@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Device Mananger</string>
+    <string name="platform_icon">platform icon</string>
+    <string name="sort">Sort</string>
+    <string name="filter">Filter</string>
+    <string name="info">Info</string>
+    <string name="device_status">device status</string>
+    <string name="search_filter">Search Filter</string>
+    <string name="apply">apply</string>
+    <string name="cancel">cancel</string>
+    <string name="clear_all">clear all</string>
+</resources>
