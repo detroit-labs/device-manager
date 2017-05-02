@@ -2,10 +2,13 @@ package com.detroitlabs.devicemananger.filter;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.FrameLayout;
 
 import com.detroitlabs.devicemananger.R;
@@ -66,5 +69,20 @@ public class SearchFilterTypeView extends FrameLayout {
         testData.add("7.0");
         testData.add("7.1.2");
         return testData;
+    }
+
+    private class SpacesItemDecoration extends RecyclerView.ItemDecoration {
+        private final int mSpace;
+
+        SpacesItemDecoration(int space) {
+            this.mSpace = space;
+        }
+
+        @Override
+        public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
+            outRect.left = mSpace;
+            outRect.right = mSpace;
+            outRect.bottom = mSpace;
+        }
     }
 }

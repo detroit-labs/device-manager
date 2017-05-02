@@ -52,7 +52,7 @@ public class SearchFilterDialog extends DialogFragment implements
     }
 
     private void initFilterUi() {
-        adapters = FilterInitializer.createAdapters();
+        adapters = FilterUtil.createAdapters();
         for (FilterOptionAdapter adapter : adapters) {
             adapter.setOnFilterUpdatedListener(this);
             SearchFilterTypeView filterTypeView =
