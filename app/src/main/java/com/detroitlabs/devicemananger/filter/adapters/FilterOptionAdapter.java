@@ -11,7 +11,6 @@ import com.detroitlabs.devicemananger.constants.FilterType;
 import com.detroitlabs.devicemananger.filter.FilterUtil;
 
 import java.util.List;
-import java.util.Set;
 
 public abstract class FilterOptionAdapter extends RecyclerView.Adapter<FilterOptionAdapter.OptionViewHolder> {
 
@@ -25,11 +24,13 @@ public abstract class FilterOptionAdapter extends RecyclerView.Adapter<FilterOpt
         void onFilterUpdated();
 
     }
+
     @Override
     public OptionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_option_item, parent, false);
         return new OptionViewHolder(view);
     }
+
     @Override
     public void onBindViewHolder(OptionViewHolder holder, int position) {
         holder.bind(options.get(position));
@@ -48,7 +49,7 @@ public abstract class FilterOptionAdapter extends RecyclerView.Adapter<FilterOpt
         this.listener = listener;
     }
 
-    public void setOptions(Set<String> options) {
+    public void setOptions(List<String> options) {
         // TODO: 5/1/17 disable textview or add animation
     }
 
@@ -65,7 +66,11 @@ public abstract class FilterOptionAdapter extends RecyclerView.Adapter<FilterOpt
             optionItem.setOnHighlightListener(new HighlightableTextView.OnHighlightListener() {
                 @Override
                 public void onHighlight(boolean isHighlighted) {
-                    FilterUtil.updateFilter(getFilterType(), text, isHighlighted);
+                    if (isHighlighted) {
+                        FilterUtil.addSelection(getFilterType(), text);
+                    } else {
+                        FilterUtil.removeSelection(getFilterType(), text);
+                    }
                     if (listener != null) {
                         listener.onFilterUpdated();
                     }

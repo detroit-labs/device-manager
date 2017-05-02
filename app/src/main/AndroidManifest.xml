@@ -16,6 +16,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <provider
+            android:name=".data.DeviceProvider"
+            android:authorities="com.detroitlabs.devicemananger"
+            android:exported="false" />
     </application>
 
 </manifest>

@@ -8,45 +8,46 @@ import com.detroitlabs.devicemananger.constants.FilterType;
 import com.detroitlabs.devicemananger.data.DatabaseContract;
 import com.detroitlabs.devicemananger.models.Filter;
 
-import java.util.Set;
+import java.util.List;
 
 
-public class FilterTaskLoader extends AsyncTaskLoader<Filter> {
+public class FilterTaskLoader extends AsyncTaskLoader<Filter.Options> {
     private final Context context;
-    private Filter filter;
+    private Filter.Options filterOptions;
+    private Filter.Selection filterSelection;
 
-    public FilterTaskLoader(Context context, Filter filter) {
+    public FilterTaskLoader(Context context, Filter.Selection filterSelection) {
         super(context);
         this.context = context;
-        this.filter = filter;
+        this.filterSelection = filterSelection;
     }
 
     // TODO: 5/1/17 handling onCancel triggered by restartLoader
 
     @Override
     protected void onStartLoading() {
-        if (filter != null) {
-            deliverResult(filter);
+        if (filterOptions != null) {
+            deliverResult(filterOptions);
         } else {
             forceLoad();
         }
     }
 
     @Override
-    public void deliverResult(Filter data) {
+    public void deliverResult(Filter.Options data) {
         if (isReset()) {
             return;
         }
-        filter = data;
+        filterOptions = data;
         if (isStarted()) {
             super.deliverResult(data);
         }
     }
 
     @Override
-    public Filter loadInBackground() {
+    public Filter.Options loadInBackground() {
         Cursor cursor = context.getContentResolver().query(DatabaseContract.FILTER_URI, getProjection(), getSelection(), null, null);
-        Filter filter = new Filter();
+        Filter.Options filterOptions = new Filter.Options();
         try {
             // iterate cursor and read the options
 
@@ -55,55 +56,48 @@ public class FilterTaskLoader extends AsyncTaskLoader<Filter> {
                 cursor.close();
             }
         }
-        return filter;
+        return filterOptions;
     }
 
     private String[] getProjection() {
-        if (filter.options == null || filter.options.isEmpty()) {
-            return null;
-        } else {
-            Set<FilterType> filterTypes = filter.options.keySet();
-            String[] projection = new String[filterTypes.size()];
-            int index = 0;
-            for (FilterType filterType : filterTypes) {
-                projection[index] = filterType.toString();
-                index++;
-            }
-            return projection;
+        FilterType[] filterTypes = FilterType.values();
+        String[] projection = new String[filterTypes.length];
+        for (int i = 0; i < filterTypes.length; ++i) {
+            projection[i] = filterTypes[i].toString();
         }
+        return projection;
     }
 
     private String getSelection() {
-        if (filter.selections == null || filter.selections.isEmpty()) {
+        if (!filterSelection.hasSelection()) {
             return null;
         } else {
             // filterType1 in (value1, value2) and filterType2 in (value1, value2)
-            Set<FilterType> filterTypes = filter.selections.keySet();
             String selection = "";
-            int index = 0;
-            for (FilterType filterType : filterTypes) {
-                if (index > 0) {
+            List<String> selectionTypes = filterSelection.getSelectionKeys();
+            for (int i = 0; i < selectionTypes.size(); ++i) {
+                if (i > 0) {
                     selection += " and ";
                 }
-                selection += filterType.toString() + " in (";
-                selection += getArgs(filter.selections.get(filterType));
+                String selectionType = selectionTypes.get(i);
+                selection += selectionType + " in (";
+                selection += getArgs(filterSelection.getSelectionValues(selectionType));
                 selection += ")";
-                index++;
+
             }
             return selection;
         }
     }
 
-    private String getArgs(Set<String> values) {
+    private String getArgs(List<String> values) {
         // value1, value2, value3
         String args = "";
-        int index = 0;
-        for (String s : values) {
+        for (int index = 0; index < values.size(); ++index) {
             if (index > 0) {
                 args += ",";
             }
-            args += s;
-            index++;
+            String value = values.get(index);
+            args += value;
         }
         return args;
     }
