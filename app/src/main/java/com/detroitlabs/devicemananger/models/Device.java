@@ -18,6 +18,9 @@ public class Device {
     public boolean isCheckedOut;
     public long expireTime;
 
+    public Device() {
+        // Default constructor required for calls to DataSnapshot.getValue(Device.class)
+    }
     public @DrawableRes int getIcon() {
         if (platform == Platform.ANDROID) {
             return R.drawable.ic_android_grey600_24dp;

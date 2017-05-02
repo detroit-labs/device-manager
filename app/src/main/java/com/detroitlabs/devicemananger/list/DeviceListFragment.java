@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.detroitlabs.devicemananger.databinding.FragDeviceListBinding;
+import com.detroitlabs.devicemananger.filter.FilterUtil;
 import com.detroitlabs.devicemananger.models.Device;
 
 import java.util.Collections;
@@ -52,6 +53,7 @@ public class DeviceListFragment extends Fragment implements
 
     @Override
     public void onLoadFinished(Loader<List<Device>> loader, List<Device> data) {
+        // apply filter to data
         adapter.setData(data);
     }
 

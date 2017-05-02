@@ -71,7 +71,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
         }
 
         private void setStatus(boolean isCheckedOut) {
-            if (isCheckedOut) {
+            if (!isCheckedOut) {
                 binding.status.setColorFilter(ContextCompat.getColor(itemView.getContext(), R.color.green));
             } else {
                 binding.status.clearColorFilter();

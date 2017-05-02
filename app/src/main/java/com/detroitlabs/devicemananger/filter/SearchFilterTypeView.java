@@ -10,6 +10,7 @@ import android.widget.FrameLayout;
 
 import com.detroitlabs.devicemananger.R;
 import com.detroitlabs.devicemananger.databinding.ViewFilterTypeBinding;
+import com.detroitlabs.devicemananger.filter.adapters.FilterOptionAdapter;
 import com.xiaofeng.flowlayoutmanager.FlowLayoutManager;
 
 import java.util.ArrayList;
@@ -18,6 +19,11 @@ import java.util.List;
 public class SearchFilterTypeView extends FrameLayout {
     private final String title;
     private ViewFilterTypeBinding binding;
+    private FilterOptionAdapter adapter;
+
+    public SearchFilterTypeView(@NonNull Context context) {
+        this(context, null);
+    }
 
     public SearchFilterTypeView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -30,6 +36,11 @@ public class SearchFilterTypeView extends FrameLayout {
         initView(context);
     }
 
+    public SearchFilterTypeView setAdapter(FilterOptionAdapter adapter) {
+        this.adapter = adapter;
+        return this;
+    }
+
     private void initView(Context context) {
         binding = ViewFilterTypeBinding.inflate(LayoutInflater.from(context), this, true);
         binding.title.setText(title);
@@ -37,15 +48,12 @@ public class SearchFilterTypeView extends FrameLayout {
     }
 
     private void initRecyclerView() {
-        FilterOptionAdapter adapter = new FilterOptionAdapter();
         binding.options.setAdapter(adapter);
         binding.options.setHasFixedSize(true);
         FlowLayoutManager layoutManager = new FlowLayoutManager();
         layoutManager.setAutoMeasureEnabled(true);
         binding.options.setLayoutManager(layoutManager);
         binding.options.addItemDecoration(new SpacesItemDecoration(16));
-        adapter.setData(getTestData());
-
     }
 
     // TODO: 4/27/17 remove this

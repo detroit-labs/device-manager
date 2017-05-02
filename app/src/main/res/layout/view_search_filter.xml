@@ -6,17 +6,29 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="@dimen/normal_padding">
+        android:orientation="vertical">
 
-        <com.detroitlabs.devicemananger.filter.SearchFilterTypeView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:title="Version" />
+        <include
+            android:id="@+id/title_bar"
+            layout="@layout/view_dialog_title" />
 
-        <com.detroitlabs.devicemananger.filter.SearchFilterTypeView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:title="Screen Size" />
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <LinearLayout
+                android:id="@+id/filter_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/normal_padding" />
+
+        </ScrollView>
+
+        <include
+            android:id="@+id/button_bar"
+            layout="@layout/view_dialog_buttons" />
     </LinearLayout>
+
 </layout>
