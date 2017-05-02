@@ -11,4 +11,9 @@
         android:icon="@drawable/ic_filter_list_white_24dp"
         android:title="@string/filter"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/account"
+        android:icon="@android:drawable/ic_dialog_email"
+        app:showAsAction="ifRoom"
+        android:title="Account" />
 </menu>

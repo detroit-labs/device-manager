@@ -24,7 +24,7 @@
                 android:layout_height="match_parent" />
         </LinearLayout>
         <!-- The navigation drawer -->
-        <com.detroitlabs.devicemananger.DeviceDetailView
+        <com.detroitlabs.devicemanager.DeviceDetailView
             android:id="@+id/device_detail"
             android:layout_width="240dp"
             android:layout_height="match_parent"
