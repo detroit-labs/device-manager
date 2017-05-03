@@ -12,7 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name="com.detroitlabs.devicemanager.MainActivity" />
+        <activity
+            android:name="com.detroitlabs.devicemanager.MainActivity"
+            android:launchMode="singleInstance" />
 
         <provider
             android:name="com.detroitlabs.devicemanager.data.DeviceProvider"
@@ -26,6 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <service android:name="com.detroitlabs.devicemanager.data.RegistrationService" />
         <service android:name="com.detroitlabs.devicemanager.data.SyncingService" />
         <service android:name="com.detroitlabs.devicemanager.data.DeviceUpdateService" />

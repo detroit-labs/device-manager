@@ -10,7 +10,7 @@ public class DeviceDbHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     private static final String DATABASE_NAME = "devices.db";
     private static final String SQL_CREATE_TABLE_DEVICES = String.format("CREATE TABLE %s"
-                    +" (%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT)",
+                    +" (%s INTEGER PRIMARY KEY AUTOINCREMENT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT, %s TEXT)",
             DatabaseContract.TABLE_DEVICES,
             DeviceColumns._ID,
             DeviceColumns.BRAND_AND_MODEL,
@@ -18,7 +18,8 @@ public class DeviceDbHelper extends SQLiteOpenHelper {
             DeviceColumns.VERSION,
             DeviceColumns.SCREEN_SIZE,
             DeviceColumns.SCREEN_RESOLUTION,
-            DeviceColumns.CHECKED_OUT_BY
+            DeviceColumns.CHECKED_OUT_BY,
+            DeviceColumns.SERIAL_NUMBER
     );
 
     public DeviceDbHelper(Context context) {

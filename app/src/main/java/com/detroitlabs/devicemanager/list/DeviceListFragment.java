@@ -1,25 +1,31 @@
 package com.detroitlabs.devicemanager.list;
 
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
+import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.detroitlabs.devicemanager.data.DatabaseContract;
 import com.detroitlabs.devicemanager.databinding.FragDeviceListBinding;
+import com.detroitlabs.devicemanager.filter.FilterUtil;
 import com.detroitlabs.devicemanager.models.Device;
 
 import java.util.Collections;
-import java.util.List;
 
 
 public class DeviceListFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<List<Device>>,
+        LoaderManager.LoaderCallbacks<Cursor>,
         DeviceListAdapter.OnItemClickListener {
+
+    public static final int LOADER_ID = 113;
+
     private FragDeviceListBinding binding;
     private DeviceListAdapter adapter;
     private OnItemClickListener listener;
@@ -35,7 +41,7 @@ public class DeviceListFragment extends Fragment implements
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         initRecyclerView();
-        getLoaderManager().initLoader(DeviceListTaskLoader.LOADER_ID, null, this);
+        getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
     private void initRecyclerView() {
@@ -46,19 +52,23 @@ public class DeviceListFragment extends Fragment implements
     }
 
     @Override
-    public Loader<List<Device>> onCreateLoader(int id, Bundle args) {
-        return new DeviceListTaskLoader(getContext());
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(getContext(),
+                DatabaseContract.DEVICE_URI,
+                null,
+                FilterUtil.convertFilterToQuerySelection(),
+                null,
+                null);
     }
 
     @Override
-    public void onLoadFinished(Loader<List<Device>> loader, List<Device> data) {
-        // apply filter to data
-        adapter.setData(data);
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        adapter.swapCursor(data);
     }
 
     @Override
     public void onLoaderReset(Loader loader) {
-        adapter.setData(Collections.<Device>emptyList());
+        adapter.swapCursor(null);
     }
 
     @Override

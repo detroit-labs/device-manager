@@ -5,6 +5,7 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.support.annotation.NonNull;
@@ -75,9 +76,16 @@ public class DeviceProvider extends ContentProvider {
         db.beginTransaction();
         try {
             for (ContentValues value : values) {
-                db.insertWithOnConflict(TABLE_DEVICES, null, value, SQLiteDatabase.CONFLICT_REPLACE);
+                String whereClause = String.format("%s = ?", DatabaseContract.DeviceColumns.SERIAL_NUMBER);
+                String[] whereArgs = new String[]{value.getAsString(DatabaseContract.DeviceColumns.SERIAL_NUMBER)};
+                int affectedId = db.update(TABLE_DEVICES, value, whereClause, whereArgs);
+                if (affectedId == 0) {
+                    db.insert(TABLE_DEVICES, null, value);
+                }
             }
             db.setTransactionSuccessful();
+        } catch (SQLException ex) {
+            Log.w(TAG, ex);
         } finally {
             db.endTransaction();
         }

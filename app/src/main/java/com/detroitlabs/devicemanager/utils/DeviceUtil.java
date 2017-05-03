@@ -11,6 +11,7 @@ import android.view.WindowManager;
 
 import com.detroitlabs.devicemanager.constants.Platform;
 import com.detroitlabs.devicemanager.models.Device;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.jaredrummler.android.device.DeviceName;
 
 import java.util.Locale;
@@ -34,7 +35,7 @@ public class DeviceUtil {
     }
 
     private static String getSerialNumber() {
-        return Build.SERIAL;
+        return FirebaseInstanceId.getInstance().getId();
     }
 
     private static String getSize(Context context) {

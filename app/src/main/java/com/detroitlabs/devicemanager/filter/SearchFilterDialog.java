@@ -76,7 +76,7 @@ public class SearchFilterDialog extends DialogFragment implements
     @Override
     public Loader<Filter.Options> onCreateLoader(int id, Bundle args) {
         if (id == LOADER_ID) {
-            return new FilterTaskLoader(getActivity(), FilterUtil.getFilterSelection());
+            return new FilterTaskLoader(getActivity());
         }
         throw new IllegalArgumentException("Illegal loader id");
     }

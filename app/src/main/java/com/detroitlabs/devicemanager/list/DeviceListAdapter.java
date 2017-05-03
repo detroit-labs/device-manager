@@ -1,5 +1,6 @@
 package com.detroitlabs.devicemanager.list;
 
+import android.database.Cursor;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,18 +11,14 @@ import com.detroitlabs.devicemanager.R;
 import com.detroitlabs.devicemanager.databinding.ViewDeviceListItemBinding;
 import com.detroitlabs.devicemanager.models.Device;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.DeviceHolder> {
 
-    private List<Device> detailList;
     private OnItemClickListener listener;
+    private Cursor cursor;
 
     public DeviceListAdapter(OnItemClickListener listener) {
         this.listener = listener;
-        detailList = new ArrayList<>();
     }
 
     @Override
@@ -33,17 +30,22 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
 
     @Override
     public void onBindViewHolder(DeviceHolder holder, int position) {
-        Device detail = detailList.get(position);
-        holder.bind(detail);
+        if (!cursor.moveToPosition(position)) {
+            throw new IllegalStateException("Invalid item position requested");
+        }
+        holder.bind(new Device(cursor));
     }
 
     @Override
     public int getItemCount() {
-        return detailList.size();
+        return (cursor != null) ? cursor.getCount() : 0;
     }
 
-    public void setData(List<Device> detailList) {
-        this.detailList = detailList;
+    public void swapCursor(Cursor cursor) {
+        if (this.cursor != null) {
+            this.cursor.close();
+        }
+        this.cursor = cursor;
         notifyDataSetChanged();
     }
 

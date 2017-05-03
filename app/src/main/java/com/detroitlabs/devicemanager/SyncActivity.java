@@ -90,8 +90,8 @@ public class SyncActivity extends AppCompatActivity {
     }
 
     private void onSyncSuccess() {
-        // proceed to MainActivity
         startActivity(new Intent(this, MainActivity.class));
+        finish();
     }
 
     private void onRegisterSuccessful() {
