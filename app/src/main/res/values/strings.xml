@@ -9,4 +9,10 @@
     <string name="apply">apply</string>
     <string name="cancel">cancel</string>
     <string name="clear_all">clear all</string>
+
+    <string name="status_register_device">Register device…</string>
+    <string name="status_register_complete">Register device complete!</string>
+    <string name="status_sync_database">Sync database…</string>
+    <string name="status_sync_database_complete">Sync database complete!</string>
+    <string name="loading">Loading…</string>
 </resources>

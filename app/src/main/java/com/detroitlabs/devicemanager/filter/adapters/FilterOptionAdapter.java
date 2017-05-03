@@ -50,7 +50,10 @@ public abstract class FilterOptionAdapter extends RecyclerView.Adapter<FilterOpt
     }
 
     public void setOptions(List<String> options) {
+
         // TODO: 5/1/17 disable textview or add animation
+        this.options = options;
+        notifyDataSetChanged();
     }
 
     class OptionViewHolder extends RecyclerView.ViewHolder {

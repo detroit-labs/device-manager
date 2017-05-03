@@ -54,7 +54,6 @@ public class DeviceProvider extends ContentProvider {
         }
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query(distinct, DatabaseContract.TABLE_DEVICES, projection, selection, selectionArgs, null, null, sortOrder, null);
-        db.close();
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
     }

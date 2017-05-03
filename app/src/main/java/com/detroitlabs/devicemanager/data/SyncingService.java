@@ -6,8 +6,10 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.detroitlabs.devicemanager.constants.Constants;
 import com.detroitlabs.devicemanager.models.Device;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,6 +34,7 @@ public class SyncingService extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         Log.d(TAG, "Sync service started");
         performSyncing();
+        notifyActivity();
     }
 
     private void performSyncing() {
@@ -54,5 +57,11 @@ public class SyncingService extends IntentService {
 
             }
         });
+    }
+
+    private void notifyActivity() {
+        Intent localIntent = new Intent(Constants.BROADCAST_ACTION_SYNC_RESULT);
+        LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
+        Log.d(TAG, "Activity notified");
     }
 }
