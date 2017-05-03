@@ -49,7 +49,15 @@ public class FilterTaskLoader extends AsyncTaskLoader<Filter.Options> {
         Cursor cursor = context.getContentResolver().query(DatabaseContract.FILTER_URI, getProjection(), getSelection(), null, null);
         Filter.Options filterOptions = new Filter.Options();
         try {
-            // iterate cursor and read the options
+            if (cursor != null && cursor.moveToFirst()) {
+                FilterType[] filterTypes = FilterType.values();
+                do {
+                    for (FilterType filterType : filterTypes) {
+                        String optionValue = DatabaseContract.getString(cursor, filterType.toString());
+                        filterOptions.addOptionValues(filterType, optionValue);
+                    }
+                } while (cursor.moveToNext());
+            }
         } finally {
             if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
@@ -71,7 +79,7 @@ public class FilterTaskLoader extends AsyncTaskLoader<Filter.Options> {
         if (!filterSelection.hasSelection()) {
             return null;
         } else {
-            // filterType1 in (value1, value2) and filterType2 in (value1, value2)
+            // filterType1 in ('value1', 'value2') and filterType2 in ('value1', 'value2')
             String selection = "";
             List<String> selectionTypes = filterSelection.getSelectionKeys();
             for (int i = 0; i < selectionTypes.size(); ++i) {
@@ -89,14 +97,15 @@ public class FilterTaskLoader extends AsyncTaskLoader<Filter.Options> {
     }
 
     private String getArgs(List<String> values) {
-        // value1, value2, value3
+        // 'value1', 'value2', 'value3'
         String args = "";
         for (int index = 0; index < values.size(); ++index) {
             if (index > 0) {
                 args += ",";
             }
-            String value = values.get(index);
-            args += value;
+            args += "'";
+            args += values.get(index);
+            args += "'";
         }
         return args;
     }

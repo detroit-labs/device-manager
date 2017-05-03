@@ -19,13 +19,24 @@ public class Filter {
             options = new HashMap<>();
         }
 
-        public List<String> getOptionValues(FilterType filterType) {
+        public Set<String> getOptionValues(FilterType filterType) {
             Set<String> values = options.get(filterType);
             if (values != null) {
-                return new ArrayList<>(values);
+                return values;
             } else {
-                return Collections.emptyList();
+                return Collections.emptySet();
             }
+        }
+
+        public void addOptionValues(FilterType filterType, String value) {
+            Set<String> values;
+            if (options.containsKey(filterType)) {
+                values = options.get(filterType);
+            } else {
+                values = new HashSet<>();
+                options.put(filterType, values);
+            }
+            values.add(value);
         }
     }
 
@@ -49,7 +60,7 @@ public class Filter {
         }
 
         public List<String> getSelectionValues(String key) {
-            return new ArrayList<>(selection.get(FilterType.valueOf(key)));
+            return new ArrayList<>(selection.get(FilterType.valueOf(key.toUpperCase())));
         }
 
         public void addSelection(FilterType filterType, String value) {
@@ -69,6 +80,9 @@ public class Filter {
                     selection.get(filterType).remove(v);
                     break;
                 }
+            }
+            if (selection.get(filterType).isEmpty()) {
+                selection.remove(filterType);
             }
         }
     }

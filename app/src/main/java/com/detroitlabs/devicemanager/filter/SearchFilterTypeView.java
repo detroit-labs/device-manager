@@ -1,7 +1,6 @@
 package com.detroitlabs.devicemanager.filter;
 
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.detroitlabs.devicemanager.R;
 import com.detroitlabs.devicemanager.databinding.ViewFilterTypeBinding;
 import com.detroitlabs.devicemanager.filter.adapters.FilterOptionAdapter;
 import com.xiaofeng.flowlayoutmanager.FlowLayoutManager;
@@ -20,23 +18,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchFilterTypeView extends FrameLayout {
-    private final String title;
     private ViewFilterTypeBinding binding;
     private FilterOptionAdapter adapter;
 
     public SearchFilterTypeView(@NonNull Context context) {
-        this(context, null);
+        super(context);
     }
 
     public SearchFilterTypeView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.SearchFilterTypeView, 0, 0);
-        try {
-            title = a.getString(R.styleable.SearchFilterTypeView_title);
-        } finally {
-            a.recycle();
-        }
-        initView(context);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        initView(getContext());
     }
 
     public SearchFilterTypeView setAdapter(FilterOptionAdapter adapter) {
@@ -46,7 +42,7 @@ public class SearchFilterTypeView extends FrameLayout {
 
     private void initView(Context context) {
         binding = ViewFilterTypeBinding.inflate(LayoutInflater.from(context), this, true);
-        binding.title.setText(title);
+        binding.title.setText(adapter.getTitleRes());
         initRecyclerView();
     }
 

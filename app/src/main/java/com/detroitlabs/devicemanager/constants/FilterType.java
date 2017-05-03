@@ -4,5 +4,12 @@ public enum FilterType {
     PLATFORM,
     VERSION,
     SCREEN_SIZE,
-    SCREEN_RESOLUTION
+    SCREEN_RESOLUTION;
+
+
+
+    @Override
+    public String toString() {
+        return super.toString().toLowerCase();
+    }
 }

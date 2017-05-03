@@ -42,9 +42,9 @@ public class RegistrationService extends IntentService {
     private void performRegistering() {
         Device device = DeviceUtil.getDeviceDetail(getApplicationContext());
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
-        Map<String, Device> devices = new HashMap<>();
-        devices.put("DL-001", device);
-        dbRef.child(TABLE_DEVICES).setValue(devices);
+//        Map<String, Device> devices = new HashMap<>();
+//        devices.put(device.serialNumber, device);
+        dbRef.child(TABLE_DEVICES).child(device.serialNumber).setValue(device);
     }
 
     private void notifyActivity() {

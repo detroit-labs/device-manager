@@ -15,4 +15,9 @@
     <string name="status_sync_database">Sync database…</string>
     <string name="status_sync_database_complete">Sync database complete!</string>
     <string name="loading">Loading…</string>
+
+    <string name="platform">Platform</string>
+    <string name="version">version</string>
+    <string name="screen_resolution">Screen Resolution</string>
+    <string name="screen_size">Screen Size</string>
 </resources>

@@ -13,10 +13,12 @@ import android.view.View;
 public class HighlightableTextView extends AppCompatTextView {
 
     public interface OnHighlightListener {
+
         void onHighlight(boolean isHighlighted);
     }
 
     private boolean isHighlighted;
+
     private OnHighlightListener onHighlightListener;
 
     public HighlightableTextView(Context context, @Nullable AttributeSet attrs) {
@@ -35,17 +37,20 @@ public class HighlightableTextView extends AppCompatTextView {
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                isHighlighted = !isHighlighted;
-                v.setActivated(isHighlighted);
-                if (onHighlightListener != null) {
-                    onHighlightListener.onHighlight(isHighlighted);
+                if (HighlightableTextView.super.isEnabled()) {
+                    isHighlighted = !isHighlighted;
+                    v.setActivated(isHighlighted);
+                    if (onHighlightListener != null) {
+                        onHighlightListener.onHighlight(isHighlighted);
+                    }
                 }
             }
         });
     }
 
-    public boolean isHighlighted() {
-        return isHighlighted;
+    public void setHighlighted(boolean isHighlighted) {
+        this.isHighlighted = isHighlighted;
+        setActivated(isHighlighted);
     }
 
     public void setOnHighlightListener(OnHighlightListener onHighlightListener) {

@@ -42,18 +42,8 @@ public class DeviceProvider extends ContentProvider {
     @Nullable
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
-        boolean distinct = false;
-        switch (URI_MATCHER.match(uri)) {
-            case DEVICES:
-                break;
-            case DEVICE_FILTER:
-                distinct = true;
-                break;
-            default:
-                throw new IllegalArgumentException("Illegal query URI");
-        }
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.query(distinct, DatabaseContract.TABLE_DEVICES, projection, selection, selectionArgs, null, null, sortOrder, null);
+        Cursor cursor = db.query(DatabaseContract.TABLE_DEVICES, projection, selection, selectionArgs, null, null, sortOrder, null);
         cursor.setNotificationUri(getContext().getContentResolver(), uri);
         return cursor;
     }
