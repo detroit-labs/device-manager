@@ -24,6 +24,11 @@ public class SearchFilterDialog extends DialogFragment implements
     private static final int LOADER_ID = 233;
     private ViewSearchFilterBinding binding;
     private FilterOptionAdapter[] adapters;
+    private OnFilterApplyListener onApplyListener;
+
+    public interface OnFilterApplyListener {
+        void onApply();
+    }
 
     public static SearchFilterDialog newInstance() {
 
@@ -65,6 +70,21 @@ public class SearchFilterDialog extends DialogFragment implements
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         binding.titleBar.titleText.setText(R.string.search_filter);
+        binding.buttonBar.cancelButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+        binding.buttonBar.applyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onApplyListener != null) {
+                    onApplyListener.onApply();
+                }
+                dismiss();
+            }
+        });
         fetchFilters();
     }
 
@@ -99,5 +119,9 @@ public class SearchFilterDialog extends DialogFragment implements
     public void onFilterUpdated() {
         // TODO: 5/1/17 add spinner to throttle clicking
         getLoaderManager().restartLoader(LOADER_ID, null, this);
+    }
+
+    public void setOnApplyListener(OnFilterApplyListener onApplyListener) {
+        this.onApplyListener = onApplyListener;
     }
 }

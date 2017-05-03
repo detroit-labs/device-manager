@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity implements DeviceListFragmen
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private ActivityMainBinding binding;
+    private DeviceListFragment deviceListFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +61,13 @@ public class MainActivity extends AppCompatActivity implements DeviceListFragmen
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onClick(Device device) {
+        binding.deviceDetail.setDetail(device);
+        openDrawer();
+    }
+
+
     private void showAccount() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
@@ -73,11 +81,20 @@ public class MainActivity extends AppCompatActivity implements DeviceListFragmen
         Log.d(TAG, "email: " + email);
     }
 
-
     private void showSearchFilterDialog() {
         FragmentManager fm = getSupportFragmentManager();
-        SearchFilterDialog searchFilterView = SearchFilterDialog.newInstance();
-        searchFilterView.show(fm, "search_filter_dialog");
+        SearchFilterDialog searchFilterDialog = SearchFilterDialog.newInstance();
+        searchFilterDialog.setOnApplyListener(getOnApplyListener());
+        searchFilterDialog.show(fm, "search_filter_dialog");
+    }
+
+    private SearchFilterDialog.OnFilterApplyListener getOnApplyListener() {
+        return new SearchFilterDialog.OnFilterApplyListener() {
+            @Override
+            public void onApply() {
+                deviceListFragment.refreshList();
+            }
+        };
     }
 
     private void setupToolbar() {
@@ -108,17 +125,11 @@ public class MainActivity extends AppCompatActivity implements DeviceListFragmen
     }
 
     private void setupDeviceListView() {
-        DeviceListFragment deviceListFragment = new DeviceListFragment();
+        deviceListFragment = new DeviceListFragment();
         deviceListFragment.setOnItemClickListener(this);
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.replace(R.id.container, deviceListFragment);
         fragmentTransaction.commit();
-    }
-
-    @Override
-    public void onClick(Device device) {
-        binding.deviceDetail.setDetail(device);
-        openDrawer();
     }
 
     private void openDrawer() {

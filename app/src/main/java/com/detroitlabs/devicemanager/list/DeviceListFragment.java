@@ -82,6 +82,10 @@ public class DeviceListFragment extends Fragment implements
         this.listener = listener;
     }
 
+    public void refreshList() {
+        getLoaderManager().restartLoader(LOADER_ID, null, this);
+    }
+
     public interface OnItemClickListener {
         void onClick(Device device);
     }
