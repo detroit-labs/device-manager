@@ -1,4 +1,4 @@
-package com.detroitlabs.devicemanager.data;
+package com.detroitlabs.devicemanager.sync;
 
 
 import android.app.IntentService;
@@ -10,6 +10,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
 import com.detroitlabs.devicemanager.constants.Constants;
+import com.detroitlabs.devicemanager.data.DatabaseContract;
 import com.detroitlabs.devicemanager.models.Device;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;

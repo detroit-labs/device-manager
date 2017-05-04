@@ -1,4 +1,4 @@
-package com.detroitlabs.devicemanager.data;
+package com.detroitlabs.devicemanager.sync;
 
 import android.app.IntentService;
 import android.content.Context;
@@ -12,9 +12,6 @@ import com.detroitlabs.devicemanager.models.Device;
 import com.detroitlabs.devicemanager.utils.DeviceUtil;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.detroitlabs.devicemanager.data.DatabaseContract.TABLE_DEVICES;
 

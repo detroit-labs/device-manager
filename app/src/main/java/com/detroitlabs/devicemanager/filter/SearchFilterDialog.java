@@ -62,7 +62,7 @@ public class SearchFilterDialog extends DialogFragment implements
         for (FilterOptionAdapter adapter : adapters) {
             adapter.setOnFilterUpdatedListener(this);
             SearchFilterTypeView filterTypeView =
-                    new SearchFilterTypeView(getActivity())
+                    new SearchFilterTypeView(getContext())
                             .setAdapter(adapter);
             binding.filterContainer.addView(filterTypeView);
         }
@@ -96,7 +96,7 @@ public class SearchFilterDialog extends DialogFragment implements
     @Override
     public Loader<Filter.Options> onCreateLoader(int id, Bundle args) {
         if (id == LOADER_ID) {
-            return new FilterTaskLoader(getActivity());
+            return new FilterTaskLoader(getContext());
         }
         throw new IllegalArgumentException("Illegal loader id");
     }

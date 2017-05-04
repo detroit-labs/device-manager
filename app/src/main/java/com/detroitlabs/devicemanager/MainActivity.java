@@ -10,23 +10,20 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.detroitlabs.devicemanager.databinding.ActivityMainBinding;
 import com.detroitlabs.devicemanager.filter.SearchFilterDialog;
 import com.detroitlabs.devicemanager.list.DeviceListFragment;
-import com.detroitlabs.devicemanager.models.Device;
-import com.detroitlabs.devicemanager.utils.DeviceUtil;
+import com.detroitlabs.devicemanager.sync.SyncFragment;
 
-public class MainActivity extends AppCompatActivity implements DeviceListFragment.OnItemClickListener {
+public class MainActivity extends AppCompatActivity implements SyncFragment.OnSyncFinishListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
+    private static final String DEVICE_LIST_FRAGMENT = "DeviceListFragment";
     private ActivityMainBinding binding;
     private DeviceListFragment deviceListFragment;
 
@@ -36,8 +33,7 @@ public class MainActivity extends AppCompatActivity implements DeviceListFragmen
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         setupToolbar();
-        setupRightDrawer();
-        setupDeviceListView();
+        setupSyncFragment();
     }
 
     @Override
@@ -49,11 +45,7 @@ public class MainActivity extends AppCompatActivity implements DeviceListFragmen
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
-        if (id == R.id.info) {
-            Device detail = DeviceUtil.getDeviceDetail(this);
-            binding.deviceDetail.setDetail(detail);
-            openDrawer();
-        } else if (id == R.id.filter) {
+        if (id == R.id.filter) {
             showSearchFilterDialog();
         } else if (id == R.id.account) {
             showAccount();
@@ -62,11 +54,32 @@ public class MainActivity extends AppCompatActivity implements DeviceListFragmen
     }
 
     @Override
-    public void onClick(Device device) {
-        binding.deviceDetail.setDetail(device);
-        openDrawer();
+    public void onSyncFinish() {
+        setupDeviceListView();
     }
 
+    private void setupSyncFragment() {
+        SyncFragment syncFragment = SyncFragment.newInstance();
+        syncFragment.setOnSyncFinishListener(this);
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.add(R.id.container, syncFragment);
+        fragmentTransaction.commit();
+    }
+
+    private void showSearchFilterDialog() {
+        FragmentManager fm = getSupportFragmentManager();
+        SearchFilterDialog searchFilterDialog = SearchFilterDialog.newInstance();
+        searchFilterDialog.setOnApplyListener(getOnApplyListener());
+        searchFilterDialog.show(fm, "search_filter_dialog");
+    }
+
+    private void setupDeviceListView() {
+        deviceListFragment = DeviceListFragment.newInstance();
+        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+        fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+        fragmentTransaction.replace(R.id.container, deviceListFragment, DEVICE_LIST_FRAGMENT);
+        fragmentTransaction.commit();
+    }
 
     private void showAccount() {
         if (ContextCompat.checkSelfPermission(this,
@@ -81,13 +94,6 @@ public class MainActivity extends AppCompatActivity implements DeviceListFragmen
         Log.d(TAG, "email: " + email);
     }
 
-    private void showSearchFilterDialog() {
-        FragmentManager fm = getSupportFragmentManager();
-        SearchFilterDialog searchFilterDialog = SearchFilterDialog.newInstance();
-        searchFilterDialog.setOnApplyListener(getOnApplyListener());
-        searchFilterDialog.show(fm, "search_filter_dialog");
-    }
-
     private SearchFilterDialog.OnFilterApplyListener getOnApplyListener() {
         return new SearchFilterDialog.OnFilterApplyListener() {
             @Override
@@ -99,40 +105,5 @@ public class MainActivity extends AppCompatActivity implements DeviceListFragmen
 
     private void setupToolbar() {
         setSupportActionBar(binding.included1.toolbar);
-    }
-
-    private void setupRightDrawer() {
-        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        binding.drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
-            @Override
-            public void onDrawerSlide(View drawerView, float slideOffset) {
-            }
-
-            @Override
-            public void onDrawerOpened(View drawerView) {
-                binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-            }
-
-            @Override
-            public void onDrawerClosed(View drawerView) {
-                binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-            }
-
-            @Override
-            public void onDrawerStateChanged(int newState) {
-            }
-        });
-    }
-
-    private void setupDeviceListView() {
-        deviceListFragment = new DeviceListFragment();
-        deviceListFragment.setOnItemClickListener(this);
-        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.replace(R.id.container, deviceListFragment);
-        fragmentTransaction.commit();
-    }
-
-    private void openDrawer() {
-        binding.drawerLayout.openDrawer(Gravity.END);
     }
 }

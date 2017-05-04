@@ -1,9 +1,11 @@
 package com.detroitlabs.devicemanager.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.os.Build;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -21,6 +23,12 @@ public class DeviceUtil {
     public static boolean hasGetAccountsPermission(Context context) {
         return ContextCompat.checkSelfPermission(context,
                 android.Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED;
+    }
+
+    public static void requestGetAccountsPermission(Activity activity, int requestCode) {
+        ActivityCompat.requestPermissions(activity,
+                new String[]{android.Manifest.permission.GET_ACCOUNTS},
+                requestCode);
     }
 
     public static Device getDeviceDetail(Context context) {

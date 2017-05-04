@@ -7,7 +7,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,8 +18,6 @@ import com.detroitlabs.devicemanager.data.DatabaseContract;
 import com.detroitlabs.devicemanager.databinding.FragDeviceListBinding;
 import com.detroitlabs.devicemanager.filter.FilterUtil;
 import com.detroitlabs.devicemanager.models.Device;
-
-import java.util.Collections;
 
 
 public class DeviceListFragment extends Fragment implements
@@ -28,20 +28,53 @@ public class DeviceListFragment extends Fragment implements
 
     private FragDeviceListBinding binding;
     private DeviceListAdapter adapter;
-    private OnItemClickListener listener;
+
+
+    public static DeviceListFragment newInstance() {
+
+        Bundle args = new Bundle();
+
+        DeviceListFragment fragment = new DeviceListFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragDeviceListBinding.inflate(inflater, container, false);
+        setupRightDrawer();
+        initRecyclerView();
         return binding.getRoot();
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        initRecyclerView();
         getLoaderManager().initLoader(LOADER_ID, null, this);
+    }
+
+    private void setupRightDrawer() {
+        binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+        binding.drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+            }
+
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+            }
+        });
     }
 
     private void initRecyclerView() {
@@ -73,20 +106,15 @@ public class DeviceListFragment extends Fragment implements
 
     @Override
     public void onItemClick(Device device) {
-        if (listener != null) {
-            listener.onClick(device);
-        }
-    }
-
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        this.listener = listener;
+        binding.deviceDetail.setDetail(device);
+        openDrawer();
     }
 
     public void refreshList() {
         getLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 
-    public interface OnItemClickListener {
-        void onClick(Device device);
+    private void openDrawer() {
+        binding.drawerLayout.openDrawer(Gravity.END);
     }
 }
