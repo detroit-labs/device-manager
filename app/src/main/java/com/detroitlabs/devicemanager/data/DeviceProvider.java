@@ -44,9 +44,7 @@ public class DeviceProvider extends ContentProvider {
     @Override
     public Cursor query(@NonNull Uri uri, @Nullable String[] projection, @Nullable String selection, @Nullable String[] selectionArgs, @Nullable String sortOrder) {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.query(DatabaseContract.TABLE_DEVICES, projection, selection, selectionArgs, null, null, sortOrder, null);
-        cursor.setNotificationUri(getContext().getContentResolver(), uri);
-        return cursor;
+        return db.query(DatabaseContract.TABLE_DEVICES, projection, selection, selectionArgs, null, null, sortOrder);
     }
 
     @Nullable
@@ -62,7 +60,6 @@ public class DeviceProvider extends ContentProvider {
             case DEVICES:
                 SQLiteDatabase db = dbHelper.getReadableDatabase();
                 long id = db.insertWithOnConflict(TABLE_DEVICES, null, values, SQLiteDatabase.CONFLICT_REPLACE);
-                getContext().getContentResolver().notifyChange(uri, null);
                 return ContentUris.withAppendedId(DatabaseContract.DEVICE_URI, id);
             default:
                 throw new IllegalArgumentException("Illegal insert URI");

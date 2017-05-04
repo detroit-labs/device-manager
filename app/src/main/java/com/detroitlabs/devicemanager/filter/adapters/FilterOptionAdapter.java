@@ -12,7 +12,6 @@ import com.detroitlabs.devicemanager.constants.FilterType;
 import com.detroitlabs.devicemanager.filter.FilterUtil;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -21,7 +20,6 @@ public abstract class FilterOptionAdapter extends RecyclerView.Adapter<FilterOpt
     private OnFilterUpdatedListener listener;
     private List<String> items;
     private Set<String> newOptions;
-    private Set<String> selectedOptions;
 
     public abstract FilterType getFilterType();
 
@@ -56,12 +54,11 @@ public abstract class FilterOptionAdapter extends RecyclerView.Adapter<FilterOpt
         this.listener = listener;
     }
 
-    public void setOptions(Set<String> options) {
+    public void setOptions(Set<String> allOptions, Set<String> options) {
         if (items == null) {
-            items = new ArrayList<>(options);
-        } else {
-            this.newOptions = options;
+            items = new ArrayList<>(allOptions);
         }
+        this.newOptions = options;
         notifyDataSetChanged();
     }
 
@@ -78,21 +75,14 @@ public abstract class FilterOptionAdapter extends RecyclerView.Adapter<FilterOpt
             if (newOptions != null) {
                 optionItem.setEnabled(newOptions.contains(text));
             }
-            if (selectedOptions != null) {
-                optionItem.setHighlighted(selectedOptions.contains(text));
-            }
+            optionItem.setHighlighted(FilterUtil.containsSelection(getFilterType(), text));
             optionItem.setOnHighlightListener(new HighlightableTextView.OnHighlightListener() {
                 @Override
                 public void onHighlight(boolean isHighlighted) {
-                    if (selectedOptions == null) {
-                        selectedOptions = new HashSet<>();
-                    }
                     if (isHighlighted) {
                         FilterUtil.addSelection(getFilterType(), text);
-                        selectedOptions.add(text);
                     } else {
                         FilterUtil.removeSelection(getFilterType(), text);
-                        selectedOptions.remove(text);
                     }
                     if (listener != null) {
                         listener.onFilterUpdated();

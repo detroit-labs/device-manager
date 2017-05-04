@@ -14,6 +14,7 @@ import com.detroitlabs.devicemanager.databinding.ViewSearchFilterBinding;
 import com.detroitlabs.devicemanager.filter.adapters.FilterOptionAdapter;
 import com.detroitlabs.devicemanager.models.Filter;
 
+import java.util.Collections;
 import java.util.Set;
 
 
@@ -92,7 +93,6 @@ public class SearchFilterDialog extends DialogFragment implements
         getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
-
     @Override
     public Loader<Filter.Options> onCreateLoader(int id, Bundle args) {
         if (id == LOADER_ID) {
@@ -103,15 +103,22 @@ public class SearchFilterDialog extends DialogFragment implements
 
     @Override
     public void onLoadFinished(Loader<Filter.Options> loader, Filter.Options data) {
+        if (FilterUtil.firstTimeOpened()) {
+            FilterUtil.setAllOptions(data);
+        }
         for (FilterOptionAdapter adapter : adapters) {
+            Set<String> allOptions = FilterUtil.getAllOptionValues(adapter.getFilterType());
             Set<String> options = data.getOptionValues(adapter.getFilterType());
-            adapter.setOptions(options);
+            adapter.setOptions(allOptions, options);
         }
     }
 
     @Override
     public void onLoaderReset(Loader<Filter.Options> loader) {
-
+        for (FilterOptionAdapter adapter : adapters) {
+            adapter.setOptions(Collections.<String>emptySet(),
+                    Collections.<String>emptySet());
+        }
     }
 
     /* Implementation FilterOptionAdapter.OnFilterUpdatedListener */

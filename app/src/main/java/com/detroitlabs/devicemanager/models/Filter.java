@@ -19,6 +19,10 @@ public class Filter {
             options = new HashMap<>();
         }
 
+        public boolean isEmpty() {
+            return options.isEmpty();
+        }
+
         public Set<String> getOptionValues(FilterType filterType) {
             Set<String> values = options.get(filterType);
             if (values != null) {
@@ -49,6 +53,12 @@ public class Filter {
 
         public boolean hasSelection() {
             return selection != null && !selection.isEmpty();
+        }
+
+        public boolean containsSelection(FilterType filterType, String value) {
+            return hasSelection() &&
+                    selection.containsKey(filterType) &&
+                    selection.get(filterType).contains(value);
         }
 
         public List<String> getSelectionKeys() {

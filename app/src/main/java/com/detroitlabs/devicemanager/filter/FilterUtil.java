@@ -10,9 +10,11 @@ import com.detroitlabs.devicemanager.filter.adapters.VersionFilterAdapter;
 import com.detroitlabs.devicemanager.models.Filter;
 
 import java.util.List;
+import java.util.Set;
 
 public class FilterUtil {
-    public static Filter.Selection filterSelection = new Filter.Selection();
+    private static Filter.Selection filterSelection = new Filter.Selection();
+    private static Filter.Options filterOptions = new Filter.Options();
 
     static FilterOptionAdapter[] createAdapters() {
         return new FilterOptionAdapter[]{
@@ -23,6 +25,18 @@ public class FilterUtil {
         };
     }
 
+    public static boolean firstTimeOpened() {
+        return filterOptions.isEmpty();
+    }
+
+    public static void setAllOptions(Filter.Options options) {
+        filterOptions = options;
+    }
+
+    public static Set<String> getAllOptionValues(FilterType filterType) {
+        return filterOptions.getOptionValues(filterType);
+    }
+
     public static void addSelection(FilterType filterType, String value) {
         filterSelection.addSelection(filterType, value);
     }
@@ -31,9 +45,8 @@ public class FilterUtil {
         filterSelection.removeSelection(filterType, value);
     }
 
-
-    public static Filter.Selection getFilterSelection() {
-        return filterSelection;
+    public static boolean containsSelection(FilterType filterType, String value) {
+        return filterSelection.containsSelection(filterType, value);
     }
 
     public static String convertFilterToQuerySelection() {
@@ -56,7 +69,6 @@ public class FilterUtil {
             return selection;
         }
     }
-
 
     private static String getArgs(List<String> values) {
         // 'value1', 'value2', 'value3'
