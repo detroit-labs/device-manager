@@ -20,6 +20,12 @@ import java.util.Locale;
 
 public class DeviceUtil {
 
+    public static Device THIS_DEVICE;
+
+    public static boolean isThisDevice(Device device) {
+        return device.serialNumber.equals(THIS_DEVICE.serialNumber);
+    }
+
     public static boolean hasGetAccountsPermission(Context context) {
         return ContextCompat.checkSelfPermission(context,
                 android.Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED;
@@ -31,7 +37,7 @@ public class DeviceUtil {
                 requestCode);
     }
 
-    public static Device getDeviceDetail(Context context) {
+    public static void readThisDevice(Context context) {
         Device detail = new Device();
         detail.platform = Platform.ANDROID;
         detail.brandAndModel = getBrandAndModel();
@@ -39,7 +45,7 @@ public class DeviceUtil {
         detail.screenResolution = getResolution(context);
         detail.screenSize = getSize(context);
         detail.serialNumber = getSerialNumber();
-        return detail;
+        THIS_DEVICE = detail;
     }
 
     private static String getSerialNumber() {

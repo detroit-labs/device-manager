@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.detroitlabs.devicemanager.R;
 import com.detroitlabs.devicemanager.databinding.ViewDeviceListItemBinding;
 import com.detroitlabs.devicemanager.models.Device;
+import com.detroitlabs.devicemanager.utils.DeviceUtil;
 
 
 public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.DeviceHolder> {

@@ -2,6 +2,7 @@ package com.detroitlabs.devicemanager.filter;
 
 
 import com.detroitlabs.devicemanager.constants.FilterType;
+import com.detroitlabs.devicemanager.data.DatabaseContract;
 import com.detroitlabs.devicemanager.filter.adapters.FilterOptionAdapter;
 import com.detroitlabs.devicemanager.filter.adapters.PlatformFilterAdapter;
 import com.detroitlabs.devicemanager.filter.adapters.ScreenResolutionAdapter;
@@ -11,6 +12,8 @@ import com.detroitlabs.devicemanager.models.Filter;
 
 import java.util.List;
 import java.util.Set;
+
+import static com.detroitlabs.devicemanager.utils.DeviceUtil.THIS_DEVICE;
 
 public class FilterUtil {
     private static Filter.Selection filterSelection = new Filter.Selection();
@@ -47,6 +50,24 @@ public class FilterUtil {
 
     public static boolean containsSelection(FilterType filterType, String value) {
         return filterSelection.containsSelection(filterType, value);
+    }
+
+    public static String getDeviceListQuery() {
+        String filterQuery = convertFilterToQuerySelection();
+        if (filterQuery != null) {
+            filterQuery += " and ";
+        } else {
+            filterQuery = "";
+        }
+        filterQuery += excludeThisDeviceQuery();
+        return filterQuery;
+    }
+
+    private static String excludeThisDeviceQuery() {
+        return DatabaseContract.DeviceColumns.SERIAL_NUMBER +
+                " != '" +
+                THIS_DEVICE.serialNumber
+                +"'";
     }
 
     public static String convertFilterToQuerySelection() {

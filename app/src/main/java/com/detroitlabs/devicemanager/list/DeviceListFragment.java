@@ -89,7 +89,7 @@ public class DeviceListFragment extends Fragment implements
         return new CursorLoader(getContext(),
                 DatabaseContract.DEVICE_URI,
                 null,
-                FilterUtil.convertFilterToQuerySelection(),
+                FilterUtil.getDeviceListQuery(),
                 null,
                 null);
     }

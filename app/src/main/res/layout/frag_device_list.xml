@@ -8,11 +8,21 @@
         android:layout_height="match_parent">
         <!-- The main content view -->
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/device_list"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/view_device_list_item" />
+            android:orientation="vertical">
+
+            <com.detroitlabs.devicemanager.list.ThisDeviceView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/device_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:listitem="@layout/view_device_list_item" />
+        </LinearLayout>
         <!-- The navigation drawer -->
         <com.detroitlabs.devicemanager.DeviceDetailView
             android:id="@+id/device_detail"

@@ -1,17 +1,10 @@
 package com.detroitlabs.devicemanager;
 
-import android.Manifest;
-import android.accounts.Account;
-import android.accounts.AccountManager;
-import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -19,6 +12,7 @@ import com.detroitlabs.devicemanager.databinding.ActivityMainBinding;
 import com.detroitlabs.devicemanager.filter.SearchFilterDialog;
 import com.detroitlabs.devicemanager.list.DeviceListFragment;
 import com.detroitlabs.devicemanager.sync.SyncFragment;
+import com.detroitlabs.devicemanager.utils.DeviceUtil;
 
 public class MainActivity extends AppCompatActivity implements SyncFragment.OnSyncFinishListener {
 
@@ -31,6 +25,8 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+
+        DeviceUtil.readThisDevice(this);
 
         setupToolbar();
         setupSyncFragment();
@@ -47,8 +43,6 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
         int id = item.getItemId();
         if (id == R.id.filter) {
             showSearchFilterDialog();
-        } else if (id == R.id.account) {
-            showAccount();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -79,19 +73,6 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
         fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
         fragmentTransaction.replace(R.id.container, deviceListFragment, DEVICE_LIST_FRAGMENT);
         fragmentTransaction.commit();
-    }
-
-    private void showAccount() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.GET_ACCOUNTS}, 0);
-        }
-        String email = "";
-        for (Account account : AccountManager.get(this).getAccountsByType("com.google")) {
-            email += account.name;
-            email += "\n\n";
-        }
-        Log.d(TAG, "email: " + email);
     }
 
     private SearchFilterDialog.OnFilterApplyListener getOnApplyListener() {
