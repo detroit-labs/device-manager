@@ -20,4 +20,8 @@
     <string name="version">version</string>
     <string name="screen_resolution">Screen Resolution</string>
     <string name="screen_size">Screen Size</string>
+    <string name="check_out">Check Out</string>
+    <string name="confirm">Confirm</string>
+    <string name="your_name">your name</string>
+    <string name="check_in">Check In</string>
 </resources>

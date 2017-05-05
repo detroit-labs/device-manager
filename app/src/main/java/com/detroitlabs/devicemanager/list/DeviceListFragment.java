@@ -18,6 +18,7 @@ import com.detroitlabs.devicemanager.data.DatabaseContract;
 import com.detroitlabs.devicemanager.databinding.FragDeviceListBinding;
 import com.detroitlabs.devicemanager.filter.FilterUtil;
 import com.detroitlabs.devicemanager.models.Device;
+import com.detroitlabs.devicemanager.sync.SyncingService;
 
 
 public class DeviceListFragment extends Fragment implements
@@ -49,9 +50,34 @@ public class DeviceListFragment extends Fragment implements
     }
 
     @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getLoaderManager().initLoader(LOADER_ID, null, this);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        registerSync();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        unregisterSync();
+    }
+
+    private void registerSync() {
+        SyncingService.registerSync(getContext());
+    }
+
+    private void unregisterSync() {
+        SyncingService.unregisterSync(getContext());
     }
 
     private void setupRightDrawer() {
@@ -117,4 +143,5 @@ public class DeviceListFragment extends Fragment implements
     private void openDrawer() {
         binding.drawerLayout.openDrawer(Gravity.END);
     }
+
 }

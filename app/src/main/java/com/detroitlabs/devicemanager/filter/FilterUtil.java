@@ -9,11 +9,10 @@ import com.detroitlabs.devicemanager.filter.adapters.ScreenResolutionAdapter;
 import com.detroitlabs.devicemanager.filter.adapters.ScreenSizeAdapter;
 import com.detroitlabs.devicemanager.filter.adapters.VersionFilterAdapter;
 import com.detroitlabs.devicemanager.models.Filter;
+import com.detroitlabs.devicemanager.utils.DeviceUtil;
 
 import java.util.List;
 import java.util.Set;
-
-import static com.detroitlabs.devicemanager.utils.DeviceUtil.THIS_DEVICE;
 
 public class FilterUtil {
     private static Filter.Selection filterSelection = new Filter.Selection();
@@ -66,8 +65,8 @@ public class FilterUtil {
     private static String excludeThisDeviceQuery() {
         return DatabaseContract.DeviceColumns.SERIAL_NUMBER +
                 " != '" +
-                THIS_DEVICE.serialNumber
-                +"'";
+                DeviceUtil.getSerialNumber() +
+                "'";
     }
 
     public static String convertFilterToQuerySelection() {

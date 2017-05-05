@@ -2,27 +2,22 @@ package com.detroitlabs.devicemanager.sync;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.animation.ObjectAnimator;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
 
 import com.detroitlabs.devicemanager.R;
 import com.detroitlabs.devicemanager.databinding.FragSyncBinding;
@@ -31,8 +26,7 @@ import com.detroitlabs.devicemanager.utils.PrefUtil;
 import com.detroitlabs.devicemanager.utils.ProgressBarUtil;
 
 import static com.detroitlabs.devicemanager.constants.Constants.BROADCAST_ACTION_REGISTER_RESULT;
-import static com.detroitlabs.devicemanager.constants.Constants.BROADCAST_ACTION_SYNC_RESULT;
-import static com.detroitlabs.devicemanager.constants.Constants.PREF_REGISTER_SUCCEEDED;
+import static com.detroitlabs.devicemanager.constants.Constants.BROADCAST_ACTION_SINGLE_SYNC_RESULT;
 
 
 public class SyncFragment extends Fragment {
@@ -110,23 +104,17 @@ public class SyncFragment extends Fragment {
         receiver = new RegistrationStatusReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BROADCAST_ACTION_REGISTER_RESULT);
-        intentFilter.addAction(BROADCAST_ACTION_SYNC_RESULT);
+        intentFilter.addAction(BROADCAST_ACTION_SINGLE_SYNC_RESULT);
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(receiver, intentFilter);
     }
 
+    // TODO: 5/5/17 register device every time opening the app
     private void checkRegisterState() {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        boolean registerSucceeded = preferences.getBoolean(PREF_REGISTER_SUCCEEDED, false);
-        Log.d(TAG, "this device has " + (registerSucceeded ? "" : "not ") + "been registered");
-        if (!registerSucceeded) {
-            if (DeviceUtil.hasGetAccountsPermission(getContext())) {
-                registerDevice();
-            } else {
-                Log.d(TAG, "requesting permission to read EMAIL");
-                DeviceUtil.requestGetAccountsPermission(getActivity(), PERMISSION_REQUEST_GET_ACCOUNTS);
-            }
+        if (DeviceUtil.hasGetAccountsPermission(getContext())) {
+            registerDevice();
         } else {
-            syncDatabase();
+            Log.d(TAG, "requesting permission to read EMAIL");
+            DeviceUtil.requestGetAccountsPermission(getActivity(), PERMISSION_REQUEST_GET_ACCOUNTS);
         }
     }
 
@@ -169,7 +157,7 @@ public class SyncFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(BROADCAST_ACTION_SYNC_RESULT)) {
+            if (action.equals(BROADCAST_ACTION_SINGLE_SYNC_RESULT)) {
                 Log.d(TAG, "Sync done");
                 onSyncSuccess();
             } else if (action.equals(BROADCAST_ACTION_REGISTER_RESULT)) {

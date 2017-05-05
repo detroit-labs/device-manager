@@ -11,17 +11,35 @@ import com.detroitlabs.devicemanager.data.DatabaseContract.DeviceColumns;
 import com.detroitlabs.devicemanager.utils.StringUtil;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
+import com.google.firebase.database.PropertyName;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.detroitlabs.devicemanager.data.DatabaseContract.getString;
 
 @IgnoreExtraProperties
 public class Device {
+
+    @PropertyName(DeviceColumns.PLATFORM)
     public Platform platform;
+
+    @PropertyName(DeviceColumns.BRAND_AND_MODEL)
     public String brandAndModel;
+
+    @PropertyName(DeviceColumns.VERSION)
     public String version;
+
+    @PropertyName(DeviceColumns.SCREEN_SIZE)
     public String screenSize;
+
+    @PropertyName(DeviceColumns.SCREEN_RESOLUTION)
     public String screenResolution;
+
+    @PropertyName(DeviceColumns.SERIAL_NUMBER)
     public String serialNumber;
+
+    @PropertyName(DeviceColumns.CHECKED_OUT_BY)
     public String checkedOutBy;
 
     public Device() {
@@ -65,5 +83,18 @@ public class Device {
         values.put(DeviceColumns.SERIAL_NUMBER, serialNumber);
         values.put(DeviceColumns.CHECKED_OUT_BY, checkedOutBy);
         return values;
+    }
+
+    @Exclude
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put(DeviceColumns.BRAND_AND_MODEL, brandAndModel);
+        map.put(DeviceColumns.PLATFORM, platform.toString());
+        map.put(DeviceColumns.VERSION, version);
+        map.put(DeviceColumns.SCREEN_RESOLUTION, screenResolution);
+        map.put(DeviceColumns.SCREEN_SIZE, screenSize);
+        map.put(DeviceColumns.SERIAL_NUMBER, serialNumber);
+        map.put(DeviceColumns.CHECKED_OUT_BY, checkedOutBy);
+        return map;
     }
 }

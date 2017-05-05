@@ -13,7 +13,9 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <com.detroitlabs.devicemanager.list.ThisDeviceView
+            <fragment
+                android:name="com.detroitlabs.devicemanager.list.ThisDeviceFragment"
+                android:id="@+id/this_device"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 

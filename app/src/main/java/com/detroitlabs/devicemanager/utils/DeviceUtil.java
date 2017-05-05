@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
@@ -20,10 +22,22 @@ import java.util.Locale;
 
 public class DeviceUtil {
 
-    public static Device THIS_DEVICE;
+    private static Device THIS_DEVICE;
 
-    public static boolean isThisDevice(Device device) {
-        return device.serialNumber.equals(THIS_DEVICE.serialNumber);
+    public static Device getDevice() {
+        return THIS_DEVICE;
+    }
+
+    public static boolean isCheckedOut() {
+        return THIS_DEVICE.isCheckedOut();
+    }
+
+    public static void setCheckedOutBy(String checkedOutBy) {
+        THIS_DEVICE.checkedOutBy = checkedOutBy;
+    }
+
+    public static boolean isThisDevice(String serialNumber) {
+        return serialNumber != null && serialNumber.equals(THIS_DEVICE.serialNumber);
     }
 
     public static boolean hasGetAccountsPermission(Context context) {
@@ -48,10 +62,17 @@ public class DeviceUtil {
         THIS_DEVICE = detail;
     }
 
-    private static String getSerialNumber() {
-        return FirebaseInstanceId.getInstance().getId();
+    public static String getSerialNumber() {
+        if (THIS_DEVICE == null || THIS_DEVICE.serialNumber == null) {
+            String id = Build.SERIAL;
+            Log.d("DeviceUtil", "ID: " + id);
+            return id;
+        } else {
+            return THIS_DEVICE.serialNumber;
+        }
     }
 
+    // TODO: 5/5/17 user library to get data
     private static String getSize(Context context) {
         DisplayMetrics dm = new DisplayMetrics();
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
@@ -79,5 +100,11 @@ public class DeviceUtil {
 
     private static String getBrandAndModel() {
         return DeviceName.getDeviceName();
+    }
+
+    public static void updateDevice(@Nullable Device thisDevice) {
+        if (thisDevice != null) {
+            THIS_DEVICE.checkedOutBy = thisDevice.checkedOutBy;
+        }
     }
 }

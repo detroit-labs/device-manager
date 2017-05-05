@@ -49,12 +49,7 @@ public class SearchFilterDialog extends DialogFragment implements
     }
 
     private void initFilter() {
-        initFilterTypes();
         initFilterUi();
-    }
-
-    private void initFilterTypes() {
-        // fetch data from firebase db and load the Filter
     }
 
     private void initFilterUi() {
