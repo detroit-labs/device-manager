@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
 
         DeviceUtil.readThisDevice(this);
 
-        setupToolbar();
         setupSyncFragment();
     }
 
@@ -89,9 +88,5 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
                 deviceListFragment.refreshList();
             }
         };
-    }
-
-    private void setupToolbar() {
-        setSupportActionBar(binding.included1.toolbar);
     }
 }

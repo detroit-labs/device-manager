@@ -8,6 +8,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -44,6 +45,7 @@ public class DeviceListFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragDeviceListBinding.inflate(inflater, container, false);
+        setupToolbar();
         setupRightDrawer();
         initRecyclerView();
         return binding.getRoot();
@@ -65,6 +67,32 @@ public class DeviceListFragment extends Fragment implements
     public void onStop() {
         super.onStop();
         unregisterSync();
+    }
+
+    @Override
+    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+        return new CursorLoader(getContext(),
+                DatabaseContract.DEVICE_URI,
+                null,
+                FilterUtil.getDeviceListQuery(),
+                null,
+                null);
+    }
+
+    @Override
+    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
+        adapter.swapCursor(data);
+    }
+
+    @Override
+    public void onLoaderReset(Loader loader) {
+        adapter.swapCursor(null);
+    }
+
+    @Override
+    public void onItemClick(Device device) {
+        binding.deviceDetail.setDetail(device);
+        openDrawer();
     }
 
     public boolean onBackPressed() {
@@ -114,37 +142,15 @@ public class DeviceListFragment extends Fragment implements
         binding.deviceList.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
-    @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getContext(),
-                DatabaseContract.DEVICE_URI,
-                null,
-                FilterUtil.getDeviceListQuery(),
-                null,
-                null);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        adapter.swapCursor(data);
-    }
-
-    @Override
-    public void onLoaderReset(Loader loader) {
-        adapter.swapCursor(null);
-    }
-
-    @Override
-    public void onItemClick(Device device) {
-        binding.deviceDetail.setDetail(device);
-        openDrawer();
-    }
-
     public void refreshList() {
         getLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 
     private void openDrawer() {
         binding.drawerLayout.openDrawer(Gravity.END);
+    }
+
+    private void setupToolbar() {
+        ((AppCompatActivity) getActivity()).setSupportActionBar(binding.included1.toolbar);
     }
 }

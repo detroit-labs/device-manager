@@ -5,13 +5,20 @@
     <android.support.v4.widget.DrawerLayout
         android:id="@+id/drawer_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
         <!-- The main content view -->
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
+            <include
+                android:id="@+id/included1"
+                layout="@layout/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
             <fragment
                 android:id="@+id/this_device"
@@ -31,6 +38,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="end"
-            android:layout_marginEnd="-64dp" />
+            android:layout_marginEnd="-64dp"
+            android:fitsSystemWindows="true" />
     </android.support.v4.widget.DrawerLayout>
 </layout>
