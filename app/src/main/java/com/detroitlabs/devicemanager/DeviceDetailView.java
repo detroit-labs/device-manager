@@ -20,7 +20,6 @@ public class DeviceDetailView extends FrameLayout {
 
     private void initView(Context context) {
         binding = ViewDeviceDetailBinding.inflate(LayoutInflater.from(context), this, true);
-        binding.version.setValue("7.1.2");
     }
 
     public void setDetail(Device device) {

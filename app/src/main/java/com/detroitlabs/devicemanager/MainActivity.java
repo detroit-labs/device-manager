@@ -48,6 +48,13 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
     }
 
     @Override
+    public void onBackPressed() {
+        if (!deviceListFragment.onBackPressed()) {
+            super.onBackPressed();
+        }
+    }
+
+    @Override
     public void onSyncFinish() {
         setupDeviceListView();
     }

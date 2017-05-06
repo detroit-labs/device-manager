@@ -50,11 +50,6 @@ public class DeviceListFragment extends Fragment implements
     }
 
     @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-    }
-
-    @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getLoaderManager().initLoader(LOADER_ID, null, this);
@@ -70,6 +65,15 @@ public class DeviceListFragment extends Fragment implements
     public void onStop() {
         super.onStop();
         unregisterSync();
+    }
+
+    public boolean onBackPressed() {
+        if (binding.drawerLayout.isDrawerOpen(Gravity.END)) {
+            binding.drawerLayout.closeDrawer(Gravity.END);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private void registerSync() {
@@ -143,5 +147,4 @@ public class DeviceListFragment extends Fragment implements
     private void openDrawer() {
         binding.drawerLayout.openDrawer(Gravity.END);
     }
-
 }

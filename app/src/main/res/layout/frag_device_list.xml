@@ -14,8 +14,8 @@
             android:orientation="vertical">
 
             <fragment
-                android:name="com.detroitlabs.devicemanager.list.ThisDeviceFragment"
                 android:id="@+id/this_device"
+                android:name="com.detroitlabs.devicemanager.list.ThisDeviceFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
@@ -28,10 +28,9 @@
         <!-- The navigation drawer -->
         <com.detroitlabs.devicemanager.DeviceDetailView
             android:id="@+id/device_detail"
-            android:layout_width="240dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="end"
-            android:background="@android:color/white"
-            android:clickable="true" />
+            android:layout_marginEnd="-64dp" />
     </android.support.v4.widget.DrawerLayout>
 </layout>
