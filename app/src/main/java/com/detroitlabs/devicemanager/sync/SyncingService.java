@@ -67,6 +67,7 @@ public class SyncingService extends Service {
         serviceHandler = new ServiceHandler(thread.getLooper());
     }
 
+    // TODO: 5/8/17 handle rotation change
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d(TAG, "Service hashcode: " + this.hashCode());

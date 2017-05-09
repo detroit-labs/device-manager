@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.detroitlabs.devicemanager.DeviceDetailView;
 import com.detroitlabs.devicemanager.data.DatabaseContract;
 import com.detroitlabs.devicemanager.databinding.FragDeviceListBinding;
 import com.detroitlabs.devicemanager.filter.FilterUtil;
@@ -131,6 +132,12 @@ public class DeviceListFragment extends Fragment implements
 
             @Override
             public void onDrawerStateChanged(int newState) {
+            }
+        });
+        binding.deviceDetail.setBackButtonClickListener(new DeviceDetailView.BackButtonClickListener() {
+            @Override
+            public void onClick() {
+                binding.drawerLayout.closeDrawer(Gravity.END);
             }
         });
     }

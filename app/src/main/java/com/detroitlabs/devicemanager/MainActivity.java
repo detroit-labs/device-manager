@@ -1,6 +1,5 @@
 package com.detroitlabs.devicemanager;
 
-import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -8,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.detroitlabs.devicemanager.databinding.ActivityMainBinding;
 import com.detroitlabs.devicemanager.filter.SearchFilterDialog;
 import com.detroitlabs.devicemanager.list.DeviceListFragment;
 import com.detroitlabs.devicemanager.sync.SyncFragment;
@@ -18,17 +16,23 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String DEVICE_LIST_FRAGMENT = "DeviceListFragment";
-    private ActivityMainBinding binding;
+    private static final String HAS_SYNCED = "HAS_SYNCED";
     private DeviceListFragment deviceListFragment;
+    private boolean hasSynced;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        setContentView(R.layout.activity_main);
 
-        DeviceUtil.readThisDevice(this);
-
-        setupSyncFragment();
+        if (savedInstanceState != null) {
+            hasSynced = savedInstanceState.getBoolean(HAS_SYNCED);
+            deviceListFragment = (DeviceListFragment) getSupportFragmentManager().findFragmentByTag(DEVICE_LIST_FRAGMENT);
+        }
+        if (!hasSynced) {
+            DeviceUtil.readThisDevice(this);
+            setupSyncFragment();
+        }
     }
 
     @Override
@@ -54,7 +58,15 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(HAS_SYNCED, hasSynced);
+
+    }
+
+    @Override
     public void onSyncFinish() {
+        hasSynced = true;
         setupDeviceListView();
     }
 

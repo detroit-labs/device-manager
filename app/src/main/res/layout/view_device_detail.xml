@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
@@ -9,48 +10,119 @@
             type="com.detroitlabs.devicemanager.models.Device" />
     </data>
 
-    <LinearLayout
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/white"
-        android:clickable="true"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <com.detroitlabs.devicemanager.list.DetailItemView
-            android:id="@+id/brandAndModel"
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:label="Brand and model"
-            app:value="@{detail.brandAndModel}" />
+            android:layout_height="256dp"
+            android:theme="@style/AppBarTheme">
 
-        <com.detroitlabs.devicemanager.list.DetailItemView
-            android:id="@+id/version"
+            <android.support.design.widget.CollapsingToolbarLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fitsSystemWindows="true"
+                app:layout_scrollFlags="snap">
+
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    app:layout_collapseMode="pin"
+                    app:navigationIcon="@drawable/ic_arrow_back_white_24dp"
+                    app:title="@{detail.brandAndModel}" />
+
+            </android.support.design.widget.CollapsingToolbarLayout>
+
+        </android.support.design.widget.AppBarLayout>
+
+        <android.support.v4.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:label="Version"
-            app:value="@{detail.version}" />
+            android:layout_height="match_parent"
+            android:background="@android:color/white"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <com.detroitlabs.devicemanager.list.DetailItemView
-            android:id="@+id/size"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:label="Size"
-            app:value="@{detail.screenSize}" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clickable="true"
+                android:orientation="vertical">
 
-        <com.detroitlabs.devicemanager.list.DetailItemView
-            android:id="@+id/resolution"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:label="Resolution"
-            app:value="@{detail.screenResolution}" />
+                <com.detroitlabs.devicemanager.list.DetailItemView
+                    android:id="@+id/version"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:label="Version"
+                    app:value="@{detail.version}" />
 
-        <com.detroitlabs.devicemanager.list.DetailItemView
-            android:id="@+id/serial_number"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:label="Serial Number"
-            app:value="@{detail.serialNumber}" />
+                <com.detroitlabs.devicemanager.list.DetailItemView
+                    android:id="@+id/size"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:label="Size"
+                    app:value="@{detail.screenSize}" />
+
+                <com.detroitlabs.devicemanager.list.DetailItemView
+                    android:id="@+id/resolution"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:label="Resolution"
+                    app:value="@{detail.screenResolution}" />
+
+                <com.detroitlabs.devicemanager.list.DetailItemView
+                    android:id="@+id/serial_number"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:label="Serial Number"
+                    app:value="@{detail.serialNumber}" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dip"
+                    android:layout_marginLeft="@dimen/normal_padding"
+                    android:layout_marginRight="@dimen/normal_padding"
+                    android:background="@color/light_grey" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/normal_padding">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingEnd="@dimen/normal_padding"
+                        android:paddingLeft="@dimen/normal_padding"
+                        android:paddingStart="@dimen/normal_padding"
+                        android:text="@string/status"
+                        android:textAppearance="?android:attr/textAppearanceListItem" />
+
+                    <TextView
+                        android:id="@+id/status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/text_margin"
+                        android:layout_marginStart="@dimen/text_margin"
+                        android:paddingBottom="@dimen/normal_padding"
+                        android:textAppearance="?android:attr/textAppearanceListItem"
+                        android:textColor="@color/dark_grey"
+                        tools:text="Borrowed by Kent" />
+
+                    <Button
+                        android:id="@+id/request_button"
+                        style="@style/RaisedButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@id/status"
+                        android:layout_alignStart="@id/status"
+                        android:layout_below="@id/status"
+                        android:text="@string/request" />
+                </RelativeLayout>
+
+            </LinearLayout>
+        </android.support.v4.widget.NestedScrollView>
+    </android.support.design.widget.CoordinatorLayout>
 
 
-    </LinearLayout>
 </layout>

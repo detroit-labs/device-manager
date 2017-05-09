@@ -11,6 +11,10 @@
 
     <style name="FlatButtonStyle" parent="Widget.AppCompat.Button.Borderless.Colored" />
 
+    <style name="RaisedButtonStyle" parent="Widget.AppCompat.Button.Colored" />
+
     <style name="HorizontalProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal" />
+
+    <style name="AppBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
 </resources>

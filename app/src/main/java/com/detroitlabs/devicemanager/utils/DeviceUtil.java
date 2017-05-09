@@ -9,13 +9,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Display;
 import android.view.WindowManager;
 
 import com.detroitlabs.devicemanager.constants.Platform;
 import com.detroitlabs.devicemanager.models.Device;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.jaredrummler.android.device.DeviceName;
 
 import java.util.Locale;
@@ -63,21 +61,14 @@ public class DeviceUtil {
     }
 
     public static String getSerialNumber() {
-        if (THIS_DEVICE == null || THIS_DEVICE.serialNumber == null) {
-            String id = Build.SERIAL;
-            Log.d("DeviceUtil", "ID: " + id);
-            return id;
-        } else {
-            return THIS_DEVICE.serialNumber;
-        }
+        return Build.SERIAL;
     }
 
-    // TODO: 5/5/17 user library to get data
     private static String getSize(Context context) {
         DisplayMetrics dm = new DisplayMetrics();
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
-        display.getMetrics(dm);
+        display.getRealMetrics(dm);
         int width = dm.widthPixels;
         int height = dm.heightPixels;
         double wi = (double) width / (double) dm.xdpi;
@@ -92,7 +83,7 @@ public class DeviceUtil {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point size = new Point();
-        display.getSize(size);
+        display.getRealSize(size);
         int width = size.x;
         int height = size.y;
         return width + " × " + height + " px";
