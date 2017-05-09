@@ -1,4 +1,4 @@
-package com.detroitlabs.devicemanager.list;
+package com.detroitlabs.devicemanager.detail;
 
 import android.content.Context;
 import android.content.res.TypedArray;

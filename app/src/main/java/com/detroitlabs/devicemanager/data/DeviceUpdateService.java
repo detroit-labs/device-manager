@@ -12,12 +12,15 @@ import static com.detroitlabs.devicemanager.data.DatabaseContract.TABLE_DEVICES;
 
 public class DeviceUpdateService extends IntentService {
 
-    public static final String TAG = DeviceUpdateService.class.getSimpleName();
-
-    public static final String ACTION_CHECK_IN = TAG + ".CHECK_IN";
-    public static final String ACTION_CHECK_OUT = TAG + ".CHECK_OUT";
-    private static final String EXTRA_SERIAL_NUMBER = TAG + ".SERIAL_NUMBER";
-    private static final String EXTRA_CHECKED_OUT_BY = TAG + ".CHECKED_OUT_BY";
+    private static final String TAG = DeviceUpdateService.class.getSimpleName();
+    private static final String ACTION = TAG + ".ACTION";
+    private static final String EXTRA = TAG + ".EXTRA";
+    private static final String ACTION_CHECK_IN = ACTION + ".CHECK_IN";
+    private static final String ACTION_CHECK_OUT = ACTION + ".CHECK_OUT";
+    private static final String ACTION_REQUEST = ACTION + ".REQUEST";
+    private static final String EXTRA_SERIAL_NUMBER = EXTRA + ".SERIAL_NUMBER";
+    private static final String EXTRA_CHECKED_OUT_BY = EXTRA + ".CHECKED_OUT_BY";
+    private static final String EXTRA_REQUESTED_BY = EXTRA + ".REQUESTED_BY";
 
     public static void checkInDevice(Context context) {
         Intent intent = new Intent(context, DeviceUpdateService.class);
@@ -34,6 +37,14 @@ public class DeviceUpdateService extends IntentService {
         context.startService(intent);
     }
 
+    public static void requestDevice(Context context, String serialNumber, String requestBy) {
+        Intent intent = new Intent(context, DeviceUpdateService.class);
+        intent.setAction(ACTION_REQUEST);
+        intent.putExtra(EXTRA_SERIAL_NUMBER, serialNumber);
+        intent.putExtra(EXTRA_REQUESTED_BY, requestBy);
+        context.startService(intent);
+    }
+
     public DeviceUpdateService() {
         super(TAG);
     }
@@ -46,6 +57,9 @@ public class DeviceUpdateService extends IntentService {
         } else if (ACTION_CHECK_OUT.equals(intent.getAction())) {
             String checkedOutBy = intent.getStringExtra(EXTRA_CHECKED_OUT_BY);
             performCheckOut(serialNumber, checkedOutBy);
+        } else if (ACTION_REQUEST.equals(intent.getAction())) {
+            String requestedBy = intent.getStringExtra(EXTRA_REQUESTED_BY);
+            performRequest(serialNumber, requestedBy);
         }
     }
 
@@ -65,4 +79,11 @@ public class DeviceUpdateService extends IntentService {
                 .setValue(checkedOutBy);
     }
 
+    private void performRequest(String serialNumber, String requestedBy) {
+        FirebaseDatabase.getInstance().getReference()
+                .child(TABLE_DEVICES)
+                .child(serialNumber)
+                .child(DatabaseContract.DeviceColumns.REQUESTED_BY)
+                .setValue(requestedBy);
+    }
 }

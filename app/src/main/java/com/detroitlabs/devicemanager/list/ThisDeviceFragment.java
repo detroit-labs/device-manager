@@ -25,6 +25,7 @@ public class ThisDeviceFragment extends Fragment {
     private static final String TAG = ThisDeviceFragment.class.getSimpleName();
     private ViewDeviceListItemBinding binding;
     private ThisDeviceContentObserver contentObserver;
+    private OnItemClickListener listener;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,22 +57,22 @@ public class ThisDeviceFragment extends Fragment {
         getContext().getContentResolver().unregisterContentObserver(contentObserver);
     }
 
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        this.listener = listener;
+    }
+
     private void initView() {
         binding.status.setImageResource(R.drawable.ic_smartphone_white_24dp);
         binding.status.setColorFilter(getColor(R.color.grey));
         binding.deviceItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showCheckInOutDialog();
+                if (listener != null) {
+                    listener.onItemClick(DeviceUtil.getDevice());
+                }
             }
         });
         setupData();
-    }
-
-    private void showCheckInOutDialog() {
-        FragmentManager fm = getFragmentManager();
-        CheckInOutDialogFragment dialogFragment = CheckInOutDialogFragment.newInstance();
-        dialogFragment.show(fm, "Check_In_Out_Dialog");
     }
 
     private int getColor(@ColorRes int colorRes) {
@@ -84,7 +85,16 @@ public class ThisDeviceFragment extends Fragment {
 
     private void setupData() {
         binding.setDetail(DeviceUtil.getDevice());
+        setStatus(DeviceUtil.isCheckedOut());
         binding.executePendingBindings();
+    }
+
+    private void setStatus(boolean isCheckedOut) {
+        if (!isCheckedOut) {
+            binding.status.setColorFilter(getColor(R.color.green));
+        } else {
+            binding.status.setColorFilter(getColor(R.color.grey));
+        }
     }
 
     private final class ThisDeviceContentObserver extends ContentObserver {

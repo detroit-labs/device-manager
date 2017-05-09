@@ -15,9 +15,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.detroitlabs.devicemanager.DeviceDetailView;
+import com.detroitlabs.devicemanager.R;
 import com.detroitlabs.devicemanager.data.DatabaseContract;
 import com.detroitlabs.devicemanager.databinding.FragDeviceListBinding;
+import com.detroitlabs.devicemanager.detail.DeviceDetailView;
 import com.detroitlabs.devicemanager.filter.FilterUtil;
 import com.detroitlabs.devicemanager.models.Device;
 import com.detroitlabs.devicemanager.sync.SyncingService;
@@ -25,7 +26,7 @@ import com.detroitlabs.devicemanager.sync.SyncingService;
 
 public class DeviceListFragment extends Fragment implements
         LoaderManager.LoaderCallbacks<Cursor>,
-        DeviceListAdapter.OnItemClickListener {
+        OnItemClickListener {
 
     public static final int LOADER_ID = 113;
 
@@ -46,10 +47,17 @@ public class DeviceListFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragDeviceListBinding.inflate(inflater, container, false);
+        setupThisFragment();
         setupToolbar();
         setupRightDrawer();
         initRecyclerView();
         return binding.getRoot();
+    }
+
+    private void setupThisFragment() {
+        ((ThisDeviceFragment) getChildFragmentManager()
+                .findFragmentById(R.id.this_device))
+                .setOnItemClickListener(this);
     }
 
     @Override
@@ -127,6 +135,7 @@ public class DeviceListFragment extends Fragment implements
 
             @Override
             public void onDrawerClosed(View drawerView) {
+                binding.deviceDetail.onClosed();
                 binding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
             }
 

@@ -8,6 +8,8 @@
         <variable
             name="detail"
             type="com.detroitlabs.devicemanager.models.Device" />
+
+        <import type="android.view.View" />
     </data>
 
     <RelativeLayout
@@ -28,7 +30,7 @@
             app:imageResource="@{detail.icon}"
             tools:src="@drawable/ic_android_grey600_24dp" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/normal_padding"
@@ -46,17 +48,32 @@
                 tools:text="Samsung Galaxy S7" />
 
             <TextView
+                android:id="@+id/version"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_below="@id/brand_and_model"
                 android:text="@{detail.version}"
                 tools:text="7.1.1" />
-        </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/brand_and_model"
+                android:layout_marginLeft="@dimen/large_padding"
+                android:layout_marginStart="@dimen/large_padding"
+                android:layout_toEndOf="@id/version"
+                android:layout_toRightOf="@id/version"
+                android:text="@{@string/requested_by(detail.requestedBy)}"
+                android:visibility="@{detail.hasRequest() ? View.VISIBLE : View.GONE}"
+                tools:text="Requested by Jack" />
+        </RelativeLayout>
 
         <ImageView
             android:id="@+id/status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:contentDescription="@string/device_status"
             android:src="@drawable/ic_checkbox_blank_circle_grey600_24dp" />

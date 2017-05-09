@@ -64,7 +64,7 @@ public class SyncFragment extends Fragment {
         super.onStart();
 
         initReceiver();
-        checkRegisterState();
+        checkRegisterStateAndInitSyncing();
     }
 
     @Override
@@ -109,7 +109,7 @@ public class SyncFragment extends Fragment {
     }
 
     // TODO: 5/5/17 register device every time opening the app
-    private void checkRegisterState() {
+    private void checkRegisterStateAndInitSyncing() {
         if (DeviceUtil.hasGetAccountsPermission(getContext())) {
             registerDevice();
         } else {

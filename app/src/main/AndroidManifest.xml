@@ -30,6 +30,7 @@
         <service android:name="com.detroitlabs.devicemanager.sync.RegistrationService" />
         <service android:name="com.detroitlabs.devicemanager.sync.SyncingService" />
         <service android:name="com.detroitlabs.devicemanager.data.DeviceUpdateService" />
+
     </application>
 
 </manifest>

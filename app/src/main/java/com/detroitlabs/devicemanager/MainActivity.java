@@ -3,14 +3,22 @@ package com.detroitlabs.devicemanager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.detroitlabs.devicemanager.data.DatabaseContract;
 import com.detroitlabs.devicemanager.filter.SearchFilterDialog;
 import com.detroitlabs.devicemanager.list.DeviceListFragment;
 import com.detroitlabs.devicemanager.sync.SyncFragment;
 import com.detroitlabs.devicemanager.utils.DeviceUtil;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import static com.detroitlabs.devicemanager.data.DatabaseContract.TABLE_DEVICES;
 
 public class MainActivity extends AppCompatActivity implements SyncFragment.OnSyncFinishListener {
 
@@ -33,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
             DeviceUtil.readThisDevice(this);
             setupSyncFragment();
         }
+//        startListeningToRequest();
     }
 
     @Override
@@ -68,6 +77,29 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
     public void onSyncFinish() {
         hasSynced = true;
         setupDeviceListView();
+    }
+
+    private void startListeningToRequest() {
+        FirebaseDatabase.getInstance().getReference()
+                .child(TABLE_DEVICES)
+                .child(DeviceUtil.getSerialNumber())
+                .child(DatabaseContract.DeviceColumns.REQUESTED_BY)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String requestedBy = dataSnapshot.getValue().toString();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setTitle("Request");
+                        builder.setMessage("Receive request from: " + requestedBy);
+                        builder.setPositiveButton(android.R.string.ok, null);
+                        builder.create().show();
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
     }
 
     private void setupSyncFragment() {

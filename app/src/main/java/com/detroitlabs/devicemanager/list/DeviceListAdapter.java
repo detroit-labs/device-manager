@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import com.detroitlabs.devicemanager.R;
 import com.detroitlabs.devicemanager.databinding.ViewDeviceListItemBinding;
 import com.detroitlabs.devicemanager.models.Device;
-import com.detroitlabs.devicemanager.utils.DeviceUtil;
 
 
 public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.DeviceHolder> {
@@ -80,10 +79,5 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
                 binding.status.clearColorFilter();
             }
         }
-    }
-
-
-    interface OnItemClickListener {
-        void onItemClick(Device device);
     }
 }

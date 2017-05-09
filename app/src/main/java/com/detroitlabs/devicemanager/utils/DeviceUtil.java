@@ -96,6 +96,7 @@ public class DeviceUtil {
     public static void updateDevice(@Nullable Device thisDevice) {
         if (thisDevice != null) {
             THIS_DEVICE.checkedOutBy = thisDevice.checkedOutBy;
+            THIS_DEVICE.requestedBy = thisDevice.requestedBy;
         }
     }
 }

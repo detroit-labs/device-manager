@@ -16,9 +16,7 @@
 
             <include
                 android:id="@+id/included1"
-                layout="@layout/toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                layout="@layout/toolbar" />
 
             <fragment
                 android:id="@+id/this_device"
@@ -33,7 +31,7 @@
                 tools:listitem="@layout/view_device_list_item" />
         </LinearLayout>
         <!-- The navigation drawer -->
-        <com.detroitlabs.devicemanager.DeviceDetailView
+        <com.detroitlabs.devicemanager.detail.DeviceDetailView
             android:id="@+id/device_detail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

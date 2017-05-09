@@ -20,10 +20,11 @@
             android:theme="@style/AppBarTheme">
 
             <android.support.design.widget.CollapsingToolbarLayout
+                android:id="@+id/collapsing_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
-                app:layout_scrollFlags="snap">
+                app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
@@ -49,28 +50,28 @@
                 android:clickable="true"
                 android:orientation="vertical">
 
-                <com.detroitlabs.devicemanager.list.DetailItemView
+                <com.detroitlabs.devicemanager.detail.DetailItemView
                     android:id="@+id/version"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:label="Version"
                     app:value="@{detail.version}" />
 
-                <com.detroitlabs.devicemanager.list.DetailItemView
+                <com.detroitlabs.devicemanager.detail.DetailItemView
                     android:id="@+id/size"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:label="Size"
                     app:value="@{detail.screenSize}" />
 
-                <com.detroitlabs.devicemanager.list.DetailItemView
+                <com.detroitlabs.devicemanager.detail.DetailItemView
                     android:id="@+id/resolution"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:label="Resolution"
                     app:value="@{detail.screenResolution}" />
 
-                <com.detroitlabs.devicemanager.list.DetailItemView
+                <com.detroitlabs.devicemanager.detail.DetailItemView
                     android:id="@+id/serial_number"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -87,14 +88,11 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/normal_padding">
+                    android:padding="@dimen/normal_padding">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:paddingEnd="@dimen/normal_padding"
-                        android:paddingLeft="@dimen/normal_padding"
-                        android:paddingStart="@dimen/normal_padding"
                         android:text="@string/status"
                         android:textAppearance="?android:attr/textAppearanceListItem" />
 
@@ -109,15 +107,71 @@
                         android:textColor="@color/dark_grey"
                         tools:text="Borrowed by Kent" />
 
-                    <Button
-                        android:id="@+id/request_button"
-                        style="@style/RaisedButtonStyle"
-                        android:layout_width="wrap_content"
+                    <FrameLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_alignLeft="@id/status"
                         android:layout_alignStart="@id/status"
-                        android:layout_below="@id/status"
-                        android:text="@string/request" />
+                        android:layout_below="@id/status">
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/request_field"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <android.support.design.widget.TextInputEditText
+                                android:id="@+id/request_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/your_name"
+                                android:imeOptions="actionDone"
+                                android:maxLines="1"
+                                android:singleLine="true" />
+
+                            <Button
+                                android:id="@+id/request_button"
+                                style="@style/RaisedButtonStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="right"
+                                android:enabled="false"
+                                android:text="@string/request" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <Button
+                            android:id="@+id/check_in_button"
+                            style="@style/RaisedButtonStyle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/check_in"
+                            android:visibility="gone" />
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/check_out_field"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                            <android.support.design.widget.TextInputEditText
+                                android:id="@+id/check_out_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/your_name"
+                                android:imeOptions="actionDone"
+                                android:maxLines="1"
+                                android:singleLine="true" />
+
+                            <Button
+                                android:id="@+id/check_out_button"
+                                style="@style/RaisedButtonStyle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="right"
+                                android:enabled="false"
+                                android:text="@string/check_out" />
+                        </android.support.design.widget.TextInputLayout>
+                    </FrameLayout>
                 </RelativeLayout>
 
             </LinearLayout>
