@@ -38,6 +38,7 @@ public class ThisDeviceFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ViewDeviceListItemBinding.inflate(inflater, container, false);
         initView();
+        setupData();
         return binding.getRoot();
     }
 
@@ -72,7 +73,6 @@ public class ThisDeviceFragment extends Fragment {
                 }
             }
         });
-        setupData();
     }
 
     private int getColor(@ColorRes int colorRes) {

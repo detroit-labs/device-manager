@@ -72,11 +72,11 @@
                     app:value="@{detail.screenResolution}" />
 
                 <com.detroitlabs.devicemanager.detail.DetailItemView
-                    android:id="@+id/serial_number"
+                    android:id="@+id/requested_by"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:label="Serial Number"
-                    app:value="@{detail.serialNumber}" />
+                    app:label="Requested By"
+                    app:value="@{detail.requestedBy ?? @string/dash}" />
 
                 <View
                     android:layout_width="match_parent"
