@@ -103,4 +103,11 @@ public class FilterUtil {
         }
         return args;
     }
+
+    public static String getThisDeviceSelection() {
+        return DatabaseContract.DeviceColumns.SERIAL_NUMBER +
+                " = '" +
+                DeviceUtil.getSerialNumber() +
+                "'";
+    }
 }

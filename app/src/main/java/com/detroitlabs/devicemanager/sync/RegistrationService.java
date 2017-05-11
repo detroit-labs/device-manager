@@ -18,7 +18,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import static com.detroitlabs.devicemanager.data.DatabaseContract.TABLE_DEVICES;
 
-
+/**
+ * 1. Register or update device information with server
+ * 2. start listening to any remote changes on this device
+ * 3. update cache if change is received
+ */
 public class RegistrationService extends IntentService {
     public static final String TAG = RegistrationService.class.getSimpleName();
 
@@ -42,20 +46,7 @@ public class RegistrationService extends IntentService {
     private void performRegistering() {
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference rowRef = dbRef.child(TABLE_DEVICES).child(DeviceUtil.getSerialNumber());
-        rowRef.updateChildren(DeviceUtil.getDevice().toMap());
-        rowRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "this device change caught");
-                Device thisDevice = dataSnapshot.getValue(Device.class);
-                DeviceUtil.updateDevice(thisDevice);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        rowRef.updateChildren(DeviceUtil.readThisDevice(getApplicationContext()).toMap());
     }
 
     private void notifyActivity() {

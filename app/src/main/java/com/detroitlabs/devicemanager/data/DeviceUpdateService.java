@@ -2,13 +2,17 @@ package com.detroitlabs.devicemanager.data;
 
 
 import android.app.IntentService;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 
 import com.detroitlabs.devicemanager.utils.DeviceUtil;
 import com.google.firebase.database.FirebaseDatabase;
 
+import static com.detroitlabs.devicemanager.data.DatabaseContract.DEVICE_URI;
 import static com.detroitlabs.devicemanager.data.DatabaseContract.TABLE_DEVICES;
+import static com.detroitlabs.devicemanager.data.DatabaseContract.THIS_DEVICE_URI;
 
 public class DeviceUpdateService extends IntentService {
 
@@ -64,6 +68,7 @@ public class DeviceUpdateService extends IntentService {
     }
 
     private void performCheckIn(String serialNumber) {
+        updateLocalDb(THIS_DEVICE_URI, serialNumber, DatabaseContract.DeviceColumns.CHECKED_OUT_BY, "");
         FirebaseDatabase.getInstance().getReference()
                 .child(TABLE_DEVICES)
                 .child(serialNumber)
@@ -72,6 +77,7 @@ public class DeviceUpdateService extends IntentService {
     }
 
     private void performCheckOut(String serialNumber, String checkedOutBy) {
+        updateLocalDb(THIS_DEVICE_URI, serialNumber, DatabaseContract.DeviceColumns.CHECKED_OUT_BY, checkedOutBy);
         FirebaseDatabase.getInstance().getReference()
                 .child(TABLE_DEVICES)
                 .child(serialNumber)
@@ -80,10 +86,18 @@ public class DeviceUpdateService extends IntentService {
     }
 
     private void performRequest(String serialNumber, String requestedBy) {
+        updateLocalDb(DEVICE_URI, serialNumber, DatabaseContract.DeviceColumns.REQUESTED_BY, requestedBy);
         FirebaseDatabase.getInstance().getReference()
                 .child(TABLE_DEVICES)
                 .child(serialNumber)
                 .child(DatabaseContract.DeviceColumns.REQUESTED_BY)
                 .setValue(requestedBy);
+    }
+
+    private void updateLocalDb(Uri uri, String serialNumber, String column, String value) {
+        ContentValues values = new ContentValues();
+        values.put(DatabaseContract.DeviceColumns.SERIAL_NUMBER, serialNumber);
+        values.put(column, value);
+        getContentResolver().update(uri, values, null, null);
     }
 }

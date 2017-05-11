@@ -74,8 +74,4 @@ public class FilterTaskLoader extends AsyncTaskLoader<Filter.Options> {
         }
         return projection;
     }
-
-    public void setFilterSelection() {
-        // TODO: 5/1/17  
-    }
 }

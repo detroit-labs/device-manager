@@ -1,36 +1,31 @@
 package com.detroitlabs.devicemanager.list;
 
 
-import android.database.ContentObserver;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
+import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.detroitlabs.devicemanager.R;
 import com.detroitlabs.devicemanager.databinding.ViewDeviceListItemBinding;
-import com.detroitlabs.devicemanager.utils.DeviceUtil;
+import com.detroitlabs.devicemanager.models.Device;
 
-import static com.detroitlabs.devicemanager.data.DatabaseContract.DEVICE_URI;
-
-public class ThisDeviceFragment extends Fragment {
+public class ThisDeviceFragment extends Fragment implements LoaderManager.LoaderCallbacks<Device> {
     private static final String TAG = ThisDeviceFragment.class.getSimpleName();
+    private static final int LOADER_ID = 333;
     private ViewDeviceListItemBinding binding;
-    private ThisDeviceContentObserver contentObserver;
     private OnItemClickListener listener;
+    private Device device;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        contentObserver = new ThisDeviceContentObserver();
     }
 
     @Nullable
@@ -38,24 +33,13 @@ public class ThisDeviceFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ViewDeviceListItemBinding.inflate(inflater, container, false);
         initView();
-        setupData();
         return binding.getRoot();
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        getContext().getContentResolver().registerContentObserver(
-                DEVICE_URI,
-                true,
-                contentObserver
-        );
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        getContext().getContentResolver().unregisterContentObserver(contentObserver);
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
@@ -68,24 +52,17 @@ public class ThisDeviceFragment extends Fragment {
         binding.deviceItemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (listener != null) {
-                    listener.onItemClick(DeviceUtil.getDevice());
+                if (listener != null && device != null) {
+                    listener.onItemClick(device);
                 }
             }
         });
     }
 
-    private int getColor(@ColorRes int colorRes) {
-        return ContextCompat.getColor(getContext(), colorRes);
-    }
-
-    private void onCheckOutStatusChanged() {
-        setupData();
-    }
-
-    private void setupData() {
-        binding.setDetail(DeviceUtil.getDevice());
-        setStatus(DeviceUtil.isCheckedOut());
+    private void setupData(Device device) {
+        this.device = device;
+        binding.setDetail(device);
+        setStatus(device.isCheckedOut());
         binding.executePendingBindings();
     }
 
@@ -97,22 +74,22 @@ public class ThisDeviceFragment extends Fragment {
         }
     }
 
-    private final class ThisDeviceContentObserver extends ContentObserver {
+    private int getColor(@ColorRes int colorRes) {
+        return ContextCompat.getColor(getContext(), colorRes);
+    }
 
-        ThisDeviceContentObserver() {
-            super(new Handler(Looper.getMainLooper()));
-        }
+    @Override
+    public Loader<Device> onCreateLoader(int id, Bundle args) {
+        return new ThisDeviceTaskLoader(getContext());
+    }
 
-        @Override
-        public boolean deliverSelfNotifications() {
-            return true;
-        }
+    @Override
+    public void onLoadFinished(Loader<Device> loader, Device data) {
+        setupData(data);
+    }
 
-        @Override
-        public void onChange(boolean selfChange) {
-            Log.d(TAG, "THIS DEVICE FRAGMENT RECEIVE CHANGE");
-            onCheckOutStatusChanged();
-        }
+    @Override
+    public void onLoaderReset(Loader<Device> loader) {
 
     }
 }

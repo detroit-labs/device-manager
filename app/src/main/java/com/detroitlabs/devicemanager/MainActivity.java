@@ -30,7 +30,6 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
             deviceListFragment = (DeviceListFragment) getSupportFragmentManager().findFragmentByTag(DEVICE_LIST_FRAGMENT);
         }
         if (!hasSynced) {
-            DeviceUtil.readThisDevice(this);
             setupSyncFragment();
         }
     }

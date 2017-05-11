@@ -14,20 +14,23 @@ import android.util.Log;
 
 import static com.detroitlabs.devicemanager.data.DatabaseContract.CONTENT_AUTHORITY;
 import static com.detroitlabs.devicemanager.data.DatabaseContract.DEVICE_URI;
-import static com.detroitlabs.devicemanager.data.DatabaseContract.PATH_FILTERS;
+import static com.detroitlabs.devicemanager.data.DatabaseContract.PATH_THIS_DEVICE;
 import static com.detroitlabs.devicemanager.data.DatabaseContract.TABLE_DEVICES;
 
 
 public class DeviceProvider extends ContentProvider {
     private static final int DEVICES = 1;
-    private static final int DEVICE_FILTER = 2;
+    private static final int THIS_DEVICE = 2;
     private static final UriMatcher URI_MATCHER = new UriMatcher(UriMatcher.NO_MATCH);
     private static final String TAG = DeviceProvider.class.getSimpleName();
 
     static {
+        /* content://com.detroitlabs.devicemanager/devices/this */
         URI_MATCHER.addURI(CONTENT_AUTHORITY,
-                TABLE_DEVICES + "/" + PATH_FILTERS,
-                DEVICE_FILTER);
+                TABLE_DEVICES + "/" + PATH_THIS_DEVICE,
+                THIS_DEVICE);
+
+        /* content://com.detroitlabs.devicemanager/devices */
         URI_MATCHER.addURI(CONTENT_AUTHORITY,
                 TABLE_DEVICES,
                 DEVICES);
@@ -56,6 +59,7 @@ public class DeviceProvider extends ContentProvider {
         return null;
     }
 
+    /* NOT USED */
     @Nullable
     @Override
     public Uri insert(@NonNull Uri uri, @Nullable ContentValues values) {
@@ -104,7 +108,7 @@ public class DeviceProvider extends ContentProvider {
         String[] whereArgs = new String[]{values.getAsString(DatabaseContract.DeviceColumns.SERIAL_NUMBER)};
         int affectedRows = db.update(TABLE_DEVICES, values, whereClause, whereArgs);
         if (affectedRows != 0) {
-            getContext().getContentResolver().notifyChange(DEVICE_URI, null);
+            getContext().getContentResolver().notifyChange(uri, null);
         }
         return affectedRows;
     }

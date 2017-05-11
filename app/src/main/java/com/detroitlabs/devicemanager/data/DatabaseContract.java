@@ -11,6 +11,8 @@ public class DatabaseContract {
 
     public static final String PATH_FILTERS = "filters";
 
+    public static final String PATH_THIS_DEVICE = "this";
+
     public static final class DeviceColumns implements BaseColumns {
         public static final String VERSION = "version";
         public static final String PLATFORM = "platform";
@@ -40,6 +42,12 @@ public class DatabaseContract {
     public static final Uri DEVICE_URI = new Uri.Builder().scheme("content")
             .authority(CONTENT_AUTHORITY)
             .appendPath(TABLE_DEVICES)
+            .build();
+
+    public static final Uri THIS_DEVICE_URI = new Uri.Builder().scheme("content")
+            .authority(CONTENT_AUTHORITY)
+            .appendPath(TABLE_DEVICES)
+            .appendPath(PATH_THIS_DEVICE)
             .build();
 
     public static String getString(@NonNull Cursor cursor, String columnName) {

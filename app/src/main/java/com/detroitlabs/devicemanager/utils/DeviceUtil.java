@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.os.Build;
-import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
@@ -20,24 +19,6 @@ import java.util.Locale;
 
 public class DeviceUtil {
 
-    private static Device THIS_DEVICE;
-
-    public static Device getDevice() {
-        return THIS_DEVICE;
-    }
-
-    public static boolean isCheckedOut() {
-        return THIS_DEVICE.isCheckedOut();
-    }
-
-    public static void setCheckedOutBy(String checkedOutBy) {
-        THIS_DEVICE.checkedOutBy = checkedOutBy;
-    }
-
-    public static boolean isThisDevice(String serialNumber) {
-        return serialNumber != null && serialNumber.equals(THIS_DEVICE.serialNumber);
-    }
-
     public static boolean hasGetAccountsPermission(Context context) {
         return ContextCompat.checkSelfPermission(context,
                 android.Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED;
@@ -49,15 +30,15 @@ public class DeviceUtil {
                 requestCode);
     }
 
-    public static void readThisDevice(Context context) {
-        Device detail = new Device();
-        detail.platform = Platform.ANDROID;
-        detail.brandAndModel = getBrandAndModel();
-        detail.version = Build.VERSION.RELEASE;
-        detail.screenResolution = getResolution(context);
-        detail.screenSize = getSize(context);
-        detail.serialNumber = getSerialNumber();
-        THIS_DEVICE = detail;
+    public static Device readThisDevice(Context context) {
+        Device device = new Device();
+        device.platform = Platform.ANDROID;
+        device.brandAndModel = getBrandAndModel();
+        device.version = Build.VERSION.RELEASE;
+        device.screenResolution = getResolution(context);
+        device.screenSize = getSize(context);
+        device.serialNumber = getSerialNumber();
+        return device;
     }
 
     public static String getSerialNumber() {
@@ -91,12 +72,5 @@ public class DeviceUtil {
 
     private static String getBrandAndModel() {
         return DeviceName.getDeviceName();
-    }
-
-    public static void updateDevice(@Nullable Device thisDevice) {
-        if (thisDevice != null) {
-            THIS_DEVICE.checkedOutBy = thisDevice.checkedOutBy;
-            THIS_DEVICE.requestedBy = thisDevice.requestedBy;
-        }
     }
 }
