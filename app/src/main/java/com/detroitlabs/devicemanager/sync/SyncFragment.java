@@ -108,7 +108,6 @@ public class SyncFragment extends Fragment {
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(receiver, intentFilter);
     }
 
-    // TODO: 5/5/17 register device every time opening the app
     private void checkRegisterStateAndInitSyncing() {
         if (DeviceUtil.hasGetAccountsPermission(getContext())) {
             registerDevice();

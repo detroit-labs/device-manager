@@ -14,9 +14,6 @@ import com.detroitlabs.devicemanager.databinding.ViewFilterTypeBinding;
 import com.detroitlabs.devicemanager.filter.adapters.FilterOptionAdapter;
 import com.xiaofeng.flowlayoutmanager.FlowLayoutManager;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class SearchFilterTypeView extends FrameLayout {
     private ViewFilterTypeBinding binding;
     private FilterOptionAdapter adapter;
@@ -53,18 +50,6 @@ public class SearchFilterTypeView extends FrameLayout {
         layoutManager.setAutoMeasureEnabled(true);
         binding.options.setLayoutManager(layoutManager);
         binding.options.addItemDecoration(new SpacesItemDecoration(16));
-    }
-
-    // TODO: 4/27/17 remove this
-    private List<String> getTestData() {
-        List<String> testData = new ArrayList<>();
-        testData.add("5.0");
-        testData.add("5.1");
-        testData.add("6.0");
-        testData.add("6.1");
-        testData.add("7.0");
-        testData.add("7.1.2");
-        return testData;
     }
 
     private class SpacesItemDecoration extends RecyclerView.ItemDecoration {

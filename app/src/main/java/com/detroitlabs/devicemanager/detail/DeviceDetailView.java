@@ -1,6 +1,7 @@
 package com.detroitlabs.devicemanager.detail;
 
 import android.content.Context;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -31,12 +32,18 @@ public class DeviceDetailView extends FrameLayout {
 
     public DeviceDetailView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        initView(context);
+        binding = ViewDeviceDetailBinding.inflate(LayoutInflater.from(context), this, true);
     }
 
-    private void initView(Context context) {
-        binding = ViewDeviceDetailBinding.inflate(LayoutInflater.from(context), this, true);
+    // TODO: 5/10/17 handle rotation when this view is displayed
+    @Override
+    protected Parcelable onSaveInstanceState() {
+        return super.onSaveInstanceState();
+    }
 
+    @Override
+    protected void onRestoreInstanceState(Parcelable state) {
+        super.onRestoreInstanceState(state);
     }
 
     public void setDetail(Device device) {
@@ -93,6 +100,7 @@ public class DeviceDetailView extends FrameLayout {
                         device.serialNumber,
                         binding.requestName.getText().toString()
                 );
+                navigateUp();
             }
         });
 
