@@ -11,18 +11,39 @@ import com.detroitlabs.devicemanager.data.DatabaseContract.DeviceColumns;
 import com.detroitlabs.devicemanager.utils.StringUtil;
 import com.google.firebase.database.Exclude;
 import com.google.firebase.database.IgnoreExtraProperties;
+import com.google.firebase.database.PropertyName;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.detroitlabs.devicemanager.data.DatabaseContract.getString;
 
 @IgnoreExtraProperties
 public class Device {
+
+    @PropertyName(DeviceColumns.PLATFORM)
     public Platform platform;
+
+    @PropertyName(DeviceColumns.BRAND_AND_MODEL)
     public String brandAndModel;
+
+    @PropertyName(DeviceColumns.VERSION)
     public String version;
+
+    @PropertyName(DeviceColumns.SCREEN_SIZE)
     public String screenSize;
+
+    @PropertyName(DeviceColumns.SCREEN_RESOLUTION)
     public String screenResolution;
+
+    @PropertyName(DeviceColumns.SERIAL_NUMBER)
     public String serialNumber;
+
+    @PropertyName(DeviceColumns.CHECKED_OUT_BY)
     public String checkedOutBy;
+
+    @PropertyName(DeviceColumns.REQUESTED_BY)
+    public String requestedBy;
 
     public Device() {
         // Default constructor required for calls to DataSnapshot.getValue(Device.class)
@@ -37,6 +58,7 @@ public class Device {
         serialNumber = getString(cursor, DeviceColumns.SERIAL_NUMBER);
         brandAndModel = getString(cursor, DeviceColumns.BRAND_AND_MODEL);
         checkedOutBy = getString(cursor, DeviceColumns.CHECKED_OUT_BY);
+        requestedBy = getString(cursor, DeviceColumns.REQUESTED_BY);
     }
 
     @Exclude
@@ -55,15 +77,33 @@ public class Device {
     }
 
     @Exclude
+    public boolean hasRequest() {
+        return !StringUtil.isNullOrEmpty(requestedBy);
+    }
+
+    @Exclude
     public ContentValues getContentValues() {
         ContentValues values = new ContentValues();
-        values.put(DeviceColumns.BRAND_AND_MODEL, brandAndModel);
-        values.put(DeviceColumns.PLATFORM, platform.toString());
         values.put(DeviceColumns.VERSION, version);
-        values.put(DeviceColumns.SCREEN_RESOLUTION, screenResolution);
         values.put(DeviceColumns.SCREEN_SIZE, screenSize);
+        values.put(DeviceColumns.REQUESTED_BY, requestedBy);
         values.put(DeviceColumns.SERIAL_NUMBER, serialNumber);
         values.put(DeviceColumns.CHECKED_OUT_BY, checkedOutBy);
+        values.put(DeviceColumns.PLATFORM, platform.toString());
+        values.put(DeviceColumns.BRAND_AND_MODEL, brandAndModel);
+        values.put(DeviceColumns.SCREEN_RESOLUTION, screenResolution);
         return values;
+    }
+
+    @Exclude
+    public Map<String, Object> toMap() {
+        Map<String, Object> map = new HashMap<>();
+        map.put(DeviceColumns.BRAND_AND_MODEL, brandAndModel);
+        map.put(DeviceColumns.PLATFORM, platform.toString());
+        map.put(DeviceColumns.VERSION, version);
+        map.put(DeviceColumns.SCREEN_RESOLUTION, screenResolution);
+        map.put(DeviceColumns.SCREEN_SIZE, screenSize);
+        map.put(DeviceColumns.SERIAL_NUMBER, serialNumber);
+        return map;
     }
 }

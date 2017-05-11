@@ -1,4 +1,4 @@
-package com.detroitlabs.devicemanager.data;
+package com.detroitlabs.devicemanager.sync;
 
 import android.app.IntentService;
 import android.content.Context;
@@ -10,15 +10,19 @@ import android.util.Log;
 import com.detroitlabs.devicemanager.constants.Constants;
 import com.detroitlabs.devicemanager.models.Device;
 import com.detroitlabs.devicemanager.utils.DeviceUtil;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.HashMap;
-import java.util.Map;
+import com.google.firebase.database.ValueEventListener;
 
 import static com.detroitlabs.devicemanager.data.DatabaseContract.TABLE_DEVICES;
 
-
+/**
+ * 1. Register or update device information with server
+ * 2. start listening to any remote changes on this device
+ * 3. update cache if change is received
+ */
 public class RegistrationService extends IntentService {
     public static final String TAG = RegistrationService.class.getSimpleName();
 
@@ -40,9 +44,9 @@ public class RegistrationService extends IntentService {
     }
 
     private void performRegistering() {
-        Device device = DeviceUtil.getDeviceDetail(getApplicationContext());
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
-        dbRef.child(TABLE_DEVICES).child(device.serialNumber).setValue(device);
+        DatabaseReference rowRef = dbRef.child(TABLE_DEVICES).child(DeviceUtil.getSerialNumber());
+        rowRef.updateChildren(DeviceUtil.readThisDevice(getApplicationContext()).toMap());
     }
 
     private void notifyActivity() {

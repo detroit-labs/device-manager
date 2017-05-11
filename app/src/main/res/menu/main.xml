@@ -2,18 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/info"
-        android:icon="@drawable/ic_smartphone_white_24dp"
-        android:title="@string/info"
-        app:showAsAction="ifRoom" />
-    <item
         android:id="@+id/filter"
-        android:icon="@drawable/ic_filter_list_white_24dp"
+        android:icon="@drawable/ic_tune_white_24dp"
         android:title="@string/filter"
         app:showAsAction="ifRoom" />
-    <item
-        android:id="@+id/account"
-        android:icon="@android:drawable/ic_dialog_email"
-        app:showAsAction="ifRoom"
-        android:title="Account" />
 </menu>

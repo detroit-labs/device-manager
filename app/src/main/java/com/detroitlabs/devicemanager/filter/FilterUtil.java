@@ -2,12 +2,14 @@ package com.detroitlabs.devicemanager.filter;
 
 
 import com.detroitlabs.devicemanager.constants.FilterType;
+import com.detroitlabs.devicemanager.data.DatabaseContract;
 import com.detroitlabs.devicemanager.filter.adapters.FilterOptionAdapter;
 import com.detroitlabs.devicemanager.filter.adapters.PlatformFilterAdapter;
 import com.detroitlabs.devicemanager.filter.adapters.ScreenResolutionAdapter;
 import com.detroitlabs.devicemanager.filter.adapters.ScreenSizeAdapter;
 import com.detroitlabs.devicemanager.filter.adapters.VersionFilterAdapter;
 import com.detroitlabs.devicemanager.models.Filter;
+import com.detroitlabs.devicemanager.utils.DeviceUtil;
 
 import java.util.List;
 import java.util.Set;
@@ -49,6 +51,24 @@ public class FilterUtil {
         return filterSelection.containsSelection(filterType, value);
     }
 
+    public static String getDeviceListQuery() {
+        String filterQuery = convertFilterToQuerySelection();
+        if (filterQuery != null) {
+            filterQuery += " and ";
+        } else {
+            filterQuery = "";
+        }
+        filterQuery += excludeThisDeviceQuery();
+        return filterQuery;
+    }
+
+    private static String excludeThisDeviceQuery() {
+        return DatabaseContract.DeviceColumns.SERIAL_NUMBER +
+                " != '" +
+                DeviceUtil.getSerialNumber() +
+                "'";
+    }
+
     public static String convertFilterToQuerySelection() {
         if (!filterSelection.hasSelection()) {
             return null;
@@ -82,5 +102,12 @@ public class FilterUtil {
             args += "'";
         }
         return args;
+    }
+
+    public static String getThisDeviceSelection() {
+        return DatabaseContract.DeviceColumns.SERIAL_NUMBER +
+                " = '" +
+                DeviceUtil.getSerialNumber() +
+                "'";
     }
 }

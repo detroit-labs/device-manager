@@ -20,4 +20,14 @@
     <string name="version">version</string>
     <string name="screen_resolution">Screen Resolution</string>
     <string name="screen_size">Screen Size</string>
+    <string name="check_out">Check Out</string>
+    <string name="confirm">Confirm</string>
+    <string name="your_name">your name</string>
+    <string name="check_in">Check In</string>
+    <string name="request">request</string>
+    <string name="requested_by">Request by %1$s</string>
+    <string name="status">Status</string>
+    <string name="borrowed_by">Borrowed by %1$s</string>
+    <string name="available">Available</string>
+    <string name="dash">-</string>
 </resources>

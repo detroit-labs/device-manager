@@ -14,14 +14,7 @@
 
         <activity
             android:name="com.detroitlabs.devicemanager.MainActivity"
-            android:launchMode="singleInstance" />
-
-        <provider
-            android:name="com.detroitlabs.devicemanager.data.DeviceProvider"
-            android:authorities="com.detroitlabs.devicemanager"
-            android:exported="false" />
-
-        <activity android:name="com.detroitlabs.devicemanager.SyncActivity">
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,9 +22,26 @@
             </intent-filter>
         </activity>
 
-        <service android:name="com.detroitlabs.devicemanager.data.RegistrationService" />
-        <service android:name="com.detroitlabs.devicemanager.data.SyncingService" />
+        <provider
+            android:name="com.detroitlabs.devicemanager.data.DeviceProvider"
+            android:authorities="com.detroitlabs.devicemanager"
+            android:exported="false" />
+
+        <service android:name="com.detroitlabs.devicemanager.sync.RegistrationService" />
+        <service android:name="com.detroitlabs.devicemanager.sync.SyncingService" />
         <service android:name="com.detroitlabs.devicemanager.data.DeviceUpdateService" />
+        <service android:name=".sync.FirebaseTokenSyncService" />
+
+        <service android:name=".notification.MyFirebaseInstanceIDService">
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
+            </intent-filter>
+        </service>
+        <service android:name=".notification.MyFirebaseMessagingService">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

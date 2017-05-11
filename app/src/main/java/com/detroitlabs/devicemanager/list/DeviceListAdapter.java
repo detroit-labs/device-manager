@@ -80,9 +80,4 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
             }
         }
     }
-
-
-    interface OnItemClickListener {
-        void onItemClick(Device device);
-    }
 }
