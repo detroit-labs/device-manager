@@ -22,6 +22,7 @@ public class DeviceUpdateService extends IntentService {
     private static final String ACTION_CHECK_IN = ACTION + ".CHECK_IN";
     private static final String ACTION_CHECK_OUT = ACTION + ".CHECK_OUT";
     private static final String ACTION_REQUEST = ACTION + ".REQUEST";
+    private static final String ACTION_RECEIVE_REQUEST = ACTION + ".RECEIVE_REQUEST";
     private static final String EXTRA_SERIAL_NUMBER = EXTRA + ".SERIAL_NUMBER";
     private static final String EXTRA_CHECKED_OUT_BY = EXTRA + ".CHECKED_OUT_BY";
     private static final String EXTRA_REQUESTED_BY = EXTRA + ".REQUESTED_BY";
@@ -49,6 +50,14 @@ public class DeviceUpdateService extends IntentService {
         context.startService(intent);
     }
 
+    public static void receiveRequest(Context context, String requestedBy) {
+        Intent intent = new Intent(context, DeviceUpdateService.class);
+        intent.setAction(ACTION_RECEIVE_REQUEST);
+        intent.putExtra(EXTRA_SERIAL_NUMBER, DeviceUtil.getSerialNumber());
+        intent.putExtra(EXTRA_REQUESTED_BY, requestedBy);
+        context.startService(intent);
+    }
+
     public DeviceUpdateService() {
         super(TAG);
     }
@@ -56,15 +65,23 @@ public class DeviceUpdateService extends IntentService {
     @Override
     protected void onHandleIntent(Intent intent) {
         String serialNumber = intent.getStringExtra(EXTRA_SERIAL_NUMBER);
-        if (ACTION_CHECK_IN.equals(intent.getAction())) {
+        String action = intent.getAction();
+        if (ACTION_CHECK_IN.equals(action)) {
             performCheckIn(serialNumber);
-        } else if (ACTION_CHECK_OUT.equals(intent.getAction())) {
+        } else if (ACTION_CHECK_OUT.equals(action)) {
             String checkedOutBy = intent.getStringExtra(EXTRA_CHECKED_OUT_BY);
             performCheckOut(serialNumber, checkedOutBy);
-        } else if (ACTION_REQUEST.equals(intent.getAction())) {
+        } else if (ACTION_REQUEST.equals(action)) {
             String requestedBy = intent.getStringExtra(EXTRA_REQUESTED_BY);
             performRequest(serialNumber, requestedBy);
+        } else if (ACTION_RECEIVE_REQUEST.equals(action)) {
+            String requestedBy = intent.getStringExtra(EXTRA_REQUESTED_BY);
+            performPersistRequest(serialNumber, requestedBy);
         }
+    }
+
+    private void performPersistRequest(String serialNumber, String requestedBy) {
+        updateLocalDb(THIS_DEVICE_URI, serialNumber, DatabaseContract.DeviceColumns.REQUESTED_BY, requestedBy);
     }
 
     private void performCheckIn(String serialNumber) {

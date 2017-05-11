@@ -45,20 +45,28 @@ public class Device {
     @PropertyName(DeviceColumns.REQUESTED_BY)
     public String requestedBy;
 
+    @PropertyName(DeviceColumns.YEAR_CLASS)
+    public String yearClass;
+
+    @PropertyName(DeviceColumns.IS_SAMSUNG)
+    public String isSamsung;
+
     public Device() {
         // Default constructor required for calls to DataSnapshot.getValue(Device.class)
     }
 
     public Device(Cursor cursor) {
-        platform = Platform.valueOf(getString(cursor, DeviceColumns.PLATFORM));
-        brandAndModel = getString(cursor, DeviceColumns.BRAND_AND_MODEL);
         version = getString(cursor, DeviceColumns.VERSION);
+        yearClass = getString(cursor, DeviceColumns.YEAR_CLASS);
+        isSamsung = getString(cursor, DeviceColumns.IS_SAMSUNG);
         screenSize = getString(cursor, DeviceColumns.SCREEN_SIZE);
-        screenResolution = getString(cursor, DeviceColumns.SCREEN_RESOLUTION);
-        serialNumber = getString(cursor, DeviceColumns.SERIAL_NUMBER);
-        brandAndModel = getString(cursor, DeviceColumns.BRAND_AND_MODEL);
-        checkedOutBy = getString(cursor, DeviceColumns.CHECKED_OUT_BY);
         requestedBy = getString(cursor, DeviceColumns.REQUESTED_BY);
+        serialNumber = getString(cursor, DeviceColumns.SERIAL_NUMBER);
+        checkedOutBy = getString(cursor, DeviceColumns.CHECKED_OUT_BY);
+        brandAndModel = getString(cursor, DeviceColumns.BRAND_AND_MODEL);
+        brandAndModel = getString(cursor, DeviceColumns.BRAND_AND_MODEL);
+        screenResolution = getString(cursor, DeviceColumns.SCREEN_RESOLUTION);
+        platform = Platform.valueOf(getString(cursor, DeviceColumns.PLATFORM));
     }
 
     @Exclude
@@ -85,6 +93,8 @@ public class Device {
     public ContentValues getContentValues() {
         ContentValues values = new ContentValues();
         values.put(DeviceColumns.VERSION, version);
+        values.put(DeviceColumns.YEAR_CLASS, yearClass);
+        values.put(DeviceColumns.IS_SAMSUNG, isSamsung);
         values.put(DeviceColumns.SCREEN_SIZE, screenSize);
         values.put(DeviceColumns.REQUESTED_BY, requestedBy);
         values.put(DeviceColumns.SERIAL_NUMBER, serialNumber);
@@ -98,12 +108,14 @@ public class Device {
     @Exclude
     public Map<String, Object> toMap() {
         Map<String, Object> map = new HashMap<>();
-        map.put(DeviceColumns.BRAND_AND_MODEL, brandAndModel);
-        map.put(DeviceColumns.PLATFORM, platform.toString());
         map.put(DeviceColumns.VERSION, version);
-        map.put(DeviceColumns.SCREEN_RESOLUTION, screenResolution);
+        map.put(DeviceColumns.YEAR_CLASS, yearClass);
+        map.put(DeviceColumns.IS_SAMSUNG, isSamsung);
         map.put(DeviceColumns.SCREEN_SIZE, screenSize);
         map.put(DeviceColumns.SERIAL_NUMBER, serialNumber);
+        map.put(DeviceColumns.PLATFORM, platform.toString());
+        map.put(DeviceColumns.BRAND_AND_MODEL, brandAndModel);
+        map.put(DeviceColumns.SCREEN_RESOLUTION, screenResolution);
         return map;
     }
 }

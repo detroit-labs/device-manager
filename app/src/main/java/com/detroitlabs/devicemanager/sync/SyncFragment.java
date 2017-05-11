@@ -32,7 +32,6 @@ import static com.detroitlabs.devicemanager.constants.Constants.BROADCAST_ACTION
 public class SyncFragment extends Fragment {
     private FragSyncBinding binding;
     private RegistrationStatusReceiver receiver;
-    private boolean canProceed;
 
     public interface OnSyncFinishListener {
         void onSyncFinish();
@@ -139,7 +138,7 @@ public class SyncFragment extends Fragment {
             public void run() {
                 onSyncFinishListener.onSyncFinish();
             }
-        }, 1000);
+        }, 2000);
     }
 
     private void updateProgressBar(@StringRes int statusTextRes, int progress) {

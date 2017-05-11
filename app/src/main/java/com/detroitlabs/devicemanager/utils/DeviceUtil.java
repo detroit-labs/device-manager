@@ -13,6 +13,7 @@ import android.view.WindowManager;
 
 import com.detroitlabs.devicemanager.constants.Platform;
 import com.detroitlabs.devicemanager.models.Device;
+import com.facebook.device.yearclass.YearClass;
 import com.jaredrummler.android.device.DeviceName;
 
 import java.util.Locale;
@@ -38,6 +39,8 @@ public class DeviceUtil {
         device.screenResolution = getResolution(context);
         device.screenSize = getSize(context);
         device.serialNumber = getSerialNumber();
+        device.yearClass = getYearClass(context);
+        device.isSamsung = getIsSamsung();
         return device;
     }
 
@@ -72,5 +75,13 @@ public class DeviceUtil {
 
     private static String getBrandAndModel() {
         return DeviceName.getDeviceName();
+    }
+
+    private static String getYearClass(Context context) {
+        return String.valueOf(YearClass.get(context));
+    }
+
+    private static String getIsSamsung() {
+        return Build.MANUFACTURER.toLowerCase().contains("samsung") ? "Yes" : "No";
     }
 }

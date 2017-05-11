@@ -16,6 +16,8 @@ public class DatabaseContract {
     public static final class DeviceColumns implements BaseColumns {
         public static final String VERSION = "version";
         public static final String PLATFORM = "platform";
+        public static final String YEAR_CLASS = "year_class";
+        public static final String IS_SAMSUNG = "is_samsung";
         public static final String SCREEN_SIZE = "screen_size";
         public static final String REQUESTED_BY = "requested_by";
         public static final String SERIAL_NUMBER = "serial_number";
@@ -23,13 +25,6 @@ public class DatabaseContract {
         public static final String BRAND_AND_MODEL = "brand_and_model";
         public static final String SCREEN_RESOLUTION = "screen_resolution";
     }
-
-    public static final String[] FILTER_TYPES = new String[]{
-            DeviceColumns.PLATFORM,
-            DeviceColumns.VERSION,
-            DeviceColumns.SCREEN_SIZE,
-            DeviceColumns.SCREEN_RESOLUTION,
-    };
 
     public static final String CONTENT_AUTHORITY = "com.detroitlabs.devicemanager";
 
