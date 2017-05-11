@@ -4,10 +4,12 @@ package com.detroitlabs.devicemanager.filter;
 import com.detroitlabs.devicemanager.constants.FilterType;
 import com.detroitlabs.devicemanager.data.DatabaseContract;
 import com.detroitlabs.devicemanager.filter.adapters.FilterOptionAdapter;
+import com.detroitlabs.devicemanager.filter.adapters.IsSamsungAdapter;
 import com.detroitlabs.devicemanager.filter.adapters.PlatformFilterAdapter;
 import com.detroitlabs.devicemanager.filter.adapters.ScreenResolutionAdapter;
 import com.detroitlabs.devicemanager.filter.adapters.ScreenSizeAdapter;
 import com.detroitlabs.devicemanager.filter.adapters.VersionFilterAdapter;
+import com.detroitlabs.devicemanager.filter.adapters.YearClassAdapter;
 import com.detroitlabs.devicemanager.models.Filter;
 import com.detroitlabs.devicemanager.utils.DeviceUtil;
 
@@ -23,7 +25,9 @@ public class FilterUtil {
                 new PlatformFilterAdapter(),
                 new VersionFilterAdapter(),
                 new ScreenSizeAdapter(),
-                new ScreenResolutionAdapter()
+                new ScreenResolutionAdapter(),
+                new YearClassAdapter(),
+                new IsSamsungAdapter()
         };
     }
 

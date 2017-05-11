@@ -30,4 +30,8 @@
     <string name="borrowed_by">Borrowed by %1$s</string>
     <string name="available">Available</string>
     <string name="dash">-</string>
+    <string name="request_from">From: %1$s</string>
+    <string name="device_request">Device request</string>
+    <string name="year_class">Year Class</string>
+    <string name="is_samsung">Is Samsung</string>
 </resources>
