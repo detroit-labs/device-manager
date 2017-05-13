@@ -7,10 +7,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.crashlytics.android.Crashlytics;
 import com.detroitlabs.devicemanager.filter.SearchFilterDialog;
 import com.detroitlabs.devicemanager.list.DeviceListFragment;
 import com.detroitlabs.devicemanager.sync.SyncFragment;
-import com.detroitlabs.devicemanager.utils.DeviceUtil;
+
+import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity implements SyncFragment.OnSyncFinishListener {
 
@@ -23,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_main);
 
         if (savedInstanceState != null) {

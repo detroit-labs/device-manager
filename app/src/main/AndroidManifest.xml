@@ -3,6 +3,7 @@
     package="com.detroitlabs.devicemanager">
 
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -42,6 +43,9 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="2abbd3768efce5a40e96de83cb479fe0360ba2de" />
     </application>
 
 </manifest>
