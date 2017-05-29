@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/TDM.iml" filepath="$PROJECT_DIR$/TDM.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/device-manager.iml" filepath="$PROJECT_DIR$/device-manager.iml" />
     </modules>
   </component>
 </project>
