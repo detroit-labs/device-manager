@@ -95,6 +95,7 @@ public class ThisDeviceFragment extends Fragment implements LoaderManager.Loader
     private void setupData(Device device) {
         this.device = device;
         binding.setDetail(device);
+        //TODO if 'this' device is not to be registered (e.g. is not DL test user) then this creates a null pointer exception
         setStatus(device.isCheckedOut());
         binding.executePendingBindings();
     }
