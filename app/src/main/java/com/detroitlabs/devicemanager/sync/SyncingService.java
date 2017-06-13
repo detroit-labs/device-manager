@@ -23,8 +23,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-import static com.detroitlabs.devicemanager.data.DatabaseContract.DEVICE_URI;
-import static com.detroitlabs.devicemanager.data.DatabaseContract.TABLE_DEVICES;
+import static com.detroitlabs.devicemanager.data.DatabaseContract.*;
 
 public class SyncingService extends Service {
     public static final String TAG = SyncingService.class.getSimpleName();
@@ -100,14 +99,20 @@ public class SyncingService extends Service {
 
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                    Log.d(TAG, "device data change detected");
                     Device device = dataSnapshot.getValue(Device.class);
                     ContentValues values = device.getContentValues();
                     getContentResolver().update(DEVICE_URI, values, null, null);
+                    Log.d(TAG, device.serialNumber + " device data updated");
                 }
 
                 @Override
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    Device device = dataSnapshot.getValue(Device.class);
+                    String where = DeviceColumns.SERIAL_NUMBER + "=?";
+                    String serialNum = device.serialNumber;
+                    String[] args = new String[]{serialNum};
+                    getContentResolver().delete(DEVICE_URI, where, args);
+                    Log.d(TAG, where + " device data removed from local db");
 
                 }
 
@@ -129,15 +134,18 @@ public class SyncingService extends Service {
         FirebaseDatabase.getInstance().getReference().child(TABLE_DEVICES).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, dataSnapshot.getChildrenCount() + " rows of data need to be inserted");
+                Log.d(TAG, dataSnapshot.getChildrenCount() + " rows of data need to be written into devices table");
                 ContentValues[] contentValuesList = new ContentValues[((int) dataSnapshot.getChildrenCount())];
+                int rowsDeleted = getContentResolver().delete(DatabaseContract.DEVICE_URI, null, null);
+                Log.d(TAG, rowsDeleted + " rows cleared in devices table");
                 int index = 0;
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Device value = snapshot.getValue(Device.class);
                     contentValuesList[index] = value.getContentValues();
                     index++;
                 }
-                getContentResolver().bulkInsert(DatabaseContract.DEVICE_URI, contentValuesList);
+                int rowsInserted = getContentResolver().bulkInsert(DatabaseContract.DEVICE_URI, contentValuesList);
+                Log.d(TAG, rowsInserted + " rows inserted into database table");
             }
 
             @Override

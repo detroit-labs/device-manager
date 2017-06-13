@@ -1,11 +1,13 @@
 package com.detroitlabs.devicemanager.utils;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.os.Build;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.view.Display;
@@ -22,13 +24,11 @@ public class DeviceUtil {
 
     public static boolean hasGetAccountsPermission(Context context) {
         return ContextCompat.checkSelfPermission(context,
-                android.Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED;
+                android.Manifest.permission.GET_ACCOUNTS) == PackageManager.PERMISSION_GRANTED;
     }
 
-    public static void requestGetAccountsPermission(Activity activity, int requestCode) {
-        ActivityCompat.requestPermissions(activity,
-                new String[]{android.Manifest.permission.GET_ACCOUNTS},
-                requestCode);
+    public static void requestGetAccountsPermission(Fragment fragment, int requestCode) {
+        fragment.requestPermissions(new String[]{Manifest.permission.GET_ACCOUNTS}, requestCode);
     }
 
     public static Device readThisDevice(Context context) {
@@ -45,7 +45,8 @@ public class DeviceUtil {
     }
 
     public static String getSerialNumber() {
-        return Build.SERIAL;
+        //this is so that emulated devices get some kind of serial value
+        return Build.SERIAL.equals("unknown") ? "12345" : Build.SERIAL;
     }
 
     private static String getSize(Context context) {

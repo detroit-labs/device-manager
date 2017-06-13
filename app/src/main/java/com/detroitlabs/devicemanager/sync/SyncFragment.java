@@ -30,6 +30,7 @@ import static com.detroitlabs.devicemanager.constants.Constants.BROADCAST_ACTION
 
 
 public class SyncFragment extends Fragment {
+    private static final String TEST_USER_1_DETROITLABS = "test_user_1@detroitlabs.com";
     private FragSyncBinding binding;
     private RegistrationStatusReceiver receiver;
 
@@ -81,10 +82,8 @@ public class SyncFragment extends Fragment {
         if (requestCode == PERMISSION_REQUEST_GET_ACCOUNTS) {
             if (grantResults.length > 0 &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                if (usingTestingAccount(AccountManager.get(getContext()).getAccountsByType("com.google"))) {
                     registerDevice();
                     return;
-                }
             }
             syncDatabase();
         }
@@ -92,7 +91,7 @@ public class SyncFragment extends Fragment {
 
     private boolean usingTestingAccount(Account[] accountsByType) {
         for (Account account : accountsByType) {
-            if (account.name.equals("test_user_1@detroitlabs.com")) {
+            if (account.name.equalsIgnoreCase(TEST_USER_1_DETROITLABS)) {
                 return true;
             }
         }
@@ -112,13 +111,19 @@ public class SyncFragment extends Fragment {
             registerDevice();
         } else {
             Log.d(TAG, "requesting permission to read EMAIL");
-            DeviceUtil.requestGetAccountsPermission(getActivity(), PERMISSION_REQUEST_GET_ACCOUNTS);
+            DeviceUtil.requestGetAccountsPermission(this, PERMISSION_REQUEST_GET_ACCOUNTS);
         }
     }
 
     private void registerDevice() {
-        updateProgressBar(R.string.status_register_device, 20);
-        RegistrationService.initRegister(getContext());
+        if (usingTestingAccount(AccountManager.get(getContext()).getAccountsByType("com.google"))){
+            updateProgressBar(R.string.status_register_device, 20);
+            RegistrationService.initRegister(getContext());
+            Log.d(TAG, "Registered device with service");
+        }else{
+            Log.d(TAG, "Not registering device because it is not using the test account");
+            syncDatabase();
+        }
     }
 
     private void onRegisterSuccessful() {
