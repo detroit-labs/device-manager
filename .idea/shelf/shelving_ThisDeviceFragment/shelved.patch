@@ -1,0 +1,30 @@
+Index: app/src/main/java/com/detroitlabs/devicemanager/list/ThisDeviceFragment.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/detroitlabs/devicemanager/list/ThisDeviceFragment.java	(revision ac29e67d5d8a47dcdc8e51f543e1f40a4ca2a141)
++++ app/src/main/java/com/detroitlabs/devicemanager/list/ThisDeviceFragment.java	(revision )
+@@ -80,8 +80,8 @@
+     }
+ 
+     private void initView() {
+-        binding.status.setImageResource(R.drawable.ic_smartphone_white_24dp);
+-        binding.status.setColorFilter(getColor(R.color.grey));
++        binding.iconStatus.setImageResource(R.drawable.ic_smartphone_white_24dp);
++        binding.iconStatus.setColorFilter(getColor(R.color.grey));
+         binding.deviceItemView.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View v) {
+@@ -101,9 +101,9 @@
+ 
+     private void setStatus(boolean isCheckedOut) {
+         if (!isCheckedOut) {
+-            binding.status.setColorFilter(getColor(R.color.green));
++            binding.iconStatus.setColorFilter(getColor(R.color.green));
+         } else {
+-            binding.status.setColorFilter(getColor(R.color.grey));
++            binding.iconStatus.setColorFilter(getColor(R.color.grey));
+         }
+     }
+ 

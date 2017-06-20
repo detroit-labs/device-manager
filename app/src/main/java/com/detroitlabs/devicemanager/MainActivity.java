@@ -9,7 +9,7 @@ import android.view.MenuItem;
 
 import com.crashlytics.android.Crashlytics;
 import com.detroitlabs.devicemanager.filter.SearchFilterDialog;
-import com.detroitlabs.devicemanager.list.DeviceListFragment;
+import com.detroitlabs.devicemanager.list.HomeFragment;
 import com.detroitlabs.devicemanager.sync.SyncFragment;
 
 import io.fabric.sdk.android.Fabric;
@@ -18,8 +18,10 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String DEVICE_LIST_FRAGMENT = "DeviceListFragment";
+    private static final String HOME_FRAGMENT = "HomeFragment";
     private static final String HAS_SYNCED = "HAS_SYNCED";
-    private DeviceListFragment deviceListFragment;
+    //private DeviceListFragment deviceListFragment;
+    private HomeFragment homeFragment;
     private boolean hasSynced;
 
     @Override
@@ -30,7 +32,8 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
 
         if (savedInstanceState != null) {
             hasSynced = savedInstanceState.getBoolean(HAS_SYNCED);
-            deviceListFragment = (DeviceListFragment) getSupportFragmentManager().findFragmentByTag(DEVICE_LIST_FRAGMENT);
+            //deviceListFragment = (DeviceListFragment) getSupportFragmentManager().findFragmentByTag(DEVICE_LIST_FRAGMENT);
+            homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentByTag(HOME_FRAGMENT);
         }
         if (!hasSynced) {
             setupSyncFragment();
@@ -54,9 +57,10 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
 
     @Override
     public void onBackPressed() {
-        if (!deviceListFragment.onBackPressed()) {
-            super.onBackPressed();
-        }
+//        if (!deviceListFragment.onBackPressed()) {
+//            super.onBackPressed();
+//        }
+        super.onBackPressed();
     }
 
     @Override
@@ -69,7 +73,8 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
     @Override
     public void onSyncFinish() {
         hasSynced = true;
-        setupDeviceListView();
+//        setupDeviceListView();
+        setupHomeFragment();
     }
 
     private void setupSyncFragment() {
@@ -87,20 +92,30 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
         searchFilterDialog.show(fm, "search_filter_dialog");
     }
 
-    private void setupDeviceListView() {
-        deviceListFragment = DeviceListFragment.newInstance();
+    private void setupHomeFragment(){
+        homeFragment = HomeFragment.newInstance();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-        fragmentTransaction.replace(R.id.container, deviceListFragment, DEVICE_LIST_FRAGMENT);
+        fragmentTransaction.replace(R.id.container, homeFragment, HOME_FRAGMENT);
         fragmentTransaction.commit();
     }
+
+//    private void setupDeviceListView() {
+//        deviceListFragment = DeviceListFragment.newInstance();
+//        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
+//        fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+//        fragmentTransaction.replace(R.id.container, deviceListFragment, DEVICE_LIST_FRAGMENT);
+//        fragmentTransaction.commit();
+//    }
 
     private SearchFilterDialog.OnFilterApplyListener getOnApplyListener() {
         return new SearchFilterDialog.OnFilterApplyListener() {
             @Override
             public void onApply() {
-                deviceListFragment.refreshList();
+//                deviceListFragment.refreshList();
             }
         };
     }
+
+
 }

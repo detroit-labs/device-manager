@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="detail"
+            type="com.detroitlabs.devicemanager.models.Device" />
+
+        <import type="android.view.View" />
+    </data>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:id="@+id/home_screen"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fitsSystemWindows="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/home_this_device"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1.6"
+                android:background="@color/colorPrimary"
+                android:gravity="bottom"
+                android:orientation="vertical">
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="bottom"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/small_padding"
+                    android:paddingStart="@dimen/large_padding">
+
+                    <TextView
+                        android:id="@+id/brand_and_model"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingBottom="@dimen/small_padding"
+                        android:text="@{detail.brandAndModel}"
+                        android:textAppearance="?android:textAppearanceLargeInverse"
+                        android:textSize="30sp"
+                        tools:text="BrandAndModel" />
+
+                    <RelativeLayout
+                        android:id="@+id/status_available"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="@{(!detail.hasRequest() &amp;&amp; !detail.isCheckedOut()) ? View.VISIBLE : View.GONE}">
+
+                        <ImageView
+                            android:id="@+id/icon_available"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:contentDescription="@string/device_status"
+                            android:src="@drawable/ic_checkbox_blank_circle_grey600_24dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/icon_available"
+                            android:layout_centerVertical="true"
+                            android:layout_toEndOf="@+id/icon_available"
+                            android:paddingStart="@dimen/normal_padding"
+                            android:text="@string/available"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Inverse"
+                            android:visibility="visible"
+                            tools:text="Available" />
+
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/status_requested_by"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="@{detail.hasRequest() ? View.VISIBLE : View.GONE}">
+
+                        <ImageView
+                            android:id="@+id/icon_requested_by"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:contentDescription="@string/device_status"
+                            android:src="@drawable/ic_checkbox_blank_circle_grey600_24dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/icon_requested_by"
+                            android:layout_centerVertical="true"
+                            android:layout_toEndOf="@+id/icon_requested_by"
+                            android:paddingStart="@dimen/normal_padding"
+                            android:text="@{@string/requested_by(detail.requestedBy)}"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Inverse"
+                            android:visibility="visible"
+                            tools:text="Requested by Jack" />
+
+                        <TextView
+                            android:id="@+id/button_cancel_request"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/large_padding"
+                            android:text="@string/cancel_allcaps"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Inverse"
+                            android:textStyle="bold" />
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/status_checked_out_by"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom"
+                        android:visibility="@{detail.checkedOut ? View.VISIBLE : View.GONE}">
+
+                        <ImageView
+                            android:id="@+id/icon_checked_out_by"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:contentDescription="@string/device_status"
+                            android:src="@drawable/ic_checkbox_blank_circle_grey600_24dp" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/icon_checked_out_by"
+                            android:layout_centerVertical="true"
+                            android:layout_toEndOf="@+id/icon_checked_out_by"
+                            android:paddingStart="@dimen/normal_padding"
+                            android:text="@{@string/borrowed_by(detail.checkedOutBy)}"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Inverse"
+                            android:visibility="visible"
+                            tools:text="Checked Out by Rob" />
+
+                        <TextView
+                            android:id="@+id/button_release"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginEnd="@dimen/large_padding"
+                            android:text="@string/release"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Inverse"
+                            android:textStyle="bold"
+                            android:visibility="visible" />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:id="@+id/inputname"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/lighter_grey"
+                    android:gravity="start"
+                    android:paddingBottom="@dimen/tiny_padding"
+                    android:paddingEnd="@dimen/large_padding"
+                    android:paddingStart="@dimen/large_padding"
+                    android:paddingTop="@dimen/tiny_padding">
+
+                    <EditText
+                        android:id="@+id/edit_text_username"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignStart="@+id/button_request"
+                        android:layout_toStartOf="@+id/button_request"
+                        android:hint="@string/enter_your_name"
+                        android:inputType="textPersonName"
+                        android:visibility="visible" />
+
+                    <Button
+                        android:id="@+id/button_request"
+                        style="@style/RaisedButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/edit_text_username"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignTop="@id/edit_text_username"
+                        android:background="@color/teal"
+                        android:text="@string/request"
+                        android:visibility="visible" />
+
+                    <Button
+                        android:id="@+id/button_checkout"
+                        style="@style/RaisedButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/edit_text_username"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignTop="@id/edit_text_username"
+                        android:background="@color/teal"
+                        android:text="@string/check_out"
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/button_register"
+                        style="@style/RaisedButtonStyle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@id/edit_text_username"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignTop="@id/edit_text_username"
+                        android:background="@color/teal"
+                        android:text="REGISTER"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/text_no_more_requests"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/no_more_requests"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                        android:visibility="gone" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="2"
+                android:orientation="vertical">
+
+                <View
+                    android:id="@+id/sep_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@android:color/darker_gray"
+                    android:visibility="visible" />
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/normal_padding"
+                    android:orientation="vertical">
+
+                    <com.detroitlabs.devicemanager.detail.DetailItemView
+                        android:id="@+id/version"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:label="Version"
+                        app:value="@{detail.version}" />
+
+                    <com.detroitlabs.devicemanager.detail.DetailItemView
+                        android:id="@+id/size"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:label="Size"
+                        app:value="@{detail.screenSize}" />
+
+                    <com.detroitlabs.devicemanager.detail.DetailItemView
+                        android:id="@+id/resolution"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:label="Resolution"
+                        app:value="@{detail.screenResolution}" />
+
+                    <com.detroitlabs.devicemanager.detail.DetailItemView
+                        android:id="@+id/year_class"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:label="Year Class"
+                        app:value="@{detail.yearClass}" />
+
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/button_other_devices"
+            android:layout_width="23dp"
+            android:layout_height="29dp"
+            android:layout_gravity="end"
+            android:layout_marginEnd="16dp"
+            android:layout_marginTop="12dp"
+            android:src="@drawable/ic_other_devices" />
+    </android.support.design.widget.CoordinatorLayout>
+</layout>
