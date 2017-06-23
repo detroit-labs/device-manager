@@ -112,7 +112,7 @@
                         android:paddingBottom="@dimen/normal_padding"
                         android:textAppearance="?android:attr/textAppearanceListItem"
                         android:textColor="@color/dark_grey"
-                        tools:text="Borrowed by Kent" />
+                        tools:text="Checked out by Kent" />
 
                     <FrameLayout
                         android:layout_width="match_parent"
@@ -146,38 +146,7 @@
                                 android:text="@string/request" />
                         </android.support.design.widget.TextInputLayout>
 
-                        <Button
-                            android:id="@+id/check_in_button"
-                            style="@style/RaisedButtonStyle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/check_in"
-                            android:visibility="gone" />
 
-                        <android.support.design.widget.TextInputLayout
-                            android:id="@+id/check_out_field"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal">
-
-                            <android.support.design.widget.TextInputEditText
-                                android:id="@+id/check_out_name"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:hint="@string/your_name"
-                                android:imeOptions="actionDone"
-                                android:maxLines="1"
-                                android:singleLine="true" />
-
-                            <Button
-                                android:id="@+id/check_out_button"
-                                style="@style/RaisedButtonStyle"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="right"
-                                android:enabled="false"
-                                android:text="@string/check_out" />
-                        </android.support.design.widget.TextInputLayout>
                     </FrameLayout>
                 </RelativeLayout>
 

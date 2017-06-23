@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
@@ -17,6 +18,7 @@ import com.detroitlabs.devicemanager.R;
 import com.detroitlabs.devicemanager.data.DeviceUpdateService;
 import com.detroitlabs.devicemanager.databinding.FragHomeBinding;
 import com.detroitlabs.devicemanager.models.Device;
+import com.detroitlabs.devicemanager.utils.DeviceUtil;
 
 
 public class HomeFragment extends Fragment implements LoaderManager.LoaderCallbacks<Device> {
@@ -64,7 +66,6 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
             public void onClick(View v) {
                 DeviceListFragment deviceListFragment = DeviceListFragment.newInstance();
                 FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-//                fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
                 fragmentTransaction.replace(R.id.container, deviceListFragment, DEVICE_LIST_FRAGMENT);
                 fragmentTransaction.commit();
             }
@@ -113,11 +114,35 @@ public class HomeFragment extends Fragment implements LoaderManager.LoaderCallba
 
     @Override
     public void onLoadFinished(Loader<Device> loader, Device data) {
+        boolean registerable = true;
+        if (data == null){
+            data = DeviceUtil.readThisDevice(getContext());
+            registerable = false;
+        }
         setupData(data);
-        adjustInputFrameControls();
+        adjustInputFrameControls(registerable);
     }
 
-    private void adjustInputFrameControls() {
+    private void adjustInputFrameControls(boolean registerable) {
+        if (registerable){
+            registerableInputControls();
+        } else {
+            notRegisterable();
+        }
+    }
+
+    private void notRegisterable() {
+        binding.textNoMoreRequests.setVisibility(View.GONE);
+        binding.editTextUsername.setVisibility(View.GONE);
+        binding.buttonRequest.setVisibility(View.GONE);
+        binding.buttonCheckout.setVisibility(View.GONE);
+        binding.buttonRegister.setVisibility(View.GONE);
+        binding.iconAvailable.setVisibility(View.GONE);
+        binding.statusAvailable.getChildAt(1).setVisibility(View.GONE);
+        binding.statusAvailable.getChildAt(2).setVisibility(View.VISIBLE);
+    }
+
+    private void registerableInputControls(){
         if (thisDevice.hasRequest() && thisDevice.isCheckedOut()) { //checked out and requested, user can't do anything
             binding.textNoMoreRequests.setVisibility(View.VISIBLE);
             binding.editTextUsername.setVisibility(View.GONE);

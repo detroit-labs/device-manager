@@ -27,7 +27,7 @@
     <string name="request">request</string>`
     <string name="requested_by">Requested by %1$s</string>
     <string name="status">Status</string>
-    <string name="borrowed_by">Borrowed by %1$s</string>
+    <string name="checked_out_by">Checked out by %1$s</string>
     <string name="available">Available</string>
     <string name="dash">-</string>
     <string name="request_from">From: %1$s</string>
@@ -38,4 +38,5 @@
     <string name="enter_your_name">Enter your name</string>
     <string name="release">RELEASE</string>
     <string name="cancel_allcaps">CANCEL</string>
+    <string name="this_device_cannot_be_registered">This device cannot be registered</string>
 </resources>

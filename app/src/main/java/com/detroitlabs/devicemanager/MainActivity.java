@@ -1,5 +1,6 @@
 package com.detroitlabs.devicemanager;
 
+import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 
 import com.crashlytics.android.Crashlytics;
 import com.detroitlabs.devicemanager.filter.SearchFilterDialog;
+import com.detroitlabs.devicemanager.list.DeviceListFragment;
 import com.detroitlabs.devicemanager.list.HomeFragment;
 import com.detroitlabs.devicemanager.sync.SyncFragment;
 
@@ -32,7 +34,6 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
 
         if (savedInstanceState != null) {
             hasSynced = savedInstanceState.getBoolean(HAS_SYNCED);
-            //deviceListFragment = (DeviceListFragment) getSupportFragmentManager().findFragmentByTag(DEVICE_LIST_FRAGMENT);
             homeFragment = (HomeFragment) getSupportFragmentManager().findFragmentByTag(HOME_FRAGMENT);
         }
         if (!hasSynced) {
@@ -57,10 +58,13 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
 
     @Override
     public void onBackPressed() {
-//        if (!deviceListFragment.onBackPressed()) {
+        //just disable back button for now, figure out how it works later
+
+//        DeviceListFragment deviceListFragment = (DeviceListFragment) getSupportFragmentManager().findFragmentByTag(DEVICE_LIST_FRAGMENT);
+//        if (deviceListFragment != null && !deviceListFragment.onBackPressed()) {
 //            super.onBackPressed();
 //        }
-        super.onBackPressed();
+//        super.onBackPressed();
     }
 
     @Override
@@ -73,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
     @Override
     public void onSyncFinish() {
         hasSynced = true;
-//        setupDeviceListView();
         setupHomeFragment();
     }
 
@@ -100,19 +103,13 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
         fragmentTransaction.commit();
     }
 
-//    private void setupDeviceListView() {
-//        deviceListFragment = DeviceListFragment.newInstance();
-//        FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-//        fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
-//        fragmentTransaction.replace(R.id.container, deviceListFragment, DEVICE_LIST_FRAGMENT);
-//        fragmentTransaction.commit();
-//    }
-
     private SearchFilterDialog.OnFilterApplyListener getOnApplyListener() {
         return new SearchFilterDialog.OnFilterApplyListener() {
             @Override
             public void onApply() {
-//                deviceListFragment.refreshList();
+                //why is this returning null?!
+                DeviceListFragment deviceListFragment = (DeviceListFragment) (getSupportFragmentManager().findFragmentByTag(DEVICE_LIST_FRAGMENT));
+                deviceListFragment.refreshList();
             }
         };
     }

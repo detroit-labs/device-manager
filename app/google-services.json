@@ -42,6 +42,13 @@
             {
               "client_id": "21813790799-9faanr1paq2umch1i78rqinhh6suhr8a.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "21813790799-hsgrcc7n4o5b41d1338fqolge599eahm.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.detroitlabs.Device-Manager"
+              }
             }
           ]
         },

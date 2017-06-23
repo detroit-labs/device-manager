@@ -67,6 +67,7 @@ public class DeviceProvider extends ContentProvider {
             case DEVICES:
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
                 long id = db.insertWithOnConflict(TABLE_DEVICES, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+                if (id != -1) getContext().getContentResolver().notifyChange(uri, null);
                 return ContentUris.withAppendedId(DatabaseContract.DEVICE_URI, id);
             default:
                 throw new IllegalArgumentException("Illegal insert URI");

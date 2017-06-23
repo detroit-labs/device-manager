@@ -94,7 +94,10 @@ public class SyncingService extends Service {
             childEventListener = new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
+                    Device device = dataSnapshot.getValue(Device.class);
+                    ContentValues values = device.getContentValues();
+                    getContentResolver().insert(DEVICE_URI, values);
+                    Log.d(TAG, device.serialNumber + " device inserted");
                 }
 
                 @Override
@@ -112,7 +115,7 @@ public class SyncingService extends Service {
                     String serialNum = device.serialNumber;
                     String[] args = new String[]{serialNum};
                     getContentResolver().delete(DEVICE_URI, where, args);
-                    Log.d(TAG, where + " device data removed from local db");
+                    Log.d(TAG, serialNum + " device data removed from local db");
 
                 }
 
@@ -145,7 +148,7 @@ public class SyncingService extends Service {
                     index++;
                 }
                 int rowsInserted = getContentResolver().bulkInsert(DatabaseContract.DEVICE_URI, contentValuesList);
-                Log.d(TAG, rowsInserted + " rows inserted into database table");
+                Log.d(TAG, rowsInserted + " rows inserted into devices table");
             }
 
             @Override

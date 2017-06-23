@@ -77,6 +77,17 @@
                             android:visibility="visible"
                             tools:text="Available" />
 
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignBottom="@+id/icon_available"
+                            android:layout_centerVertical="true"
+                            android:layout_toEndOf="@+id/icon_available"
+                            android:paddingStart="@dimen/normal_padding"
+                            android:text="@string/this_device_cannot_be_registered"
+                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Inverse"
+                            android:visibility="gone" />
+
 
                     </RelativeLayout>
 
@@ -141,7 +152,7 @@
                             android:layout_centerVertical="true"
                             android:layout_toEndOf="@+id/icon_checked_out_by"
                             android:paddingStart="@dimen/normal_padding"
-                            android:text="@{@string/borrowed_by(detail.checkedOutBy)}"
+                            android:text="@{@string/checked_out_by(detail.checkedOutBy)}"
                             android:textAppearance="@style/Base.TextAppearance.AppCompat.Inverse"
                             android:visibility="visible"
                             tools:text="Checked Out by Rob" />
@@ -288,8 +299,11 @@
 
         <ImageView
             android:id="@+id/button_other_devices"
-            android:layout_width="23dp"
-            android:layout_height="29dp"
+            android:scaleType="center"
+            android:scaleY="1.5"
+            android:scaleX="1.5"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_gravity="end"
             android:layout_marginEnd="16dp"
             android:layout_marginTop="12dp"
