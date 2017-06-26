@@ -60,7 +60,7 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
 
         void bind(final Device detail) {
             binding.setDetail(detail);
-            setStatus(detail.isCheckedOut());
+            setStatus(detail);
             binding.executePendingBindings();
             binding.deviceItemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -72,11 +72,22 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
             });
         }
 
-        private void setStatus(boolean isCheckedOut) {
-            if (!isCheckedOut) {
+        private void setStatus(Device device) {
+            binding.statusText.setVisibility(View.GONE);
+
+            if (!device.isCheckedOut()) {
                 binding.status.setColorFilter(ContextCompat.getColor(itemView.getContext(), R.color.green));
             } else {
                 binding.status.clearColorFilter();
+            }
+
+            if (device.hasRequest()) { //give priority to showing who has requested it next,  since icon already shows checked out status
+                binding.statusText.setText("Requested by " + device.requestedBy);
+                binding.statusText.setVisibility(View.VISIBLE);
+            }
+            else if (device.isCheckedOut()){ //but if no one is requesting it currently, show who has it checked out now
+                binding.statusText.setText("Checked out by " + device.checkedOutBy); //TODO use string res
+                binding.statusText.setVisibility(View.VISIBLE);
             }
         }
     }

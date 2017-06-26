@@ -85,13 +85,8 @@ public class DeviceDetailView extends FrameLayout {
             }
         });
 
-        if (device.isCheckedOut()) {
-            showButton(binding.requestField);
-        } else {
-            hideAllButtons();
-        }
-
-
+        //allow someone to request a device no matter what state the device is in
+        showButton(binding.requestField);
     }
 
     private void navigateUp() {
