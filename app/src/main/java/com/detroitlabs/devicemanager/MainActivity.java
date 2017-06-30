@@ -1,6 +1,5 @@
 package com.detroitlabs.devicemanager;
 
-import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -13,16 +12,15 @@ import com.detroitlabs.devicemanager.filter.SearchFilterDialog;
 import com.detroitlabs.devicemanager.list.DeviceListFragment;
 import com.detroitlabs.devicemanager.list.HomeFragment;
 import com.detroitlabs.devicemanager.sync.SyncFragment;
+import com.detroitlabs.devicemanager.sync.SyncingService;
 
 import io.fabric.sdk.android.Fabric;
 
 public class MainActivity extends AppCompatActivity implements SyncFragment.OnSyncFinishListener {
 
-    private static final String TAG = MainActivity.class.getSimpleName();
     private static final String DEVICE_LIST_FRAGMENT = "DeviceListFragment";
     private static final String HOME_FRAGMENT = "HomeFragment";
     private static final String HAS_SYNCED = "HAS_SYNCED";
-    //private DeviceListFragment deviceListFragment;
     private HomeFragment homeFragment;
     private boolean hasSynced;
 
@@ -75,6 +73,12 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SyncingService.unregisterSync(this);
+    }
+
+    @Override
     public void onSyncFinish() {
         hasSynced = true;
         setupHomeFragment();
@@ -95,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
         searchFilterDialog.show(fm, "search_filter_dialog");
     }
 
-    private void setupHomeFragment(){
+    private void setupHomeFragment() {
         homeFragment = HomeFragment.newInstance();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
