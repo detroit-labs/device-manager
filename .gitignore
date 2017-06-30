@@ -44,6 +44,7 @@ captures/
 .idea/markdown-navigator.xml
 .idea/markdown-navigator/
 .idea/modules.xml
+.idea/shelf/
 
 # Keystore files
 *.jks
