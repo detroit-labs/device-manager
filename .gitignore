@@ -43,6 +43,7 @@ captures/
 .idea/libraries
 .idea/markdown-navigator.xml
 .idea/markdown-navigator/
+.idea/modules.xml
 
 # Keystore files
 *.jks
