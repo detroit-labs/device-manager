@@ -21,9 +21,10 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import static com.detroitlabs.devicemanager.data.DatabaseContract.*;
+import static com.detroitlabs.devicemanager.data.DatabaseContract.DEVICE_URI;
+import static com.detroitlabs.devicemanager.data.DatabaseContract.DeviceColumns;
+import static com.detroitlabs.devicemanager.data.DatabaseContract.TABLE_DEVICES;
 
 public class SyncingService extends Service {
     public static final String TAG = SyncingService.class.getSimpleName();
@@ -41,6 +42,7 @@ public class SyncingService extends Service {
         context.startService(intent);
     }
 
+    // TODO: 6/30/17 remove register and unregister sync
     public static void registerSync(Context context) {
         Intent intent = new Intent(context, SyncingService.class);
         intent.putExtra(ACTION, ACTION_REGISTER);
@@ -134,28 +136,14 @@ public class SyncingService extends Service {
     }
 
     private void performSyncing() {
-        FirebaseDatabase.getInstance().getReference().child(TABLE_DEVICES).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, dataSnapshot.getChildrenCount() + " rows of data need to be written into devices table");
-                ContentValues[] contentValuesList = new ContentValues[((int) dataSnapshot.getChildrenCount())];
-                int rowsDeleted = getContentResolver().delete(DatabaseContract.DEVICE_URI, null, null);
-                Log.d(TAG, rowsDeleted + " rows cleared in devices table");
-                int index = 0;
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Device value = snapshot.getValue(Device.class);
-                    contentValuesList[index] = value.getContentValues();
-                    index++;
-                }
-                int rowsInserted = getContentResolver().bulkInsert(DatabaseContract.DEVICE_URI, contentValuesList);
-                Log.d(TAG, rowsInserted + " rows inserted into devices table");
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        // TODO: 6/30/17
+        // remove all data from database
+        // and add child value listener
+        int rowsDeleted = getContentResolver().delete(DatabaseContract.DEVICE_URI, null, null);
+        Log.d(TAG, rowsDeleted + " rows cleared in devices table");
+        FirebaseDatabase.getInstance().getReference()
+                .child(TABLE_DEVICES)
+                .addChildEventListener(getChildEventListener());
     }
 
     private void notifySingleSyncComplete() {
