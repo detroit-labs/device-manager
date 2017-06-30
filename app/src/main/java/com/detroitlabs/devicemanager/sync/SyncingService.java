@@ -136,9 +136,6 @@ public class SyncingService extends Service {
     }
 
     private void performSyncing() {
-        // TODO: 6/30/17
-        // remove all data from database
-        // and add child value listener
         int rowsDeleted = getContentResolver().delete(DatabaseContract.DEVICE_URI, null, null);
         Log.d(TAG, rowsDeleted + " rows cleared in devices table");
         FirebaseDatabase.getInstance().getReference()
