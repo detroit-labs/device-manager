@@ -24,7 +24,6 @@ import com.detroitlabs.devicemanager.databinding.FragDeviceListBinding;
 import com.detroitlabs.devicemanager.detail.DeviceDetailView;
 import com.detroitlabs.devicemanager.filter.FilterUtil;
 import com.detroitlabs.devicemanager.models.Device;
-import com.detroitlabs.devicemanager.sync.SyncingService;
 
 
 public class DeviceListFragment extends Fragment implements
@@ -64,18 +63,6 @@ public class DeviceListFragment extends Fragment implements
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
-        registerSync();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        unregisterSync();
-    }
-
-    @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
         return new CursorLoader(getContext(),
                 DatabaseContract.DEVICE_URI,
@@ -108,14 +95,6 @@ public class DeviceListFragment extends Fragment implements
         } else {
             return false;
         }
-    }
-
-    private void registerSync() {
-        SyncingService.registerSync(getContext());
-    }
-
-    private void unregisterSync() {
-        SyncingService.unregisterSync(getContext());
     }
 
     private void setupRightDrawer() {

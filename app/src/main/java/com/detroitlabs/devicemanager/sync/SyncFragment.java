@@ -30,23 +30,21 @@ import static com.detroitlabs.devicemanager.constants.Constants.BROADCAST_ACTION
 
 
 public class SyncFragment extends Fragment {
-    private static final String TEST_USER_1_DETROITLABS = "test_user_1@detroitlabs.com";
-    private FragSyncBinding binding;
-    private RegistrationStatusReceiver receiver;
-
     public interface OnSyncFinishListener {
         void onSyncFinish();
     }
 
+    private static final String TEST_USER_1_DETROITLABS = "test_user_1@detroitlabs.com";
     private static final String TAG = SyncFragment.class.getSimpleName();
     private static final int PERMISSION_REQUEST_GET_ACCOUNTS = 7;
+
+    private FragSyncBinding binding;
+    private RegistrationStatusReceiver receiver;
     private OnSyncFinishListener onSyncFinishListener;
     private int progress;
 
     public static SyncFragment newInstance() {
-
         Bundle args = new Bundle();
-
         SyncFragment fragment = new SyncFragment();
         fragment.setArguments(args);
         return fragment;
@@ -82,8 +80,8 @@ public class SyncFragment extends Fragment {
         if (requestCode == PERMISSION_REQUEST_GET_ACCOUNTS) {
             if (grantResults.length > 0 &&
                     grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    registerDevice();
-                    return;
+                registerDevice();
+                return;
             }
             syncDatabase();
         }
@@ -116,23 +114,23 @@ public class SyncFragment extends Fragment {
     }
 
     private void registerDevice() {
-        if (usingTestingAccount(AccountManager.get(getContext()).getAccountsByType("com.google"))){
+        if (usingTestingAccount(AccountManager.get(getContext()).getAccountsByType("com.google"))) {
             updateProgressBar(R.string.status_register_device, 20);
             RegistrationService.initRegister(getContext());
             Log.d(TAG, "Registered device with service");
-        }else{
+        } else {
             Log.d(TAG, "Not registering device because it is not using the test account");
             syncDatabase();
         }
     }
 
     private void onRegisterSuccessful() {
-        updateProgressBar(R.string.status_sync_database_complete, 20);
+        updateProgressBar(R.string.status_register_complete, 60);
         syncDatabase();
     }
 
     private void syncDatabase() {
-        updateProgressBar(R.string.status_sync_database, 20);
+        updateProgressBar(R.string.status_sync_database, 80);
         SyncingService.initSync(getContext());
     }
 
@@ -143,7 +141,7 @@ public class SyncFragment extends Fragment {
             public void run() {
                 onSyncFinishListener.onSyncFinish();
             }
-        }, 2000);
+        }, 1500);
     }
 
     private void updateProgressBar(@StringRes int statusTextRes, int progress) {
