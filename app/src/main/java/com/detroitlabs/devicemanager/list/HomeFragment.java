@@ -24,7 +24,7 @@ import com.detroitlabs.devicemanager.utils.DeviceUtil;
 public class HomeFragment extends Fragment implements LoaderManager.LoaderCallbacks<Device> {
 
     private static final int LOADER_ID = 334;
-    private static final String DEVICE_LIST_FRAGMENT = "DevliceListFragment";
+    private static final String DEVICE_LIST_FRAGMENT = "DeviceListFragment";
     private Device thisDevice;
     private FragHomeBinding binding;
 
