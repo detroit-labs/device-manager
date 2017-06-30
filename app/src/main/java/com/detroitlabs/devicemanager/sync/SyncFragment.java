@@ -26,7 +26,7 @@ import com.detroitlabs.devicemanager.utils.PrefUtil;
 import com.detroitlabs.devicemanager.utils.ProgressBarUtil;
 
 import static com.detroitlabs.devicemanager.constants.Constants.BROADCAST_ACTION_REGISTER_RESULT;
-import static com.detroitlabs.devicemanager.constants.Constants.BROADCAST_ACTION_SINGLE_SYNC_RESULT;
+import static com.detroitlabs.devicemanager.constants.Constants.BROADCAST_ACTION_SYNC_RESULT;
 
 
 public class SyncFragment extends Fragment {
@@ -100,7 +100,7 @@ public class SyncFragment extends Fragment {
         receiver = new RegistrationStatusReceiver();
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(BROADCAST_ACTION_REGISTER_RESULT);
-        intentFilter.addAction(BROADCAST_ACTION_SINGLE_SYNC_RESULT);
+        intentFilter.addAction(BROADCAST_ACTION_SYNC_RESULT);
         LocalBroadcastManager.getInstance(getContext()).registerReceiver(receiver, intentFilter);
     }
 
@@ -158,7 +158,7 @@ public class SyncFragment extends Fragment {
         @Override
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
-            if (action.equals(BROADCAST_ACTION_SINGLE_SYNC_RESULT)) {
+            if (action.equals(BROADCAST_ACTION_SYNC_RESULT)) {
                 Log.d(TAG, "Sync done");
                 onSyncSuccess();
             } else if (action.equals(BROADCAST_ACTION_REGISTER_RESULT)) {

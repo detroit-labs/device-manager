@@ -28,9 +28,8 @@ import static com.detroitlabs.devicemanager.data.DatabaseContract.TABLE_DEVICES;
 
 public class SyncingService extends Service {
     public static final String TAG = SyncingService.class.getSimpleName();
-    private static final int ACTION_REGISTER = 11;
     private static final int ACTION_UNREGISTER = 13;
-    private static final int ACTION_SINGLE_SYNC = 17;
+    private static final int ACTION_SYNC = 17;
     private static final String ACTION = TAG + ".ACTION";
 
     private ChildEventListener childEventListener;
@@ -38,14 +37,7 @@ public class SyncingService extends Service {
 
     public static void initSync(Context context) {
         Intent intent = new Intent(context, SyncingService.class);
-        intent.putExtra(ACTION, ACTION_SINGLE_SYNC);
-        context.startService(intent);
-    }
-
-    // TODO: 6/30/17 remove register and unregister sync
-    public static void registerSync(Context context) {
-        Intent intent = new Intent(context, SyncingService.class);
-        intent.putExtra(ACTION, ACTION_REGISTER);
+        intent.putExtra(ACTION, ACTION_SYNC);
         context.startService(intent);
     }
 
@@ -79,16 +71,18 @@ public class SyncingService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    private void performSyncing() {
+        int rowsDeleted = getContentResolver().delete(DatabaseContract.DEVICE_URI, null, null);
+        Log.d(TAG, rowsDeleted + " rows cleared in devices table");
+        FirebaseDatabase.getInstance().getReference()
+                .child(TABLE_DEVICES)
+                .addChildEventListener(getChildEventListener());
+    }
+
     private void performUnregisterSyncing() {
         FirebaseDatabase.getInstance().getReference()
                 .child(TABLE_DEVICES)
                 .removeEventListener(getChildEventListener());
-    }
-
-    private void performRegisterSyncing() {
-        FirebaseDatabase.getInstance().getReference()
-                .child(TABLE_DEVICES)
-                .addChildEventListener(getChildEventListener());
     }
 
     private ChildEventListener getChildEventListener() {
@@ -135,16 +129,8 @@ public class SyncingService extends Service {
         return childEventListener;
     }
 
-    private void performSyncing() {
-        int rowsDeleted = getContentResolver().delete(DatabaseContract.DEVICE_URI, null, null);
-        Log.d(TAG, rowsDeleted + " rows cleared in devices table");
-        FirebaseDatabase.getInstance().getReference()
-                .child(TABLE_DEVICES)
-                .addChildEventListener(getChildEventListener());
-    }
-
-    private void notifySingleSyncComplete() {
-        Intent localIntent = new Intent(Constants.BROADCAST_ACTION_SINGLE_SYNC_RESULT);
+    private void notifySyncDone() {
+        Intent localIntent = new Intent(Constants.BROADCAST_ACTION_SYNC_RESULT);
         LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
         Log.d(TAG, "Activity notified");
     }
@@ -157,16 +143,13 @@ public class SyncingService extends Service {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.arg1) {
-                case ACTION_REGISTER:
-                    performRegisterSyncing();
-                    break;
                 case ACTION_UNREGISTER:
                     performUnregisterSyncing();
                     stopSelf();
                     break;
-                case ACTION_SINGLE_SYNC:
+                case ACTION_SYNC:
                     performSyncing();
-                    notifySingleSyncComplete();
+                    notifySyncDone();
                     break;
                 default:
                     throw new IllegalStateException("Illegal intent");
