@@ -4,14 +4,17 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -21,7 +24,6 @@ import com.detroitlabs.devicemanager.databinding.FragDeviceListBinding;
 import com.detroitlabs.devicemanager.detail.DeviceDetailView;
 import com.detroitlabs.devicemanager.filter.FilterUtil;
 import com.detroitlabs.devicemanager.models.Device;
-import com.detroitlabs.devicemanager.sync.SyncingService;
 
 
 public class DeviceListFragment extends Fragment implements
@@ -29,6 +31,7 @@ public class DeviceListFragment extends Fragment implements
         OnItemClickListener {
 
     public static final int LOADER_ID = 113;
+    private static final String HOME_FRAGMENT = "HomeFragment";
 
     private FragDeviceListBinding binding;
     private DeviceListAdapter adapter;
@@ -47,35 +50,16 @@ public class DeviceListFragment extends Fragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragDeviceListBinding.inflate(inflater, container, false);
-        setupThisFragment();
         setupToolbar();
         setupRightDrawer();
         initRecyclerView();
         return binding.getRoot();
     }
 
-    private void setupThisFragment() {
-        ((ThisDeviceFragment) getChildFragmentManager()
-                .findFragmentById(R.id.this_device))
-                .setOnItemClickListener(this);
-    }
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getLoaderManager().initLoader(LOADER_ID, null, this);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        registerSync();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        unregisterSync();
     }
 
     @Override
@@ -111,14 +95,6 @@ public class DeviceListFragment extends Fragment implements
         } else {
             return false;
         }
-    }
-
-    private void registerSync() {
-        SyncingService.registerSync(getContext());
-    }
-
-    private void unregisterSync() {
-        SyncingService.unregisterSync(getContext());
     }
 
     private void setupRightDrawer() {
@@ -167,6 +143,26 @@ public class DeviceListFragment extends Fragment implements
     }
 
     private void setupToolbar() {
+        setHasOptionsMenu(true);
         ((AppCompatActivity) getActivity()).setSupportActionBar(binding.included1.toolbar);
+        ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+        if (bar != null) {
+            bar.setDisplayHomeAsUpEnabled(true);
+            bar.setDisplayShowHomeEnabled(true);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's back button
+            case android.R.id.home:
+                HomeFragment homeFragment = HomeFragment.newInstance();
+                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
+                fragmentTransaction.replace(R.id.container, homeFragment, HOME_FRAGMENT);
+                fragmentTransaction.commit();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

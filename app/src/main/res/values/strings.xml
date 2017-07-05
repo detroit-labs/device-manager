@@ -15,6 +15,7 @@
     <string name="status_sync_database">Sync database…</string>
     <string name="status_sync_database_complete">Sync database complete!</string>
     <string name="loading">Loading…</string>
+    <string name="empty_string"></string>
 
     <string name="platform">Platform</string>
     <string name="version">version</string>
@@ -24,14 +25,19 @@
     <string name="confirm">Confirm</string>
     <string name="your_name">your name</string>
     <string name="check_in">Check In</string>
-    <string name="request">request</string>
-    <string name="requested_by">Request by %1$s</string>
+    <string name="request">request</string>`
+    <string name="requested_by">Requested by %1$s</string>
     <string name="status">Status</string>
-    <string name="borrowed_by">Borrowed by %1$s</string>
+    <string name="checked_out_by">Checked out by %1$s</string>
     <string name="available">Available</string>
     <string name="dash">-</string>
     <string name="request_from">From: %1$s</string>
     <string name="device_request">Device request</string>
     <string name="year_class">Year Class</string>
     <string name="is_samsung">Is Samsung</string>
+    <string name="no_more_requests">No more requests can be made at this time</string>
+    <string name="enter_your_name">Enter your name</string>
+    <string name="release">RELEASE</string>
+    <string name="cancel_allcaps">CANCEL</string>
+    <string name="this_device_cannot_be_registered">This device cannot be registered</string>
 </resources>

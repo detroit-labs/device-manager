@@ -21,16 +21,15 @@ import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import static com.detroitlabs.devicemanager.data.DatabaseContract.DEVICE_URI;
+import static com.detroitlabs.devicemanager.data.DatabaseContract.DeviceColumns;
 import static com.detroitlabs.devicemanager.data.DatabaseContract.TABLE_DEVICES;
 
 public class SyncingService extends Service {
     public static final String TAG = SyncingService.class.getSimpleName();
-    private static final int ACTION_REGISTER = 11;
     private static final int ACTION_UNREGISTER = 13;
-    private static final int ACTION_SINGLE_SYNC = 17;
+    private static final int ACTION_SYNC = 17;
     private static final String ACTION = TAG + ".ACTION";
 
     private ChildEventListener childEventListener;
@@ -38,13 +37,7 @@ public class SyncingService extends Service {
 
     public static void initSync(Context context) {
         Intent intent = new Intent(context, SyncingService.class);
-        intent.putExtra(ACTION, ACTION_SINGLE_SYNC);
-        context.startService(intent);
-    }
-
-    public static void registerSync(Context context) {
-        Intent intent = new Intent(context, SyncingService.class);
-        intent.putExtra(ACTION, ACTION_REGISTER);
+        intent.putExtra(ACTION, ACTION_SYNC);
         context.startService(intent);
     }
 
@@ -78,16 +71,18 @@ public class SyncingService extends Service {
         return super.onStartCommand(intent, flags, startId);
     }
 
+    private void performSyncing() {
+        int rowsDeleted = getContentResolver().delete(DatabaseContract.DEVICE_URI, null, null);
+        Log.d(TAG, rowsDeleted + " rows cleared in devices table");
+        FirebaseDatabase.getInstance().getReference()
+                .child(TABLE_DEVICES)
+                .addChildEventListener(getChildEventListener());
+    }
+
     private void performUnregisterSyncing() {
         FirebaseDatabase.getInstance().getReference()
                 .child(TABLE_DEVICES)
                 .removeEventListener(getChildEventListener());
-    }
-
-    private void performRegisterSyncing() {
-        FirebaseDatabase.getInstance().getReference()
-                .child(TABLE_DEVICES)
-                .addChildEventListener(getChildEventListener());
     }
 
     private ChildEventListener getChildEventListener() {
@@ -95,19 +90,28 @@ public class SyncingService extends Service {
             childEventListener = new ChildEventListener() {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-
+                    Device device = dataSnapshot.getValue(Device.class);
+                    ContentValues values = device.getContentValues();
+                    getContentResolver().insert(DEVICE_URI, values);
+                    Log.d(TAG, device.serialNumber + " device inserted");
                 }
 
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                    Log.d(TAG, "device data change detected");
                     Device device = dataSnapshot.getValue(Device.class);
                     ContentValues values = device.getContentValues();
                     getContentResolver().update(DEVICE_URI, values, null, null);
+                    Log.d(TAG, device.serialNumber + " device data updated");
                 }
 
                 @Override
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    Device device = dataSnapshot.getValue(Device.class);
+                    String where = DeviceColumns.SERIAL_NUMBER + "=?";
+                    String serialNum = device.serialNumber;
+                    String[] args = new String[]{serialNum};
+                    getContentResolver().delete(DEVICE_URI, where, args);
+                    Log.d(TAG, serialNum + " device data removed from local db");
 
                 }
 
@@ -125,30 +129,8 @@ public class SyncingService extends Service {
         return childEventListener;
     }
 
-    private void performSyncing() {
-        FirebaseDatabase.getInstance().getReference().child(TABLE_DEVICES).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, dataSnapshot.getChildrenCount() + " rows of data need to be inserted");
-                ContentValues[] contentValuesList = new ContentValues[((int) dataSnapshot.getChildrenCount())];
-                int index = 0;
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Device value = snapshot.getValue(Device.class);
-                    contentValuesList[index] = value.getContentValues();
-                    index++;
-                }
-                getContentResolver().bulkInsert(DatabaseContract.DEVICE_URI, contentValuesList);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void notifySingleSyncComplete() {
-        Intent localIntent = new Intent(Constants.BROADCAST_ACTION_SINGLE_SYNC_RESULT);
+    private void notifySyncDone() {
+        Intent localIntent = new Intent(Constants.BROADCAST_ACTION_SYNC_RESULT);
         LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
         Log.d(TAG, "Activity notified");
     }
@@ -161,16 +143,13 @@ public class SyncingService extends Service {
         @Override
         public void handleMessage(Message msg) {
             switch (msg.arg1) {
-                case ACTION_REGISTER:
-                    performRegisterSyncing();
-                    break;
                 case ACTION_UNREGISTER:
                     performUnregisterSyncing();
                     stopSelf();
                     break;
-                case ACTION_SINGLE_SYNC:
+                case ACTION_SYNC:
                     performSyncing();
-                    notifySingleSyncComplete();
+                    notifySyncDone();
                     break;
                 default:
                     throw new IllegalStateException("Illegal intent");

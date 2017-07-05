@@ -18,12 +18,6 @@
                 android:id="@+id/included1"
                 layout="@layout/toolbar" />
 
-            <fragment
-                android:id="@+id/this_device"
-                android:name="com.detroitlabs.devicemanager.list.ThisDeviceFragment"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/device_list"
                 android:layout_width="match_parent"
