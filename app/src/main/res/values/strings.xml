@@ -7,7 +7,7 @@
     <string name="device_status">device status</string>
     <string name="search_filter">Search Filter</string>
     <string name="apply">apply</string>
-    <string name="cancel">cancel</string>
+    <string name="cancel">@android:string/cancel</string>
     <string name="clear_all">clear all</string>
 
     <string name="status_register_device">Register device…</string>
@@ -28,6 +28,7 @@
     <string name="request">request</string>`
     <string name="requested_by">Requested by %1$s</string>
     <string name="status">Status</string>
+    <string name="borrowed_by">Borrowed by %1$s</string>
     <string name="checked_out_by">Checked out by %1$s</string>
     <string name="available">Available</string>
     <string name="dash">-</string>
@@ -40,4 +41,6 @@
     <string name="release">RELEASE</string>
     <string name="cancel_allcaps">CANCEL</string>
     <string name="this_device_cannot_be_registered">This device cannot be registered</string>
+    <string name="register">register</string>
+    <string name="other_devices">other devices</string>
 </resources>

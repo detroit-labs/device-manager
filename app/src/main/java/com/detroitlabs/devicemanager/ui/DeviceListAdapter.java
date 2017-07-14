@@ -1,4 +1,4 @@
-package com.detroitlabs.devicemanager.list;
+package com.detroitlabs.devicemanager.ui;
 
 import android.database.Cursor;
 import android.support.v4.content.ContextCompat;
@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 
 import com.detroitlabs.devicemanager.R;
 import com.detroitlabs.devicemanager.databinding.ViewDeviceListItemBinding;
+import com.detroitlabs.devicemanager.list.OnItemClickListener;
 import com.detroitlabs.devicemanager.models.Device;
 
 

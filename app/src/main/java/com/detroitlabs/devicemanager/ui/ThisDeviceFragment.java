@@ -1,4 +1,4 @@
-package com.detroitlabs.devicemanager.list;
+package com.detroitlabs.devicemanager.ui;
 
 
 import android.content.BroadcastReceiver;
@@ -20,12 +20,13 @@ import android.view.ViewGroup;
 
 import com.detroitlabs.devicemanager.R;
 import com.detroitlabs.devicemanager.databinding.ViewDeviceListItemBinding;
+import com.detroitlabs.devicemanager.list.OnItemClickListener;
 import com.detroitlabs.devicemanager.models.Device;
 
 import static com.detroitlabs.devicemanager.constants.Constants.BROADCAST_ACTION_REQUEST_RECEIVED;
 import static com.detroitlabs.devicemanager.constants.Constants.BROADCAST_EXTRA_REQUESTED_BY;
 
-public class ThisDeviceFragment extends Fragment implements LoaderManager.LoaderCallbacks<Device> {
+public class ThisDeviceFragment extends Fragment {
     private static final String TAG = ThisDeviceFragment.class.getSimpleName();
     private static final int LOADER_ID = 333;
     private ViewDeviceListItemBinding binding;
@@ -53,12 +54,6 @@ public class ThisDeviceFragment extends Fragment implements LoaderManager.Loader
         binding = ViewDeviceListItemBinding.inflate(inflater, container, false);
         initView();
         return binding.getRoot();
-    }
-
-    @Override
-    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
     @Override
@@ -118,20 +113,5 @@ public class ThisDeviceFragment extends Fragment implements LoaderManager.Loader
         builder.setTitle(R.string.device_request);
         builder.setPositiveButton(android.R.string.ok, null);
         builder.create().show();
-    }
-
-    @Override
-    public Loader<Device> onCreateLoader(int id, Bundle args) {
-        return new ThisDeviceTaskLoader(getContext());
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Device> loader, Device data) {
-        setupData(data);
-    }
-
-    @Override
-    public void onLoaderReset(Loader<Device> loader) {
-
     }
 }

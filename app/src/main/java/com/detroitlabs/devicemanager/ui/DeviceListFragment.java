@@ -1,4 +1,4 @@
-package com.detroitlabs.devicemanager.list;
+package com.detroitlabs.devicemanager.ui;
 
 import android.database.Cursor;
 import android.os.Bundle;
@@ -23,6 +23,7 @@ import com.detroitlabs.devicemanager.data.DatabaseContract;
 import com.detroitlabs.devicemanager.databinding.FragDeviceListBinding;
 import com.detroitlabs.devicemanager.detail.DeviceDetailView;
 import com.detroitlabs.devicemanager.filter.FilterUtil;
+import com.detroitlabs.devicemanager.list.OnItemClickListener;
 import com.detroitlabs.devicemanager.models.Device;
 
 

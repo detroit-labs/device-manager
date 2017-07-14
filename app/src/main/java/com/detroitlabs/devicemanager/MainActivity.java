@@ -9,8 +9,8 @@ import android.view.MenuItem;
 
 import com.crashlytics.android.Crashlytics;
 import com.detroitlabs.devicemanager.filter.SearchFilterDialog;
-import com.detroitlabs.devicemanager.list.DeviceListFragment;
-import com.detroitlabs.devicemanager.list.HomeFragment;
+import com.detroitlabs.devicemanager.ui.DeviceListFragment;
+import com.detroitlabs.devicemanager.ui.HomeFragment;
 import com.detroitlabs.devicemanager.sync.SyncFragment;
 import com.detroitlabs.devicemanager.sync.SyncingService;
 
