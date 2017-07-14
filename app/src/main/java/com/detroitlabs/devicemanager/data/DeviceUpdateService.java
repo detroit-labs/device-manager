@@ -85,7 +85,6 @@ public class DeviceUpdateService extends IntentService {
     }
 
     private void performCheckIn(String serialNumber) {
-        updateLocalDb(THIS_DEVICE_URI, serialNumber, DatabaseContract.DeviceColumns.CHECKED_OUT_BY, "");
         FirebaseDatabase.getInstance().getReference()
                 .child(TABLE_DEVICES)
                 .child(serialNumber)
@@ -94,7 +93,6 @@ public class DeviceUpdateService extends IntentService {
     }
 
     private void performCheckOut(String serialNumber, String checkedOutBy) {
-        updateLocalDb(THIS_DEVICE_URI, serialNumber, DatabaseContract.DeviceColumns.CHECKED_OUT_BY, checkedOutBy);
         FirebaseDatabase.getInstance().getReference()
                 .child(TABLE_DEVICES)
                 .child(serialNumber)

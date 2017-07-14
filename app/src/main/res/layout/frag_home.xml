@@ -47,7 +47,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                app:device="@{device}" />
+                app:device="@{device}"
+                app:viewModel="@{viewModel}" />
 
             <TextView
                 android:id="@+id/brand_and_model"
@@ -105,8 +106,9 @@
                     android:layout_toLeftOf="@id/button_checkout"
                     android:layout_toStartOf="@id/button_checkout"
                     android:hint="@string/enter_your_name"
+                    android:imeOptions="actionGo"
                     android:inputType="textPersonName"
-                    android:text="@{viewModel.name}" />
+                    android:text="@={viewModel.name}" />
 
 
                 <TextView

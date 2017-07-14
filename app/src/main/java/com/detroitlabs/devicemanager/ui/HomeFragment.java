@@ -5,14 +5,17 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentTransaction;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.TextView;
 
-import com.detroitlabs.devicemanager.R;
 import com.detroitlabs.devicemanager.databinding.FragHomeBinding;
 import com.detroitlabs.devicemanager.db.Device;
+import com.detroitlabs.devicemanager.utils.ViewUtil;
 
 
 public class HomeFragment extends LifecycleFragment {
@@ -36,7 +39,6 @@ public class HomeFragment extends LifecycleFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         binding = FragHomeBinding.inflate(inflater, container, false);
         setupView();
         return binding.getRoot();
@@ -57,6 +59,23 @@ public class HomeFragment extends LifecycleFragment {
     }
 
     private void setupView() {
+        binding.buttonCheckout.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                ViewUtil.hideKeyboard(view);
+                binding.editTextUsername.clearFocus();
+                return false;
+            }
+        });
+        binding.editTextUsername.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
+                if (actionId == EditorInfo.IME_ACTION_GO) {
+                    viewModel.checkOut();
+                }
+                return false;
+            }
+        });
 //        binding.buttonOtherDevices.setOnClickListener(new View.OnClickListener() {
 //            @Override
 //            public void onClick(View v) {

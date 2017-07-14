@@ -7,7 +7,6 @@ import android.os.AsyncTask;
 import com.detroitlabs.devicemanager.DmApplication;
 import com.detroitlabs.devicemanager.db.Device;
 import com.detroitlabs.devicemanager.db.DeviceDao;
-import com.detroitlabs.devicemanager.utils.DeviceUtil;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -45,6 +44,12 @@ public class DeviceRepository {
     }
 
     public void update(Device device) {
-        deviceDao.update(device);
+        new AsyncTask<Device, Void, Void>() {
+            @Override
+            protected Void doInBackground(Device... devices) {
+                deviceDao.update(devices[0]);
+                return null;
+            }
+        }.execute(device);
     }
 }
