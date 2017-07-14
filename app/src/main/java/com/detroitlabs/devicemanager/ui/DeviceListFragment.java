@@ -1,13 +1,11 @@
 package com.detroitlabs.devicemanager.ui;
 
-import android.database.Cursor;
+import android.arch.lifecycle.LifecycleFragment;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.CursorLoader;
-import android.support.v4.content.Loader;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -19,19 +17,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.detroitlabs.devicemanager.R;
-import com.detroitlabs.devicemanager.data.DatabaseContract;
 import com.detroitlabs.devicemanager.databinding.FragDeviceListBinding;
 import com.detroitlabs.devicemanager.detail.DeviceDetailView;
-import com.detroitlabs.devicemanager.filter.FilterUtil;
-import com.detroitlabs.devicemanager.list.OnItemClickListener;
-import com.detroitlabs.devicemanager.models.Device;
+
+import java.util.List;
 
 
-public class DeviceListFragment extends Fragment implements
-        LoaderManager.LoaderCallbacks<Cursor>,
+public class DeviceListFragment extends LifecycleFragment implements
         OnItemClickListener {
 
-    public static final int LOADER_ID = 113;
     private static final String HOME_FRAGMENT = "HomeFragment";
 
     private FragDeviceListBinding binding;
@@ -60,33 +54,19 @@ public class DeviceListFragment extends Fragment implements
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        getLoaderManager().initLoader(LOADER_ID, null, this);
+        DeviceListViewModel viewModel = ViewModelProviders.of(this).get(DeviceListViewModel.class);
+        viewModel.getDeviceList().observe(this, new Observer<List<com.detroitlabs.devicemanager.db.Device>>() {
+            @Override
+            public void onChanged(@Nullable List<com.detroitlabs.devicemanager.db.Device> devices) {
+                adapter.setData(devices);
+            }
+        });
     }
 
     @Override
-    public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-        return new CursorLoader(getContext(),
-                DatabaseContract.DEVICE_URI,
-                null,
-                FilterUtil.getDeviceListQuery(),
-                null,
-                null);
-    }
-
-    @Override
-    public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
-        adapter.swapCursor(data);
-    }
-
-    @Override
-    public void onLoaderReset(Loader loader) {
-        adapter.swapCursor(null);
-    }
-
-    @Override
-    public void onItemClick(Device device) {
-        binding.deviceDetail.setDetail(device);
-        openDrawer();
+    public void onItemClick(com.detroitlabs.devicemanager.db.Device device) {
+//        binding.deviceDetail.setDetail(device);
+//        openDrawer();
     }
 
     public boolean onBackPressed() {
@@ -136,7 +116,7 @@ public class DeviceListFragment extends Fragment implements
     }
 
     public void refreshList() {
-        getLoaderManager().restartLoader(LOADER_ID, null, this);
+
     }
 
     private void openDrawer() {

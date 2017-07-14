@@ -1,22 +1,18 @@
 package com.detroitlabs.devicemanager.ui;
 
-import android.database.Cursor;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
-import com.detroitlabs.devicemanager.R;
 import com.detroitlabs.devicemanager.databinding.ViewDeviceListItemBinding;
-import com.detroitlabs.devicemanager.list.OnItemClickListener;
-import com.detroitlabs.devicemanager.models.Device;
+
+import java.util.List;
 
 
 public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.DeviceHolder> {
 
     private OnItemClickListener listener;
-    private Cursor cursor;
+    private List<com.detroitlabs.devicemanager.db.Device> devices;
 
     public DeviceListAdapter(OnItemClickListener listener) {
         this.listener = listener;
@@ -26,27 +22,23 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
     public DeviceHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         ViewDeviceListItemBinding binding = ViewDeviceListItemBinding.inflate(
                 LayoutInflater.from(parent.getContext()), parent, false);
+        binding.setListener(listener);
         return new DeviceHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(DeviceHolder holder, int position) {
-        if (!cursor.moveToPosition(position)) {
-            throw new IllegalStateException("Invalid item position requested");
-        }
-        holder.bind(new Device(cursor));
+        com.detroitlabs.devicemanager.db.Device device = devices.get(position);
+        holder.bind(device);
     }
 
     @Override
     public int getItemCount() {
-        return (cursor != null) ? cursor.getCount() : 0;
+        return devices == null ? 0 : devices.size();
     }
 
-    public void swapCursor(Cursor cursor) {
-        if (this.cursor != null) {
-            this.cursor.close();
-        }
-        this.cursor = cursor;
+    public void setData(List<com.detroitlabs.devicemanager.db.Device> devices) {
+        this.devices = devices;
         notifyDataSetChanged();
     }
 
@@ -59,37 +51,9 @@ public class DeviceListAdapter extends RecyclerView.Adapter<DeviceListAdapter.De
             this.binding = binding;
         }
 
-        void bind(final Device detail) {
-            binding.setDetail(detail);
-            setStatus(detail);
+        void bind(final com.detroitlabs.devicemanager.db.Device device) {
+            binding.setDevice(device);
             binding.executePendingBindings();
-            binding.deviceItemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        listener.onItemClick(detail);
-                    }
-                }
-            });
-        }
-
-        private void setStatus(Device device) {
-            binding.statusText.setVisibility(View.GONE);
-
-            if (!device.isCheckedOut()) {
-                binding.status.setColorFilter(ContextCompat.getColor(itemView.getContext(), R.color.green));
-            } else {
-                binding.status.clearColorFilter();
-            }
-
-            if (device.hasRequest()) { //give priority to showing who has requested it next,  since icon already shows checked out status
-                binding.statusText.setText("Requested by " + device.requestedBy);
-                binding.statusText.setVisibility(View.VISIBLE);
-            }
-            else if (device.isCheckedOut()){ //but if no one is requesting it currently, show who has it checked out now
-                binding.statusText.setText("Checked out by " + device.checkedOutBy); //TODO use string res
-                binding.statusText.setVisibility(View.VISIBLE);
-            }
         }
     }
 }

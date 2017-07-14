@@ -5,6 +5,7 @@ import android.app.Application;
 
 import com.detroitlabs.devicemanager.sync.RegistrationService;
 import com.detroitlabs.devicemanager.sync.SyncingService;
+import com.detroitlabs.devicemanager.ui.DeviceListViewModel;
 import com.detroitlabs.devicemanager.ui.HomeViewModel;
 
 import javax.inject.Singleton;
@@ -30,4 +31,6 @@ public interface AppComponent {
     void inject(RegistrationService registrationService);
 
     void inject(HomeViewModel homeViewModel);
+
+    void inject(DeviceListViewModel deviceListViewModel);
 }

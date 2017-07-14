@@ -72,6 +72,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/device_status"
+                    android:tint="@color/orange"
                     android:src="@drawable/ic_checkbox_blank_circle_grey600_24dp" />
 
                 <TextView
@@ -109,6 +110,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/device_status"
+                    android:tint="@color/red"
                     android:src="@drawable/ic_checkbox_blank_circle_grey600_24dp" />
 
                 <TextView

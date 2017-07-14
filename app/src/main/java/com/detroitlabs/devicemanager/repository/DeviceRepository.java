@@ -8,6 +8,8 @@ import com.detroitlabs.devicemanager.DmApplication;
 import com.detroitlabs.devicemanager.db.Device;
 import com.detroitlabs.devicemanager.db.DeviceDao;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
@@ -51,5 +53,9 @@ public class DeviceRepository {
                 return null;
             }
         }.execute(device);
+    }
+
+    public LiveData<List<Device>> getAllDevices() {
+        return deviceDao.getAllExceptThis(DmApplication.getThisDevice().serialNumber);
     }
 }

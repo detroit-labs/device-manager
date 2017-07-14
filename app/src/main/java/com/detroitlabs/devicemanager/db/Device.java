@@ -1,7 +1,10 @@
 package com.detroitlabs.devicemanager.db;
 
 import android.arch.persistence.room.Entity;
+import android.support.annotation.DrawableRes;
 
+import com.detroitlabs.devicemanager.R;
+import com.detroitlabs.devicemanager.constants.Platform;
 import com.detroitlabs.devicemanager.data.DatabaseContract;
 import com.detroitlabs.devicemanager.utils.StringUtil;
 import com.google.firebase.database.Exclude;
@@ -12,7 +15,8 @@ import java.util.Map;
 
 @Entity(primaryKeys = "serialNumber")
 public class Device {
-    public String platform;
+
+    public Platform platform;
     @PropertyName("brand_and_model")
     public String brandAndModel;
     public String version;
@@ -36,7 +40,7 @@ public class Device {
     // TODO: 7/13/17 temporary wrapper method
     public static Device wrap(com.detroitlabs.devicemanager.models.Device device) {
         Device d = new Device();
-        d.platform = device.platform.name();
+        d.platform = device.platform;
         d.brandAndModel = device.brandAndModel;
         d.version = device.version;
         d.screenSize = device.screenSize;
@@ -57,6 +61,16 @@ public class Device {
     @Exclude
     public boolean hasRequest() {
         return !StringUtil.isNullOrEmpty(requestedBy);
+    }
+
+    @Exclude
+    @DrawableRes
+    public int getIcon() {
+        if (platform == Platform.ANDROID) {
+            return R.drawable.ic_android_grey600_24dp;
+        } else {
+            return R.drawable.ic_apple_grey600_24dp;
+        }
     }
 
     @Exclude
