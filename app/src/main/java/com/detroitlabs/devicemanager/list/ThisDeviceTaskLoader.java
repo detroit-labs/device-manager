@@ -6,7 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.AsyncTaskLoader;
 
 import com.detroitlabs.devicemanager.data.DatabaseContract;
-import com.detroitlabs.devicemanager.filter.FilterUtil;
+import com.detroitlabs.devicemanager.ui.filter.FilterUtil;
 import com.detroitlabs.devicemanager.models.Device;
 
 

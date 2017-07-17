@@ -1,4 +1,4 @@
-package com.detroitlabs.devicemanager.filter.adapters;
+package com.detroitlabs.devicemanager.ui.filter.adapters;
 
 import android.support.annotation.StringRes;
 import android.support.v7.widget.RecyclerView;
@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import com.detroitlabs.devicemanager.HighlightableTextView;
 import com.detroitlabs.devicemanager.R;
 import com.detroitlabs.devicemanager.constants.FilterType;
-import com.detroitlabs.devicemanager.filter.FilterUtil;
+import com.detroitlabs.devicemanager.ui.filter.FilterUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,11 +43,7 @@ public abstract class FilterOptionAdapter extends RecyclerView.Adapter<FilterOpt
 
     @Override
     public int getItemCount() {
-        if (items == null || items.isEmpty()) {
-            return 0;
-        } else {
-            return items.size();
-        }
+        return items == null ? 0 : items.size();
     }
 
     public void setOnFilterUpdatedListener(OnFilterUpdatedListener listener) {

@@ -1,17 +1,17 @@
-package com.detroitlabs.devicemanager.filter.adapters;
+package com.detroitlabs.devicemanager.ui.filter.adapters;
 
 
 import com.detroitlabs.devicemanager.R;
 import com.detroitlabs.devicemanager.constants.FilterType;
 
-public class ScreenResolutionAdapter extends FilterOptionAdapter {
+public class VersionFilterAdapter extends FilterOptionAdapter {
     @Override
     public FilterType getFilterType() {
-        return FilterType.SCREEN_RESOLUTION;
+        return FilterType.VERSION;
     }
 
     @Override
     public int getTitleRes() {
-        return R.string.screen_resolution;
+        return R.string.version;
     }
 }

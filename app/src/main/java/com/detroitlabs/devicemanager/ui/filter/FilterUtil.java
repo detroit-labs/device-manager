@@ -1,15 +1,15 @@
-package com.detroitlabs.devicemanager.filter;
+package com.detroitlabs.devicemanager.ui.filter;
 
 
 import com.detroitlabs.devicemanager.constants.FilterType;
 import com.detroitlabs.devicemanager.data.DatabaseContract;
-import com.detroitlabs.devicemanager.filter.adapters.FilterOptionAdapter;
-import com.detroitlabs.devicemanager.filter.adapters.IsSamsungAdapter;
-import com.detroitlabs.devicemanager.filter.adapters.PlatformFilterAdapter;
-import com.detroitlabs.devicemanager.filter.adapters.ScreenResolutionAdapter;
-import com.detroitlabs.devicemanager.filter.adapters.ScreenSizeAdapter;
-import com.detroitlabs.devicemanager.filter.adapters.VersionFilterAdapter;
-import com.detroitlabs.devicemanager.filter.adapters.YearClassAdapter;
+import com.detroitlabs.devicemanager.ui.filter.adapters.FilterOptionAdapter;
+import com.detroitlabs.devicemanager.ui.filter.adapters.IsSamsungAdapter;
+import com.detroitlabs.devicemanager.ui.filter.adapters.PlatformFilterAdapter;
+import com.detroitlabs.devicemanager.ui.filter.adapters.ScreenResolutionAdapter;
+import com.detroitlabs.devicemanager.ui.filter.adapters.ScreenSizeAdapter;
+import com.detroitlabs.devicemanager.ui.filter.adapters.VersionFilterAdapter;
+import com.detroitlabs.devicemanager.ui.filter.adapters.YearClassAdapter;
 import com.detroitlabs.devicemanager.models.Filter;
 import com.detroitlabs.devicemanager.utils.DeviceUtil;
 

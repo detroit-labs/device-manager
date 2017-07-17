@@ -1,9 +1,8 @@
-package com.detroitlabs.devicemanager.filter;
+package com.detroitlabs.devicemanager.ui.filter;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.LoaderManager;
 import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,15 +10,14 @@ import android.view.ViewGroup;
 
 import com.detroitlabs.devicemanager.R;
 import com.detroitlabs.devicemanager.databinding.ViewSearchFilterBinding;
-import com.detroitlabs.devicemanager.filter.adapters.FilterOptionAdapter;
 import com.detroitlabs.devicemanager.models.Filter;
+import com.detroitlabs.devicemanager.ui.filter.adapters.FilterOptionAdapter;
 
 import java.util.Collections;
 import java.util.Set;
 
 
 public class SearchFilterDialog extends DialogFragment implements
-        LoaderManager.LoaderCallbacks<Filter.Options>,
         FilterOptionAdapter.OnFilterUpdatedListener {
 
     private static final int LOADER_ID = 233;
@@ -85,10 +83,8 @@ public class SearchFilterDialog extends DialogFragment implements
     }
 
     private void fetchFilters() {
-        getLoaderManager().initLoader(LOADER_ID, null, this);
     }
 
-    @Override
     public Loader<Filter.Options> onCreateLoader(int id, Bundle args) {
         if (id == LOADER_ID) {
             return new FilterTaskLoader(getContext());
@@ -96,7 +92,6 @@ public class SearchFilterDialog extends DialogFragment implements
         throw new IllegalArgumentException("Illegal loader id");
     }
 
-    @Override
     public void onLoadFinished(Loader<Filter.Options> loader, Filter.Options data) {
         if (FilterUtil.firstTimeOpened()) {
             FilterUtil.setAllOptions(data);
@@ -108,7 +103,6 @@ public class SearchFilterDialog extends DialogFragment implements
         }
     }
 
-    @Override
     public void onLoaderReset(Loader<Filter.Options> loader) {
         for (FilterOptionAdapter adapter : adapters) {
             adapter.setOptions(Collections.<String>emptySet(),
@@ -120,7 +114,6 @@ public class SearchFilterDialog extends DialogFragment implements
     @Override
     public void onFilterUpdated() {
         // TODO: 5/1/17 add spinner to throttle clicking
-        getLoaderManager().restartLoader(LOADER_ID, null, this);
     }
 
     public void setOnApplyListener(OnFilterApplyListener onApplyListener) {

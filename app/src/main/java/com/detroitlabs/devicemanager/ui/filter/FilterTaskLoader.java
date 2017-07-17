@@ -1,4 +1,4 @@
-package com.detroitlabs.devicemanager.filter;
+package com.detroitlabs.devicemanager.ui.filter;
 
 import android.content.Context;
 import android.database.Cursor;

@@ -1,4 +1,4 @@
-package com.detroitlabs.devicemanager.filter.adapters;
+package com.detroitlabs.devicemanager.ui.filter.adapters;
 
 
 import com.detroitlabs.devicemanager.R;

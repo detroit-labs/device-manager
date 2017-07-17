@@ -1,4 +1,4 @@
-package com.detroitlabs.devicemanager.filter;
+package com.detroitlabs.devicemanager.ui.filter;
 
 import android.content.Context;
 import android.graphics.Rect;
@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.detroitlabs.devicemanager.databinding.ViewFilterTypeBinding;
-import com.detroitlabs.devicemanager.filter.adapters.FilterOptionAdapter;
+import com.detroitlabs.devicemanager.ui.filter.adapters.FilterOptionAdapter;
 import com.xiaofeng.flowlayoutmanager.FlowLayoutManager;
 
 public class SearchFilterTypeView extends FrameLayout {
