@@ -1,4 +1,4 @@
-package com.detroitlabs.devicemanager.models;
+package com.detroitlabs.devicemanager.ui.filter;
 
 
 import com.detroitlabs.devicemanager.constants.FilterType;
@@ -19,11 +19,7 @@ public class Filter {
             options = new HashMap<>();
         }
 
-        public boolean isEmpty() {
-            return options.isEmpty();
-        }
-
-        public Set<String> getOptionValues(FilterType filterType) {
+        Set<String> getOptionValues(FilterType filterType) {
             Set<String> values = options.get(filterType);
             if (values != null) {
                 return values;
@@ -51,29 +47,30 @@ public class Filter {
             selection = new HashMap<>();
         }
 
-        public boolean hasSelection() {
+        boolean hasSelection() {
             return selection != null && !selection.isEmpty();
         }
 
-        public boolean containsSelection(FilterType filterType, String value) {
-            return hasSelection() &&
-                    selection.containsKey(filterType) &&
-                    selection.get(filterType).contains(value);
+        boolean hasSelection(FilterType filterType) {
+            return hasSelection() && selection.containsKey(filterType);
         }
 
-        public List<String> getSelectionKeys() {
-            List<String> keys = new ArrayList<>(selection.keySet().size());
+        List<FilterType> getSelectionKeys() {
+            List<FilterType> keys = new ArrayList<>(selection.keySet().size());
             for (FilterType filterType : selection.keySet()) {
-                keys.add(filterType.toString());
+                keys.add(filterType);
             }
             return keys;
         }
 
-        public List<String> getSelectionValues(String key) {
-            return new ArrayList<>(selection.get(FilterType.valueOf(key.toUpperCase())));
+        Set<String> getSelectionValues(FilterType filterType) {
+            if (!hasSelection(filterType)) {
+                return Collections.emptySet();
+            }
+            return selection.get(filterType);
         }
 
-        public void addSelection(FilterType filterType, String value) {
+        void addSelection(FilterType filterType, String value) {
             Set<String> values;
             if (selection.containsKey(filterType)) {
                 values = selection.get(filterType);
@@ -84,7 +81,7 @@ public class Filter {
             values.add(value);
         }
 
-        public void removeSelection(FilterType filterType, String value) {
+        void removeSelection(FilterType filterType, String value) {
             for (String v : selection.get(filterType)) {
                 if (v.equalsIgnoreCase(value)) {
                     selection.get(filterType).remove(v);
@@ -94,6 +91,10 @@ public class Filter {
             if (selection.get(filterType).isEmpty()) {
                 selection.remove(filterType);
             }
+        }
+
+        void removeAllSelections() {
+            selection.clear();
         }
     }
 }

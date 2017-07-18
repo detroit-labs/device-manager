@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            tools:text="clear all" />
+            android:text="@string/clear_all"/>
 
         <TextView
             android:id="@+id/title_text"

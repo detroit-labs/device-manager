@@ -9,17 +9,18 @@ import android.view.ViewGroup;
 import com.detroitlabs.devicemanager.HighlightableTextView;
 import com.detroitlabs.devicemanager.R;
 import com.detroitlabs.devicemanager.constants.FilterType;
-import com.detroitlabs.devicemanager.ui.filter.FilterUtil;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public abstract class FilterOptionAdapter extends RecyclerView.Adapter<FilterOptionAdapter.OptionViewHolder> {
 
     private OnFilterUpdatedListener listener;
-    private List<String> items;
+    private List<String> allOptions;
     private Set<String> newOptions;
+    private Set<String> selections = new HashSet<>();
 
     public abstract FilterType getFilterType();
 
@@ -27,9 +28,9 @@ public abstract class FilterOptionAdapter extends RecyclerView.Adapter<FilterOpt
     public abstract int getTitleRes();
 
     public interface OnFilterUpdatedListener {
-        void onFilterUpdated();
-    }
 
+        void onFilterUpdated(FilterType filterType, String value, boolean isActivated);
+    }
     @Override
     public OptionViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.view_option_item, parent, false);
@@ -38,23 +39,30 @@ public abstract class FilterOptionAdapter extends RecyclerView.Adapter<FilterOpt
 
     @Override
     public void onBindViewHolder(OptionViewHolder holder, int position) {
-        holder.bind(items.get(position));
+        holder.bind(allOptions.get(position));
     }
 
     @Override
     public int getItemCount() {
-        return items == null ? 0 : items.size();
+        return allOptions == null ? 0 : allOptions.size();
     }
 
     public void setOnFilterUpdatedListener(OnFilterUpdatedListener listener) {
         this.listener = listener;
     }
 
-    public void setOptions(Set<String> allOptions, Set<String> options) {
-        if (items == null) {
-            items = new ArrayList<>(allOptions);
-        }
+    public void setOptions(Set<String> options, Set<String> selections) {
         this.newOptions = options;
+        if (!selections.isEmpty()) {
+            this.selections = selections;
+        } else {
+            this.selections.clear();
+        }
+        notifyDataSetChanged();
+    }
+
+    public void setAllOptions(Set<String> allOptions) {
+        this.allOptions = new ArrayList<>(allOptions);
         notifyDataSetChanged();
     }
 
@@ -66,23 +74,21 @@ public abstract class FilterOptionAdapter extends RecyclerView.Adapter<FilterOpt
             this.optionItem = (HighlightableTextView) itemView;
         }
 
-        void bind(final String text) {
+        void bind(String text) {
             optionItem.setText(text);
-            if (newOptions != null) {
+            if (newOptions != null && !newOptions.isEmpty()) {
                 optionItem.setEnabled(newOptions.contains(text));
             }
-            optionItem.setHighlighted(FilterUtil.containsSelection(getFilterType(), text));
+            optionItem.setHighlighted(selections.contains(text));
             optionItem.setOnHighlightListener(new HighlightableTextView.OnHighlightListener() {
                 @Override
-                public void onHighlight(boolean isHighlighted) {
+                public void onHighlight(boolean isHighlighted, CharSequence text) {
                     if (isHighlighted) {
-                        FilterUtil.addSelection(getFilterType(), text);
+                        selections.add(text.toString());
                     } else {
-                        FilterUtil.removeSelection(getFilterType(), text);
+                        selections.remove(text.toString());
                     }
-                    if (listener != null) {
-                        listener.onFilterUpdated();
-                    }
+                    listener.onFilterUpdated(getFilterType(), text.toString(), isHighlighted);
                 }
             });
         }

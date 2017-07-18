@@ -1,6 +1,8 @@
 package com.detroitlabs.devicemanager.ui.filter;
 
 
+import android.util.Pair;
+
 import com.detroitlabs.devicemanager.constants.FilterType;
 import com.detroitlabs.devicemanager.data.DatabaseContract;
 import com.detroitlabs.devicemanager.ui.filter.adapters.FilterOptionAdapter;
@@ -10,16 +12,13 @@ import com.detroitlabs.devicemanager.ui.filter.adapters.ScreenResolutionAdapter;
 import com.detroitlabs.devicemanager.ui.filter.adapters.ScreenSizeAdapter;
 import com.detroitlabs.devicemanager.ui.filter.adapters.VersionFilterAdapter;
 import com.detroitlabs.devicemanager.ui.filter.adapters.YearClassAdapter;
-import com.detroitlabs.devicemanager.models.Filter;
 import com.detroitlabs.devicemanager.utils.DeviceUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 public class FilterUtil {
-    private static Filter.Selection filterSelection = new Filter.Selection();
-    private static Filter.Options filterOptions = new Filter.Options();
-
     static FilterOptionAdapter[] createAdapters() {
         return new FilterOptionAdapter[]{
                 new PlatformFilterAdapter(),
@@ -31,87 +30,44 @@ public class FilterUtil {
         };
     }
 
-    public static boolean firstTimeOpened() {
-        return filterOptions.isEmpty();
-    }
-
-    public static void setAllOptions(Filter.Options options) {
-        filterOptions = options;
-    }
-
-    public static Set<String> getAllOptionValues(FilterType filterType) {
-        return filterOptions.getOptionValues(filterType);
-    }
-
-    public static void addSelection(FilterType filterType, String value) {
-        filterSelection.addSelection(filterType, value);
-    }
-
-    public static void removeSelection(FilterType filterType, String value) {
-        filterSelection.removeSelection(filterType, value);
-    }
-
-    public static boolean containsSelection(FilterType filterType, String value) {
-        return filterSelection.containsSelection(filterType, value);
-    }
-
-    public static String getDeviceListQuery() {
-        String filterQuery = convertFilterToQuerySelection();
-        if (filterQuery != null) {
-            filterQuery += " and ";
-        } else {
-            filterQuery = "";
-        }
-        filterQuery += excludeThisDeviceQuery();
-        return filterQuery;
-    }
-
-    private static String excludeThisDeviceQuery() {
-        return DatabaseContract.DeviceColumns.SERIAL_NUMBER +
-                " != '" +
-                DeviceUtil.getSerialNumber() +
-                "'";
-    }
-
-    public static String convertFilterToQuerySelection() {
-        if (!filterSelection.hasSelection()) {
-            return null;
-        } else {
-            // filterType1 in ('value1', 'value2') and filterType2 in ('value1', 'value2')
-            String selection = "";
-            List<String> selectionTypes = filterSelection.getSelectionKeys();
-            for (int i = 0; i < selectionTypes.size(); ++i) {
-                if (i > 0) {
-                    selection += " and ";
-                }
-                String selectionType = selectionTypes.get(i);
-                selection += selectionType + " in (";
-                selection += getArgs(filterSelection.getSelectionValues(selectionType));
-                selection += ")";
-
-            }
-            return selection;
-        }
-    }
-
-    private static String getArgs(List<String> values) {
-        // 'value1', 'value2', 'value3'
-        String args = "";
-        for (int index = 0; index < values.size(); ++index) {
-            if (index > 0) {
-                args += ",";
-            }
-            args += "'";
-            args += values.get(index);
-            args += "'";
-        }
-        return args;
-    }
-
     public static String getThisDeviceSelection() {
         return DatabaseContract.DeviceColumns.SERIAL_NUMBER +
                 " = '" +
                 DeviceUtil.getSerialNumber() +
                 "'";
+    }
+
+    public static Pair<String, Object[]> convertSelectionToQuery(Filter.Selection selection) {
+        StringBuilder qb = new StringBuilder("SELECT * FROM DEVICE");
+        if (selection.hasSelection()) {
+            qb.append(" WHERE ");
+        }
+        List<Object> args = new ArrayList<>();
+        List<FilterType> filterTypes = selection.getSelectionKeys();
+        for (int i = 0; i < filterTypes.size(); ++i) {
+            if (i > 0) {
+                qb.append(" AND ");
+            }
+            FilterType type = filterTypes.get(i);
+            Set<String> values = selection.getSelectionValues(type);
+            qb.append(type.toString());
+            qb.append(" IN (");
+            qb.append(getPlaceHolders(values.size()));
+            qb.append(")");
+            args.addAll(values);
+        }
+        return Pair.create(qb.toString(), args.toArray());
+    }
+
+    private static String getPlaceHolders(int count) {
+        // ?,?,?,?,?
+        String result = "";
+        for (int i = 0; i < count; ++i) {
+            if (i > 0) {
+                result += ",";
+            }
+            result += "?";
+        }
+        return result;
     }
 }

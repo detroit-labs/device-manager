@@ -8,17 +8,10 @@
         android:orientation="horizontal">
 
         <Button
-            android:id="@+id/cancel_button"
+            android:id="@+id/ok_button"
             style="@style/ColoredFlatButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/cancel" />
-
-        <Button
-            android:id="@+id/apply_button"
-            style="@style/ColoredFlatButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/apply" />
+            android:text="@android:string/ok" />
     </LinearLayout>
 </layout>

@@ -1,18 +1,13 @@
 package com.detroitlabs.devicemanager;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
-import android.view.MenuItem;
 
 import com.crashlytics.android.Crashlytics;
-import com.detroitlabs.devicemanager.ui.filter.SearchFilterDialog;
-import com.detroitlabs.devicemanager.ui.DeviceListFragment;
-import com.detroitlabs.devicemanager.ui.HomeFragment;
 import com.detroitlabs.devicemanager.sync.SyncFragment;
 import com.detroitlabs.devicemanager.sync.SyncingService;
+import com.detroitlabs.devicemanager.ui.HomeFragment;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -37,21 +32,6 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
         if (!hasSynced) {
             setupSyncFragment();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
-        return super.onCreateOptionsMenu(menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.filter) {
-            showSearchFilterDialog();
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -92,13 +72,6 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
         fragmentTransaction.commit();
     }
 
-    private void showSearchFilterDialog() {
-        FragmentManager fm = getSupportFragmentManager();
-        SearchFilterDialog searchFilterDialog = SearchFilterDialog.newInstance();
-        searchFilterDialog.setOnApplyListener(getOnApplyListener());
-        searchFilterDialog.show(fm, "search_filter_dialog");
-    }
-
     private void setupHomeFragment() {
         homeFragment = HomeFragment.newInstance();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
@@ -106,17 +79,4 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
         fragmentTransaction.replace(R.id.container, homeFragment, HOME_FRAGMENT);
         fragmentTransaction.commit();
     }
-
-    private SearchFilterDialog.OnFilterApplyListener getOnApplyListener() {
-        return new SearchFilterDialog.OnFilterApplyListener() {
-            @Override
-            public void onApply() {
-                //why is this returning null?!
-                DeviceListFragment deviceListFragment = (DeviceListFragment) (getSupportFragmentManager().findFragmentByTag(DEVICE_LIST_FRAGMENT));
-                deviceListFragment.refreshList();
-            }
-        };
-    }
-
-
 }

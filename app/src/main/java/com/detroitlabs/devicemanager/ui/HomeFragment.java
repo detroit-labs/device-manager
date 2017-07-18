@@ -82,9 +82,10 @@ public class HomeFragment extends LifecycleFragment {
             @Override
             public void onClick(View v) {
                 DeviceListFragment deviceListFragment = DeviceListFragment.newInstance();
-                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.container, deviceListFragment, DEVICE_LIST_FRAGMENT);
-                fragmentTransaction.commit();
+                FragmentTransaction ft = getFragmentManager().beginTransaction();
+                ft.add(R.id.container, deviceListFragment);
+                ft.addToBackStack(null);
+                ft.commit();
             }
         });
     }

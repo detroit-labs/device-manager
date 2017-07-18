@@ -5,20 +5,25 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.detroitlabs.devicemanager.R;
 import com.detroitlabs.devicemanager.databinding.FragDeviceListBinding;
+import com.detroitlabs.devicemanager.db.Device;
 import com.detroitlabs.devicemanager.detail.DeviceDetailView;
+import com.detroitlabs.devicemanager.ui.filter.FilterViewModel;
+import com.detroitlabs.devicemanager.ui.filter.SearchFilterDialog;
 
 import java.util.List;
 
@@ -27,15 +32,21 @@ public class DeviceListFragment extends LifecycleFragment implements
         OnItemClickListener {
 
     private static final String HOME_FRAGMENT = "HomeFragment";
+    private static final String DEVICE_LIST_FRAGMENT = "DeviceListFragment";
 
     private FragDeviceListBinding binding;
     private DeviceListAdapter adapter;
-
+    private DeviceListViewModel viewModel;
+    private FilterViewModel filterViewModel;
+    private Observer<List<Device>> observer = new Observer<List<Device>>() {
+        @Override
+        public void onChanged(@Nullable List<Device> devices) {
+            adapter.setData(devices);
+        }
+    };
 
     public static DeviceListFragment newInstance() {
-
         Bundle args = new Bundle();
-
         DeviceListFragment fragment = new DeviceListFragment();
         fragment.setArguments(args);
         return fragment;
@@ -54,17 +65,13 @@ public class DeviceListFragment extends LifecycleFragment implements
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        DeviceListViewModel viewModel = ViewModelProviders.of(this).get(DeviceListViewModel.class);
-        viewModel.getDeviceList().observe(this, new Observer<List<com.detroitlabs.devicemanager.db.Device>>() {
-            @Override
-            public void onChanged(@Nullable List<com.detroitlabs.devicemanager.db.Device> devices) {
-                adapter.setData(devices);
-            }
-        });
+        filterViewModel = ViewModelProviders.of(this).get(FilterViewModel.class);
+        viewModel = ViewModelProviders.of(this).get(DeviceListViewModel.class);
+        viewModel.getDeviceList().observe(this, observer);
     }
 
     @Override
-    public void onItemClick(com.detroitlabs.devicemanager.db.Device device) {
+    public void onItemClick(Device device) {
 //        binding.deviceDetail.setDetail(device);
 //        openDrawer();
     }
@@ -115,10 +122,6 @@ public class DeviceListFragment extends LifecycleFragment implements
         binding.deviceList.setLayoutManager(new LinearLayoutManager(getContext()));
     }
 
-    public void refreshList() {
-
-    }
-
     private void openDrawer() {
         binding.drawerLayout.openDrawer(Gravity.END);
     }
@@ -134,16 +137,29 @@ public class DeviceListFragment extends LifecycleFragment implements
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             // Respond to the action bar's back button
             case android.R.id.home:
-                HomeFragment homeFragment = HomeFragment.newInstance();
-                FragmentTransaction fragmentTransaction = getFragmentManager().beginTransaction();
-                fragmentTransaction.replace(R.id.container, homeFragment, HOME_FRAGMENT);
-                fragmentTransaction.commit();
+                getActivity().getSupportFragmentManager().popBackStack();
+                return true;
+            case R.id.filter:
+                showSearchFilterDialog();
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    private void showSearchFilterDialog() {
+        FragmentManager fm = getFragmentManager();
+        SearchFilterDialog searchFilterDialog = SearchFilterDialog.newInstance();
+        searchFilterDialog.setViewModel(filterViewModel);
+        searchFilterDialog.show(fm, "search_filter_dialog");
     }
 }

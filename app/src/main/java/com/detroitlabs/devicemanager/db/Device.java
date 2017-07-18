@@ -4,6 +4,7 @@ import android.arch.persistence.room.Entity;
 import android.support.annotation.DrawableRes;
 
 import com.detroitlabs.devicemanager.R;
+import com.detroitlabs.devicemanager.constants.FilterType;
 import com.detroitlabs.devicemanager.constants.Platform;
 import com.detroitlabs.devicemanager.data.DatabaseContract;
 import com.detroitlabs.devicemanager.utils.StringUtil;
@@ -85,5 +86,25 @@ public class Device {
         map.put(DatabaseContract.DeviceColumns.BRAND_AND_MODEL, brandAndModel);
         map.put(DatabaseContract.DeviceColumns.SCREEN_RESOLUTION, screenResolution);
         return map;
+    }
+
+    @Exclude
+    public String getFilterValue(FilterType filterType) {
+        switch (filterType) {
+            case PLATFORM:
+                return platform.name();
+            case VERSION:
+                return version;
+            case SCREEN_SIZE:
+                return screenSize;
+            case SCREEN_RESOLUTION:
+                return screenResolution;
+            case YEAR_CLASS:
+                return yearClass;
+            case IS_SAMSUNG:
+                return isSamsung;
+            default:
+                return "LOL";
+        }
     }
 }

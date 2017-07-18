@@ -1,38 +1,40 @@
 package com.detroitlabs.devicemanager.ui.filter;
 
+import android.arch.lifecycle.LifecycleRegistry;
+import android.arch.lifecycle.LifecycleRegistryOwner;
+import android.arch.lifecycle.Observer;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.content.Loader;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.detroitlabs.devicemanager.R;
+import com.detroitlabs.devicemanager.constants.FilterType;
 import com.detroitlabs.devicemanager.databinding.ViewSearchFilterBinding;
-import com.detroitlabs.devicemanager.models.Filter;
 import com.detroitlabs.devicemanager.ui.filter.adapters.FilterOptionAdapter;
 
-import java.util.Collections;
 import java.util.Set;
 
 
 public class SearchFilterDialog extends DialogFragment implements
-        FilterOptionAdapter.OnFilterUpdatedListener {
+        FilterOptionAdapter.OnFilterUpdatedListener, LifecycleRegistryOwner {
 
-    private static final int LOADER_ID = 233;
+    private static final String TAG = SearchFilterDialog.class.getName();
     private ViewSearchFilterBinding binding;
     private FilterOptionAdapter[] adapters;
-    private OnFilterApplyListener onApplyListener;
+    private FilterViewModel viewModel;
+    private final LifecycleRegistry lifecycleRegistry = new LifecycleRegistry(this);
 
-    public interface OnFilterApplyListener {
-        void onApply();
+
+    @Override
+    public LifecycleRegistry getLifecycle() {
+        return lifecycleRegistry;
     }
 
     public static SearchFilterDialog newInstance() {
-
         Bundle args = new Bundle();
-
         SearchFilterDialog fragment = new SearchFilterDialog();
         fragment.setArguments(args);
         return fragment;
@@ -42,12 +44,35 @@ public class SearchFilterDialog extends DialogFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = ViewSearchFilterBinding.inflate(inflater, container, false);
-        initFilter();
+        initFilterUi();
         return binding.getRoot();
     }
 
-    private void initFilter() {
-        initFilterUi();
+    public void setViewModel(FilterViewModel viewModel) {
+        this.viewModel = viewModel;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        binding.titleBar.titleText.setText(R.string.search_filter);
+        binding.buttonBar.okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
+        binding.titleBar.topButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                viewModel.clearAllSelections();
+            }
+        });
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        fetchFilters();
     }
 
     private void initFilterUi() {
@@ -61,62 +86,30 @@ public class SearchFilterDialog extends DialogFragment implements
         }
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        binding.titleBar.titleText.setText(R.string.search_filter);
-        binding.buttonBar.cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
-        binding.buttonBar.applyButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onApplyListener != null) {
-                    onApplyListener.onApply();
-                }
-                dismiss();
-            }
-        });
-        fetchFilters();
-    }
-
     private void fetchFilters() {
+        viewModel.loadAllOptions().observe(this, new Observer<Filter.Options>() {
+            @Override
+            public void onChanged(@Nullable Filter.Options options) {
+                for (FilterOptionAdapter adapter : adapters) {
+                    Set<String> values = options.getOptionValues(adapter.getFilterType());
+                    adapter.setAllOptions(values);
+                }
+            }
+        });
+        viewModel.loadFilteredOptions().observe(this, new Observer<Filter.Options>() {
+            @Override
+            public void onChanged(@Nullable Filter.Options options) {
+                for (FilterOptionAdapter adapter : adapters) {
+                    Set<String> newOptions = options.getOptionValues(adapter.getFilterType());
+                    Set<String> selections = viewModel.getSelections(adapter.getFilterType());
+                    adapter.setOptions(newOptions, selections);
+                }
+            }
+        });
     }
 
-    public Loader<Filter.Options> onCreateLoader(int id, Bundle args) {
-        if (id == LOADER_ID) {
-            return new FilterTaskLoader(getContext());
-        }
-        throw new IllegalArgumentException("Illegal loader id");
-    }
-
-    public void onLoadFinished(Loader<Filter.Options> loader, Filter.Options data) {
-        if (FilterUtil.firstTimeOpened()) {
-            FilterUtil.setAllOptions(data);
-        }
-        for (FilterOptionAdapter adapter : adapters) {
-            Set<String> allOptions = FilterUtil.getAllOptionValues(adapter.getFilterType());
-            Set<String> options = data.getOptionValues(adapter.getFilterType());
-            adapter.setOptions(allOptions, options);
-        }
-    }
-
-    public void onLoaderReset(Loader<Filter.Options> loader) {
-        for (FilterOptionAdapter adapter : adapters) {
-            adapter.setOptions(Collections.<String>emptySet(),
-                    Collections.<String>emptySet());
-        }
-    }
-
-    /* Implementation FilterOptionAdapter.OnFilterUpdatedListener */
     @Override
-    public void onFilterUpdated() {
-        // TODO: 5/1/17 add spinner to throttle clicking
-    }
-
-    public void setOnApplyListener(OnFilterApplyListener onApplyListener) {
-        this.onApplyListener = onApplyListener;
+    public void onFilterUpdated(FilterType filterType, String value, boolean isActivated) {
+        viewModel.updateFilter(filterType, value, isActivated);
     }
 }
