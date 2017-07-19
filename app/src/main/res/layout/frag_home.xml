@@ -18,6 +18,7 @@
 
 
     <LinearLayout
+        android:id="@+id/transition_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -71,10 +72,10 @@
             android:orientation="vertical">
 
             <RelativeLayout
+                android:id="@+id/checkout_area"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/normal_padding"
-                app:visibleGone="@{!device.notRegisterable &amp;&amp; !device.checkedOut}"
                 tools:visibility="visible">
 
                 <Button
@@ -85,8 +86,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:onClick="@{() -> viewModel.checkOut()}"
-                    android:text="@string/check_out"
-                    app:visibleGone="@{!device.checkedOut}" />
+                    android:text="@string/check_out"/>
 
                 <Button
                     android:id="@+id/button_register"
@@ -123,8 +123,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="@color/light_grey"
-                android:visibility="visible" />
+                android:background="@color/light_grey" />
 
             <include
                 layout="@layout/layout_device_detail"

@@ -42,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
 //        if (deviceListFragment != null && !deviceListFragment.onBackPressed()) {
 //            super.onBackPressed();
 //        }
-//        super.onBackPressed();
+        super.onBackPressed();
     }
 
     @Override
