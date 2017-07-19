@@ -14,28 +14,28 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.detroitlabs.devicemanager.detail.DetailItemView
+        <com.detroitlabs.devicemanager.ui.detail.DetailItemView
             android:id="@+id/version"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:label="Version"
             app:value="@{device.version}" />
 
-        <com.detroitlabs.devicemanager.detail.DetailItemView
+        <com.detroitlabs.devicemanager.ui.detail.DetailItemView
             android:id="@+id/size"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:label="Size"
             app:value="@{device.screenSize}" />
 
-        <com.detroitlabs.devicemanager.detail.DetailItemView
+        <com.detroitlabs.devicemanager.ui.detail.DetailItemView
             android:id="@+id/resolution"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:label="Resolution"
             app:value="@{device.screenResolution}" />
 
-        <com.detroitlabs.devicemanager.detail.DetailItemView
+        <com.detroitlabs.devicemanager.ui.detail.DetailItemView
             android:id="@+id/year_class"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

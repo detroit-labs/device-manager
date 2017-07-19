@@ -21,7 +21,7 @@ import android.view.ViewGroup;
 import com.detroitlabs.devicemanager.R;
 import com.detroitlabs.devicemanager.databinding.FragDeviceListBinding;
 import com.detroitlabs.devicemanager.db.Device;
-import com.detroitlabs.devicemanager.detail.DeviceDetailView;
+import com.detroitlabs.devicemanager.ui.detail.DeviceDetailView;
 import com.detroitlabs.devicemanager.ui.filter.FilterViewModel;
 import com.detroitlabs.devicemanager.ui.filter.SearchFilterDialog;
 

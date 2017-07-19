@@ -1,4 +1,4 @@
-package com.detroitlabs.devicemanager.detail;
+package com.detroitlabs.devicemanager.ui.detail;
 
 import android.content.Context;
 import android.content.res.TypedArray;

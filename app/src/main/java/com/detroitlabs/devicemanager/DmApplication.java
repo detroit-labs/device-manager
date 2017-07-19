@@ -16,7 +16,7 @@ public class DmApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        device = Device.wrap(DeviceUtil.readThisDevice(this));
+        device = DeviceUtil.readThisDevice(this);
         instance = this;
         injector = DaggerAppComponent.builder().application(this).build();
     }

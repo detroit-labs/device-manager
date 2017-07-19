@@ -1,4 +1,4 @@
-package com.detroitlabs.devicemanager.detail;
+package com.detroitlabs.devicemanager.ui.detail;
 
 import android.content.Context;
 import android.os.Parcelable;
@@ -15,7 +15,7 @@ import android.widget.FrameLayout;
 import com.detroitlabs.devicemanager.R;
 import com.detroitlabs.devicemanager.data.DeviceUpdateService;
 import com.detroitlabs.devicemanager.databinding.ViewDeviceDetailBinding;
-import com.detroitlabs.devicemanager.models.Device;
+import com.detroitlabs.devicemanager.db.Device;
 
 public class DeviceDetailView extends FrameLayout {
     private BackButtonClickListener listener;

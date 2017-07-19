@@ -38,22 +38,6 @@ public class Device {
     @Exclude
     public boolean notRegisterable;
 
-    // TODO: 7/13/17 temporary wrapper method
-    public static Device wrap(com.detroitlabs.devicemanager.models.Device device) {
-        Device d = new Device();
-        d.platform = device.platform;
-        d.brandAndModel = device.brandAndModel;
-        d.version = device.version;
-        d.screenSize = device.screenSize;
-        d.screenResolution = device.screenResolution;
-        d.serialNumber = device.serialNumber;
-        d.checkedOutBy = device.checkedOutBy;
-        d.requestedBy = device.requestedBy;
-        d.yearClass = device.yearClass;
-        d.isSamsung = device.isSamsung;
-        return d;
-    }
-
     @Exclude
     public boolean isCheckedOut() {
         return !StringUtil.isNullOrEmpty(checkedOutBy);
