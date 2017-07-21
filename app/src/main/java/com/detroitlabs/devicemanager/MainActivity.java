@@ -75,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements SyncFragment.OnSy
     private void setupHomeFragment() {
         homeFragment = HomeFragment.newInstance();
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        fragmentTransaction.setCustomAnimations(R.anim.fade_in, R.anim.fade_out);
+        fragmentTransaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
         fragmentTransaction.replace(R.id.container, homeFragment, HOME_FRAGMENT);
         fragmentTransaction.commit();
     }

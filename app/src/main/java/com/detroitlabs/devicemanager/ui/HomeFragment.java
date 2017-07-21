@@ -103,6 +103,7 @@ public class HomeFragment extends LifecycleFragment {
                 DeviceListFragment deviceListFragment = DeviceListFragment.newInstance();
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.add(R.id.container, deviceListFragment);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
                 ft.addToBackStack(null);
                 ft.commit();
             }
