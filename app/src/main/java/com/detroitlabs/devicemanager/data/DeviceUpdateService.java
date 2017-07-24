@@ -81,7 +81,7 @@ public class DeviceUpdateService extends IntentService {
     }
 
     private void performPersistRequest(String serialNumber, String requestedBy) {
-        updateLocalDb(THIS_DEVICE_URI, serialNumber, DatabaseContract.DeviceColumns.REQUESTED_BY, requestedBy);
+//        updateLocalDb(THIS_DEVICE_URI, serialNumber, DatabaseContract.DeviceColumns.REQUESTED_BY, requestedBy);
     }
 
     private void performCheckIn(String serialNumber) {
@@ -101,7 +101,7 @@ public class DeviceUpdateService extends IntentService {
     }
 
     private void performRequest(String serialNumber, String requestedBy) {
-        updateLocalDb(DEVICE_URI, serialNumber, DatabaseContract.DeviceColumns.REQUESTED_BY, requestedBy);
+//        updateLocalDb(DEVICE_URI, serialNumber, DatabaseContract.DeviceColumns.REQUESTED_BY, requestedBy);
         FirebaseDatabase.getInstance().getReference()
                 .child(TABLE_DEVICES)
                 .child(serialNumber)

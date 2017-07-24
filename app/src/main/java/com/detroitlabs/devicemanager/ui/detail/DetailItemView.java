@@ -21,8 +21,8 @@ public class DetailItemView extends FrameLayout {
     public DetailItemView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         View view = inflate(context, R.layout.view_detail_item, this);
-        label = (TextView) view.findViewById(R.id.label);
-        value = (TextView) view.findViewById(R.id.value);
+        label = view.findViewById(R.id.label);
+        value = view.findViewById(R.id.value);
         TypedArray a = context.getTheme().obtainStyledAttributes(attrs, R.styleable.DetailItemView, 0, 0);
         try {
             String label = a.getString(R.styleable.DetailItemView_label);

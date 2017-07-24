@@ -1,4 +1,4 @@
-package com.detroitlabs.devicemanager.binding;
+package com.detroitlabs.devicemanager.ui.binding;
 
 
 import android.databinding.BindingAdapter;

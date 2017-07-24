@@ -25,6 +25,8 @@ import com.detroitlabs.devicemanager.ui.detail.DeviceDetailView;
 import com.detroitlabs.devicemanager.ui.filter.FilterViewModel;
 import com.detroitlabs.devicemanager.ui.filter.SearchFilterDialog;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 
@@ -41,6 +43,7 @@ public class DeviceListFragment extends LifecycleFragment implements
     private Observer<List<Device>> observer = new Observer<List<Device>>() {
         @Override
         public void onChanged(@Nullable List<Device> devices) {
+            sort(devices);
             adapter.setData(devices);
         }
     };
@@ -120,6 +123,7 @@ public class DeviceListFragment extends LifecycleFragment implements
         adapter = new DeviceListAdapter(this);
         binding.deviceList.setAdapter(adapter);
         binding.deviceList.setLayoutManager(new LinearLayoutManager(getContext()));
+        binding.deviceList.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
     }
 
     private void openDrawer() {
@@ -161,5 +165,22 @@ public class DeviceListFragment extends LifecycleFragment implements
         SearchFilterDialog searchFilterDialog = SearchFilterDialog.newInstance();
         searchFilterDialog.setViewModel(filterViewModel);
         searchFilterDialog.show(fm, "search_filter_dialog");
+    }
+
+    private void sort(List<Device> devices) {
+        Collections.sort(devices, new Comparator<Device>() {
+            @Override
+            public int compare(Device d1, Device d2) {
+                int c;
+                if (d1.isCheckedOut() == d2.isCheckedOut()) {
+                    c = d1.brandAndModel.compareTo(d2.brandAndModel);
+                } else if (d1.isCheckedOut()) {
+                    c = 1;
+                } else {
+                    c = -1;
+                }
+                return c;
+            }
+        });
     }
 }

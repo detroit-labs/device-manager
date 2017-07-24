@@ -3,9 +3,11 @@ package com.detroitlabs.devicemanager.ui;
 import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentTransaction;
+import android.transition.TransitionManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -56,8 +58,25 @@ public class HomeFragment extends LifecycleFragment {
             @Override
             public void onChanged(@Nullable Device device) {
                 binding.setDevice(device);
+                animVisibility(device);
             }
         });
+    }
+
+    private void animVisibility(Device device) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            TransitionManager.beginDelayedTransition(binding.transitionContainer);
+        }
+
+        setVisible(binding.checkoutArea, !device.notRegisterable && !device.isCheckedOut());
+        setVisible(binding.status.textNotRegisterable, device.notRegisterable);
+        setVisible(binding.status.viewAvailable, !device.notRegisterable && !device.hasRequest() && !device.isCheckedOut());
+        setVisible(binding.status.viewRequest, device.hasRequest());
+        setVisible(binding.status.viewCheckout, device.isCheckedOut());
+    }
+
+    private void setVisible(View view, boolean show) {
+        view.setVisibility(show ? View.VISIBLE : View.GONE);
     }
 
     private void setupView() {
@@ -84,6 +103,7 @@ public class HomeFragment extends LifecycleFragment {
                 DeviceListFragment deviceListFragment = DeviceListFragment.newInstance();
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
                 ft.add(R.id.container, deviceListFragment);
+                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
                 ft.addToBackStack(null);
                 ft.commit();
             }

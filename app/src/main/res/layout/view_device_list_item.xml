@@ -20,7 +20,7 @@
         android:id="@+id/device_item_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:background="?attr/selectableItemBackground"
         android:onClick="@{() -> listener.onItemClick(device)}"
         android:padding="@dimen/normal_padding">
 
@@ -41,8 +41,7 @@
             android:layout_marginLeft="@dimen/normal_padding"
             android:layout_marginStart="@dimen/normal_padding"
             android:layout_toEndOf="@id/icon"
-            android:layout_toRightOf="@id/icon"
-            android:orientation="vertical">
+            android:layout_toRightOf="@id/icon">
 
             <TextView
                 android:id="@+id/brand_and_model"
@@ -54,7 +53,7 @@
 
             <TextView
                 android:id="@+id/version"
-                android:layout_width="wrap_content"
+                android:layout_width="32dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/brand_and_model"
                 android:text="@{device.version}"
