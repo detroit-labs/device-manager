@@ -13,22 +13,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
-            android:name="com.detroitlabs.devicemanager.MainActivity"
-            android:launchMode="singleInstance">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            android:name=".PagerActivity"
+            android:launchMode="singleInstance" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
-
-        <service android:name="com.detroitlabs.devicemanager.sync.RegistrationService" />
-        <service android:name="com.detroitlabs.devicemanager.sync.SyncingService" />
-        <service android:name="com.detroitlabs.devicemanager.data.DeviceUpdateService" />
+        <service android:name=".sync.RegistrationService" />
+        <service android:name=".sync.SyncingService" />
+        <service android:name=".data.DeviceUpdateService" />
         <service android:name=".sync.FirebaseTokenSyncService" />
-
         <service android:name=".notification.MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
@@ -43,6 +35,14 @@
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="2abbd3768efce5a40e96de83cb479fe0360ba2de" />
+
+        <activity android:name=".SyncActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
