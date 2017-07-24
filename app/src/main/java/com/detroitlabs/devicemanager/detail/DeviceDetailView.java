@@ -16,7 +16,6 @@ import com.detroitlabs.devicemanager.R;
 import com.detroitlabs.devicemanager.data.DeviceUpdateService;
 import com.detroitlabs.devicemanager.databinding.ViewDeviceDetailBinding;
 import com.detroitlabs.devicemanager.models.Device;
-import com.detroitlabs.devicemanager.utils.DeviceUtil;
 
 public class DeviceDetailView extends FrameLayout {
     private BackButtonClickListener listener;
@@ -27,8 +26,6 @@ public class DeviceDetailView extends FrameLayout {
     }
 
     private ViewDeviceDetailBinding binding;
-
-    private boolean isThisDevice;
 
     public DeviceDetailView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
@@ -47,7 +44,6 @@ public class DeviceDetailView extends FrameLayout {
     }
 
     public void setDetail(Device device) {
-        isThisDevice = device.serialNumber.equals(DeviceUtil.getSerialNumber());
         binding.setDetail(device);
         setTitle(device);
         setStatus(device);
@@ -57,7 +53,6 @@ public class DeviceDetailView extends FrameLayout {
     }
 
     public void onClosed() {
-        binding.checkOutName.getEditableText().clear();
         binding.requestName.getEditableText().clear();
     }
 
@@ -78,20 +73,6 @@ public class DeviceDetailView extends FrameLayout {
                 binding.requestButton.setEnabled(s.length() > 0);
             }
         });
-        binding.checkOutName.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                binding.checkOutButton.setEnabled(s.length() > 0);
-            }
-        });
         binding.requestButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -104,34 +85,8 @@ public class DeviceDetailView extends FrameLayout {
             }
         });
 
-        binding.checkInButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DeviceUpdateService.checkInDevice(getContext());
-                navigateUp();
-            }
-        });
-        binding.checkOutButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DeviceUpdateService.checkOutDevice(getContext(), binding.checkOutName.getText().toString());
-                navigateUp();
-            }
-        });
-
-        if (isThisDevice) {
-            if (device.isCheckedOut()) {
-                showButton(binding.checkInButton);
-            } else {
-                showButton(binding.checkOutField);
-            }
-        } else {
-            if (device.isCheckedOut()) {
-                showButton(binding.requestField);
-            } else {
-                hideAllButtons();
-            }
-        }
+        //allow someone to request a device no matter what state the device is in
+        showButton(binding.requestField);
     }
 
     private void navigateUp() {
@@ -147,22 +102,16 @@ public class DeviceDetailView extends FrameLayout {
 
     private void hideAllButtons() {
         binding.requestField.setVisibility(GONE);
-        binding.checkInButton.setVisibility(GONE);
-        binding.checkOutField.setVisibility(GONE);
     }
 
     private void setTitle(Device device) {
         String brandAndModel = device.brandAndModel;
-        if (isThisDevice) {
-            binding.collapsingToolbar.setTitle(brandAndModel + " (this device)");
-        } else {
-            binding.collapsingToolbar.setTitle(brandAndModel);
-        }
+        binding.collapsingToolbar.setTitle(brandAndModel);
     }
 
     private void setStatus(Device device) {
         if (device.isCheckedOut()) {
-            binding.status.setText(getString(R.string.borrowed_by, device.checkedOutBy));
+            binding.status.setText(getString(R.string.checked_out_by, device.checkedOutBy));
         } else {
             binding.status.setText(R.string.available);
         }

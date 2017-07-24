@@ -92,17 +92,26 @@ public class Device {
     @Exclude
     public ContentValues getContentValues() {
         ContentValues values = new ContentValues();
-        values.put(DeviceColumns.VERSION, version);
-        values.put(DeviceColumns.YEAR_CLASS, yearClass);
-        values.put(DeviceColumns.IS_SAMSUNG, isSamsung);
-        values.put(DeviceColumns.SCREEN_SIZE, screenSize);
+        nullCheckAndPut(values, DeviceColumns.VERSION, version);
+        nullCheckAndPut(values, DeviceColumns.YEAR_CLASS, yearClass);
+        nullCheckAndPut(values, DeviceColumns.IS_SAMSUNG, isSamsung);
+        nullCheckAndPut(values, DeviceColumns.SCREEN_SIZE, screenSize);
         values.put(DeviceColumns.REQUESTED_BY, requestedBy);
-        values.put(DeviceColumns.SERIAL_NUMBER, serialNumber);
+        nullCheckAndPut(values, DeviceColumns.SERIAL_NUMBER, serialNumber);
         values.put(DeviceColumns.CHECKED_OUT_BY, checkedOutBy);
-        values.put(DeviceColumns.PLATFORM, platform.toString());
-        values.put(DeviceColumns.BRAND_AND_MODEL, brandAndModel);
-        values.put(DeviceColumns.SCREEN_RESOLUTION, screenResolution);
+        nullCheckAndPut(values, DeviceColumns.PLATFORM, platform.toString());
+        nullCheckAndPut(values, DeviceColumns.BRAND_AND_MODEL, brandAndModel);
+        nullCheckAndPut(values, DeviceColumns.SCREEN_RESOLUTION, screenResolution);
         return values;
+    }
+
+    @Exclude
+    private void nullCheckAndPut(ContentValues values, String key, String value){
+        if (value == null){
+            throw new RuntimeException("This device has a null value for key '" + key + "'");
+        } else {
+            values.put(key, value);
+        }
     }
 
     @Exclude

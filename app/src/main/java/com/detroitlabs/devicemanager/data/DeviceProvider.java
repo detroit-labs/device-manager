@@ -67,6 +67,7 @@ public class DeviceProvider extends ContentProvider {
             case DEVICES:
                 SQLiteDatabase db = dbHelper.getWritableDatabase();
                 long id = db.insertWithOnConflict(TABLE_DEVICES, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+                if (id != -1) getContext().getContentResolver().notifyChange(uri, null);
                 return ContentUris.withAppendedId(DatabaseContract.DEVICE_URI, id);
             default:
                 throw new IllegalArgumentException("Illegal insert URI");
@@ -75,7 +76,7 @@ public class DeviceProvider extends ContentProvider {
 
     @Override
     public int bulkInsert(@NonNull Uri uri, @NonNull ContentValues[] values) {
-        Log.d(TAG, "Start bulk inserting data");
+        Log.d(TAG, "Start bulk inserting rows into devices table");
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         db.beginTransaction();
         try {
@@ -88,6 +89,7 @@ public class DeviceProvider extends ContentProvider {
                 }
             }
             db.setTransactionSuccessful();
+            Log.d(TAG, "Bulk insert of rows completed successfully");
         } catch (SQLException ex) {
             Log.w(TAG, ex);
         } finally {
@@ -98,17 +100,34 @@ public class DeviceProvider extends ContentProvider {
 
     @Override
     public int delete(@NonNull Uri uri, @Nullable String selection, @Nullable String[] selectionArgs) {
-        return 0;
+        Log.d(TAG, "Start deleting rows in devices table");
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        db.beginTransaction();
+        int rowsDeleted = 0;
+        try {
+            rowsDeleted = db.delete(TABLE_DEVICES, selection, selectionArgs);
+            db.setTransactionSuccessful();
+            getContext().getContentResolver().notifyChange(uri, null);
+            Log.d(TAG, "Deletion of " + rowsDeleted + " rows successful");
+        } catch (SQLException e) {
+            Log.w(TAG, e);
+        } finally {
+            db.endTransaction();
+        }
+
+        return rowsDeleted;
     }
 
     @Override
     public int update(@NonNull Uri uri, @Nullable ContentValues values, @Nullable String selection, @Nullable String[] selectionArgs) {
+        Log.d(TAG, "Start updating rows in devices table");
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String whereClause = String.format("%s = ?", DatabaseContract.DeviceColumns.SERIAL_NUMBER);
         String[] whereArgs = new String[]{values.getAsString(DatabaseContract.DeviceColumns.SERIAL_NUMBER)};
         int affectedRows = db.update(TABLE_DEVICES, values, whereClause, whereArgs);
         if (affectedRows != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
+            Log.d(TAG, "Updated " + affectedRows + " rows");
         }
         return affectedRows;
     }
