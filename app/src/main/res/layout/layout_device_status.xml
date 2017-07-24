@@ -23,17 +23,17 @@
         tools:background="@color/colorPrimary">
 
         <TextView
+            android:id="@+id/text_not_registerable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/this_device_cannot_be_registered"
             android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
-            app:visibleGone="@{device.notRegisterable}"
             tools:visibility="gone" />
 
         <RelativeLayout
+            android:id="@+id/view_available"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:visibleGone="@{!device.notRegisterable &amp;&amp; !device.hasRequest &amp;&amp; !device.checkedOut}"
             tools:visibility="gone">
 
             <ImageView
@@ -63,17 +63,17 @@
             tools:visibility="visible">
 
             <RelativeLayout
+                android:id="@+id/view_request"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:visibleGone="@{device.hasRequest}">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/icon1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/device_status"
-                    android:tint="@color/orange"
-                    android:src="@drawable/ic_checkbox_blank_circle_grey600_24dp" />
+                    android:src="@drawable/ic_checkbox_blank_circle_grey600_24dp"
+                    android:tint="@color/orange" />
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -101,17 +101,17 @@
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/view_checkout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:visibleGone="@{device.checkedOut}">
+                android:layout_height="wrap_content">
 
                 <ImageView
                     android:id="@+id/icon2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:contentDescription="@string/device_status"
-                    android:tint="@color/red"
-                    android:src="@drawable/ic_checkbox_blank_circle_grey600_24dp" />
+                    android:src="@drawable/ic_checkbox_blank_circle_grey600_24dp"
+                    android:tint="@color/red" />
 
                 <TextView
                     android:layout_width="wrap_content"
