@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
+        android:name=".DmApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -23,11 +24,6 @@
             </intent-filter>
         </activity>
 
-        <provider
-            android:name="com.detroitlabs.devicemanager.data.DeviceProvider"
-            android:authorities="com.detroitlabs.devicemanager"
-            android:exported="false" />
-
         <service android:name="com.detroitlabs.devicemanager.sync.RegistrationService" />
         <service android:name="com.detroitlabs.devicemanager.sync.SyncingService" />
         <service android:name="com.detroitlabs.devicemanager.data.DeviceUpdateService" />
@@ -40,9 +36,10 @@
         </service>
         <service android:name=".notification.MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="2abbd3768efce5a40e96de83cb479fe0360ba2de" />

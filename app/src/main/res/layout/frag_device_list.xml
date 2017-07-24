@@ -22,10 +22,11 @@
                 android:id="@+id/device_list"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/white"
                 tools:listitem="@layout/view_device_list_item" />
         </LinearLayout>
         <!-- The navigation drawer -->
-        <com.detroitlabs.devicemanager.detail.DeviceDetailView
+        <com.detroitlabs.devicemanager.ui.detail.DeviceDetailView
             android:id="@+id/device_detail"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

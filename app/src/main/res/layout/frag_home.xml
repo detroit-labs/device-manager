@@ -6,307 +6,131 @@
     <data>
 
         <variable
-            name="detail"
-            type="com.detroitlabs.devicemanager.models.Device" />
+            name="device"
+            type="com.detroitlabs.devicemanager.db.Device" />
+
+        <variable
+            name="viewModel"
+            type="com.detroitlabs.devicemanager.ui.HomeViewModel" />
 
         <import type="android.view.View" />
     </data>
 
-    <android.support.design.widget.CoordinatorLayout
-        android:id="@+id/home_screen"
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/home_this_device"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:background="@color/colorPrimary"
+            android:padding="@dimen/normal_padding">
+
+            <ImageView
+                android:id="@+id/button_other_devices"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:contentDescription="@string/other_devices"
+                android:scaleY="1.2"
+                android:src="@drawable/ic_other_devices" />
+
+            <include
+                android:id="@+id/status"
+                layout="@layout/layout_device_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                app:device="@{device}"
+                app:viewModel="@{viewModel}" />
+
+            <TextView
+                android:id="@+id/brand_and_model"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/status"
+                android:layout_marginBottom="@dimen/small_padding"
+                android:text="@{device.brandAndModel}"
+                android:textAppearance="?android:textAppearanceLargeInverse"
+                android:textSize="30sp"
+                tools:text="BrandAndModel" />
+
+
+        </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="3"
             android:orientation="vertical">
 
-            <LinearLayout
-                android:id="@+id/home_this_device"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1.6"
-                android:background="@color/colorPrimary"
-                android:gravity="bottom"
-                android:orientation="vertical">
+                android:layout_height="wrap_content"
+                android:padding="@dimen/normal_padding"
+                app:visibleGone="@{!device.notRegisterable &amp;&amp; !device.checkedOut}"
+                tools:visibility="visible">
 
+                <Button
+                    android:id="@+id/button_checkout"
+                    style="@style/RaisedButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:onClick="@{() -> viewModel.checkOut()}"
+                    android:text="@string/check_out"
+                    app:visibleGone="@{!device.checkedOut}" />
 
-                <LinearLayout
+                <Button
+                    android:id="@+id/button_register"
+                    style="@style/RaisedButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/register"
+                    android:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/edit_text_username"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="bottom"
-                    android:orientation="vertical"
-                    android:paddingBottom="@dimen/small_padding"
-                    android:paddingStart="@dimen/large_padding">
-
-                    <TextView
-                        android:id="@+id/brand_and_model"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingBottom="@dimen/small_padding"
-                        android:text="@{detail.brandAndModel}"
-                        android:textAppearance="?android:textAppearanceLargeInverse"
-                        android:textSize="30sp"
-                        tools:text="BrandAndModel" />
-
-                    <RelativeLayout
-                        android:id="@+id/status_available"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="@{(!detail.hasRequest() &amp;&amp; !detail.isCheckedOut()) ? View.VISIBLE : View.GONE}">
-
-                        <ImageView
-                            android:id="@+id/icon_available"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:contentDescription="@string/device_status"
-                            android:src="@drawable/ic_checkbox_blank_circle_grey600_24dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBottom="@+id/icon_available"
-                            android:layout_centerVertical="true"
-                            android:layout_toEndOf="@+id/icon_available"
-                            android:paddingStart="@dimen/normal_padding"
-                            android:text="@string/available"
-                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Inverse"
-                            android:visibility="visible"
-                            tools:text="Available" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBottom="@+id/icon_available"
-                            android:layout_centerVertical="true"
-                            android:layout_toEndOf="@+id/icon_available"
-                            android:paddingStart="@dimen/normal_padding"
-                            android:text="@string/this_device_cannot_be_registered"
-                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Inverse"
-                            android:visibility="gone" />
+                    android:layout_alignBaseline="@id/button_checkout"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_toLeftOf="@id/button_checkout"
+                    android:layout_toStartOf="@id/button_checkout"
+                    android:hint="@string/enter_your_name"
+                    android:imeOptions="actionGo"
+                    android:inputType="textPersonName"
+                    android:text="@={viewModel.name}" />
 
 
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/status_requested_by"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:visibility="@{detail.hasRequest() ? View.VISIBLE : View.GONE}">
-
-                        <ImageView
-                            android:id="@+id/icon_requested_by"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:contentDescription="@string/device_status"
-                            android:src="@drawable/ic_checkbox_blank_circle_grey600_24dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBottom="@+id/icon_requested_by"
-                            android:layout_centerVertical="true"
-                            android:layout_toEndOf="@+id/icon_requested_by"
-                            android:paddingStart="@dimen/normal_padding"
-                            android:text="@{@string/requested_by(detail.requestedBy)}"
-                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Inverse"
-                            android:visibility="visible"
-                            tools:text="Requested by Jack" />
-
-                        <TextView
-                            android:id="@+id/button_cancel_request"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginEnd="@dimen/large_padding"
-                            android:text="@string/cancel_allcaps"
-                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Inverse"
-                            android:textStyle="bold" />
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/status_checked_out_by"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:gravity="bottom"
-                        android:visibility="@{detail.checkedOut ? View.VISIBLE : View.GONE}">
-
-                        <ImageView
-                            android:id="@+id/icon_checked_out_by"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:contentDescription="@string/device_status"
-                            android:src="@drawable/ic_checkbox_blank_circle_grey600_24dp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBottom="@+id/icon_checked_out_by"
-                            android:layout_centerVertical="true"
-                            android:layout_toEndOf="@+id/icon_checked_out_by"
-                            android:paddingStart="@dimen/normal_padding"
-                            android:text="@{@string/checked_out_by(detail.checkedOutBy)}"
-                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Inverse"
-                            android:visibility="visible"
-                            tools:text="Checked Out by Rob" />
-
-                        <TextView
-                            android:id="@+id/button_release"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginEnd="@dimen/large_padding"
-                            android:text="@string/release"
-                            android:textAppearance="@style/Base.TextAppearance.AppCompat.Inverse"
-                            android:textStyle="bold"
-                            android:visibility="visible" />
-
-                    </RelativeLayout>
-
-                </LinearLayout>
-
-                <RelativeLayout
-                    android:id="@+id/inputname"
+                <TextView
+                    android:id="@+id/text_no_more_requests"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/lighter_grey"
-                    android:gravity="start"
-                    android:paddingBottom="@dimen/tiny_padding"
-                    android:paddingEnd="@dimen/large_padding"
-                    android:paddingStart="@dimen/large_padding"
-                    android:paddingTop="@dimen/tiny_padding">
+                    android:text="@string/no_more_requests"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                    android:visibility="gone" />
+            </RelativeLayout>
 
-                    <EditText
-                        android:id="@+id/edit_text_username"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignStart="@+id/button_request"
-                        android:layout_toStartOf="@+id/button_request"
-                        android:hint="@string/enter_your_name"
-                        android:inputType="textPersonName"
-                        android:visibility="visible" />
-
-                    <Button
-                        android:id="@+id/button_request"
-                        style="@style/RaisedButtonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@id/edit_text_username"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignTop="@id/edit_text_username"
-                        android:background="@color/teal"
-                        android:text="@string/request"
-                        android:visibility="visible" />
-
-                    <Button
-                        android:id="@+id/button_checkout"
-                        style="@style/RaisedButtonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@id/edit_text_username"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignTop="@id/edit_text_username"
-                        android:background="@color/teal"
-                        android:text="@string/check_out"
-                        android:visibility="gone" />
-
-                    <Button
-                        android:id="@+id/button_register"
-                        style="@style/RaisedButtonStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignBottom="@id/edit_text_username"
-                        android:layout_alignParentRight="true"
-                        android:layout_alignTop="@id/edit_text_username"
-                        android:background="@color/teal"
-                        android:text="REGISTER"
-                        android:visibility="gone" />
-
-                    <TextView
-                        android:id="@+id/text_no_more_requests"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/no_more_requests"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                        android:visibility="gone" />
-                </RelativeLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
+            <View
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="2"
-                android:orientation="vertical">
+                android:layout_height="1dp"
+                android:background="@color/light_grey"
+                android:visibility="visible" />
 
-                <View
-                    android:id="@+id/sep_bar"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="@android:color/darker_gray"
-                    android:visibility="visible" />
+            <include
+                layout="@layout/layout_device_detail"
+                app:device="@{device}" />
 
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/normal_padding"
-                    android:orientation="vertical">
-
-                    <com.detroitlabs.devicemanager.detail.DetailItemView
-                        android:id="@+id/version"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:label="Version"
-                        app:value="@{detail.version}" />
-
-                    <com.detroitlabs.devicemanager.detail.DetailItemView
-                        android:id="@+id/size"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:label="Size"
-                        app:value="@{detail.screenSize}" />
-
-                    <com.detroitlabs.devicemanager.detail.DetailItemView
-                        android:id="@+id/resolution"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:label="Resolution"
-                        app:value="@{detail.screenResolution}" />
-
-                    <com.detroitlabs.devicemanager.detail.DetailItemView
-                        android:id="@+id/year_class"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:label="Year Class"
-                        app:value="@{detail.yearClass}" />
-
-
-                </LinearLayout>
-
-
-            </LinearLayout>
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/button_other_devices"
-            android:scaleType="center"
-            android:scaleY="1.5"
-            android:scaleX="1.5"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_gravity="end"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="12dp"
-            android:src="@drawable/ic_other_devices" />
-    </android.support.design.widget.CoordinatorLayout>
+    </LinearLayout>
 </layout>

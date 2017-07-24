@@ -14,7 +14,7 @@ import android.view.Display;
 import android.view.WindowManager;
 
 import com.detroitlabs.devicemanager.constants.Platform;
-import com.detroitlabs.devicemanager.models.Device;
+import com.detroitlabs.devicemanager.db.Device;
 import com.facebook.device.yearclass.YearClass;
 import com.jaredrummler.android.device.DeviceName;
 

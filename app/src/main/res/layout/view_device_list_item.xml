@@ -6,8 +6,12 @@
     <data>
 
         <variable
-            name="detail"
-            type="com.detroitlabs.devicemanager.models.Device" />
+            name="device"
+            type="com.detroitlabs.devicemanager.db.Device" />
+
+        <variable
+            name="listener"
+            type="com.detroitlabs.devicemanager.ui.OnItemClickListener" />
 
         <import type="android.view.View" />
     </data>
@@ -17,6 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:onClick="@{() -> listener.onItemClick(device)}"
         android:padding="@dimen/normal_padding">
 
         <ImageView
@@ -27,7 +32,7 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:contentDescription="@string/platform_icon"
-            app:imageResource="@{detail.icon}"
+            app:imageResource="@{device.icon}"
             tools:src="@drawable/ic_android_grey600_24dp" />
 
         <RelativeLayout
@@ -43,7 +48,7 @@
                 android:id="@+id/brand_and_model"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{detail.brandAndModel}"
+                android:text="@{device.brandAndModel}"
                 android:textAppearance="?android:textAppearanceLarge"
                 tools:text="Samsung Galaxy S7" />
 
@@ -52,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/brand_and_model"
-                android:text="@{detail.version}"
+                android:text="@{device.version}"
                 tools:text="7.1.1" />
 
             <TextView
@@ -64,6 +69,7 @@
                 android:layout_marginStart="@dimen/large_padding"
                 android:layout_toEndOf="@id/version"
                 android:layout_toRightOf="@id/version"
+                app:status_text="@{device}"
                 tools:text="Requested by Jack" />
         </RelativeLayout>
 
@@ -75,7 +81,8 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:contentDescription="@string/device_status"
-            android:src="@drawable/ic_checkbox_blank_circle_grey600_24dp" />
+            android:src="@drawable/ic_checkbox_blank_circle_grey600_24dp"
+            app:color="@{device}" />
 
     </RelativeLayout>
 </layout>

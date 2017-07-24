@@ -9,6 +9,7 @@ import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
@@ -119,6 +120,7 @@ public class SyncFragment extends Fragment {
             RegistrationService.initRegister(getContext());
             Log.d(TAG, "Registered device with service");
         } else {
+            RegistrationService.saveWithoutRegister(getContext());
             Log.d(TAG, "Not registering device because it is not using the test account");
             syncDatabase();
         }

@@ -2,7 +2,6 @@ package com.detroitlabs.devicemanager.sync;
 
 
 import android.app.Service;
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
@@ -14,26 +13,40 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.detroitlabs.devicemanager.DmApplication;
 import com.detroitlabs.devicemanager.constants.Constants;
-import com.detroitlabs.devicemanager.data.DatabaseContract;
-import com.detroitlabs.devicemanager.models.Device;
+import com.detroitlabs.devicemanager.db.Device;
+import com.detroitlabs.devicemanager.db.DeviceDao;
+import com.detroitlabs.devicemanager.repository.DeviceRepository;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
-import static com.detroitlabs.devicemanager.data.DatabaseContract.DEVICE_URI;
-import static com.detroitlabs.devicemanager.data.DatabaseContract.DeviceColumns;
+import java.util.List;
+
+import javax.inject.Inject;
+
 import static com.detroitlabs.devicemanager.data.DatabaseContract.TABLE_DEVICES;
 
 public class SyncingService extends Service {
-    public static final String TAG = SyncingService.class.getSimpleName();
+    private static final String TAG = SyncingService.class.getSimpleName();
     private static final int ACTION_UNREGISTER = 13;
     private static final int ACTION_SYNC = 17;
     private static final String ACTION = TAG + ".ACTION";
 
     private ChildEventListener childEventListener;
     private ServiceHandler serviceHandler;
+
+    @Inject
+    DeviceRepository deviceRepo;
+
+    public SyncingService() {
+        super();
+        DmApplication.getInjector().inject(this);
+    }
 
     public static void initSync(Context context) {
         Intent intent = new Intent(context, SyncingService.class);
@@ -72,11 +85,27 @@ public class SyncingService extends Service {
     }
 
     private void performSyncing() {
-        int rowsDeleted = getContentResolver().delete(DatabaseContract.DEVICE_URI, null, null);
+        DatabaseReference tableDevice = FirebaseDatabase.getInstance().getReference()
+                .child(TABLE_DEVICES);
+        int rowsDeleted = deviceRepo.emptyDeviceTable();
         Log.d(TAG, rowsDeleted + " rows cleared in devices table");
-        FirebaseDatabase.getInstance().getReference()
-                .child(TABLE_DEVICES)
-                .addChildEventListener(getChildEventListener());
+        tableDevice.addChildEventListener(getChildEventListener());
+        notifyWhenDone(tableDevice);
+    }
+
+    private void notifyWhenDone(DatabaseReference tableDevice) {
+
+        tableDevice.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG, "Sync is done, rows inserted: " + dataSnapshot.getChildrenCount());
+                notifySyncDone();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+            }
+        });
     }
 
     private void performUnregisterSyncing() {
@@ -91,27 +120,22 @@ public class SyncingService extends Service {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     Device device = dataSnapshot.getValue(Device.class);
-                    ContentValues values = device.getContentValues();
-                    getContentResolver().insert(DEVICE_URI, values);
+                    deviceRepo.insert(device);
                     Log.d(TAG, device.serialNumber + " device inserted");
                 }
 
                 @Override
                 public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                     Device device = dataSnapshot.getValue(Device.class);
-                    ContentValues values = device.getContentValues();
-                    getContentResolver().update(DEVICE_URI, values, null, null);
+                    deviceRepo.update(device);
                     Log.d(TAG, device.serialNumber + " device data updated");
                 }
 
                 @Override
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
                     Device device = dataSnapshot.getValue(Device.class);
-                    String where = DeviceColumns.SERIAL_NUMBER + "=?";
-                    String serialNum = device.serialNumber;
-                    String[] args = new String[]{serialNum};
-                    getContentResolver().delete(DEVICE_URI, where, args);
-                    Log.d(TAG, serialNum + " device data removed from local db");
+                    deviceRepo.delete(device);
+                    Log.d(TAG, device.serialNumber + " device data removed from local db");
 
                 }
 
@@ -149,7 +173,6 @@ public class SyncingService extends Service {
                     break;
                 case ACTION_SYNC:
                     performSyncing();
-                    notifySyncDone();
                     break;
                 default:
                     throw new IllegalStateException("Illegal intent");
