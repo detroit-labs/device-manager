@@ -101,12 +101,12 @@ public class SyncActivity extends AppCompatActivity {
             public void run() {
                 startPagerActivity();
             }
-        }, 1500);
+        }, 1000);
     }
 
     private void startPagerActivity() {
-        finish();
         startActivity(new Intent(this, PagerActivity.class));
+        finish();
     }
 
     private void updateStatusText(@StringRes int statusRes) {
