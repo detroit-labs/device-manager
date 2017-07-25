@@ -48,7 +48,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@{device.brandAndModel}"
-                android:textAppearance="?android:textAppearanceLarge"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 tools:text="Samsung Galaxy S7" />
 
             <TextView

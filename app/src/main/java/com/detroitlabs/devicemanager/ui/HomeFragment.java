@@ -20,9 +20,8 @@ import com.detroitlabs.devicemanager.db.Device;
 import com.detroitlabs.devicemanager.utils.ViewUtil;
 
 
-public class HomeFragment extends LifecycleFragment {
+public class HomeFragment extends LifecycleFragment implements BackPressListener{
 
-    private static final String DEVICE_LIST_FRAGMENT = "DeviceListFragment";
     private FragHomeBinding binding;
     private HomeViewModel viewModel;
 
@@ -59,6 +58,11 @@ public class HomeFragment extends LifecycleFragment {
                 animVisibility(device);
             }
         });
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        return false;
     }
 
     private void animVisibility(Device device) {

@@ -9,7 +9,6 @@ import android.databinding.ObservableField;
 import com.detroitlabs.devicemanager.DmApplication;
 import com.detroitlabs.devicemanager.data.DeviceUpdateService;
 import com.detroitlabs.devicemanager.db.Device;
-import com.detroitlabs.devicemanager.di.DaggerAppComponent;
 import com.detroitlabs.devicemanager.repository.DeviceRepository;
 
 import javax.inject.Inject;
