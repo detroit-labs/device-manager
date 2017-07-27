@@ -42,4 +42,6 @@
     <string name="this_device_cannot_be_registered">This device cannot be registered</string>
     <string name="register">register</string>
     <string name="other_devices">other devices</string>
+    <string name="authentication">authentication…</string>
+    <string name="not_authorized">Not authorized</string>
 </resources>
