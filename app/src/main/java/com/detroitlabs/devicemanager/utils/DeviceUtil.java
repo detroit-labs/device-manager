@@ -31,6 +31,10 @@ public class DeviceUtil {
         fragment.requestPermissions(new String[]{Manifest.permission.GET_ACCOUNTS}, requestCode);
     }
 
+    public static void requestGetAccountsPermission(Activity activity, int requestCode) {
+        activity.requestPermissions(new String[]{Manifest.permission.GET_ACCOUNTS}, requestCode);
+    }
+
     public static Device readThisDevice(Context context) {
         Device device = new Device();
         device.platform = Platform.ANDROID;

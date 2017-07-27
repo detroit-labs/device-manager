@@ -6,7 +6,6 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentTransaction;
 import android.transition.TransitionManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -16,15 +15,13 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
-import com.detroitlabs.devicemanager.R;
 import com.detroitlabs.devicemanager.databinding.FragHomeBinding;
 import com.detroitlabs.devicemanager.db.Device;
 import com.detroitlabs.devicemanager.utils.ViewUtil;
 
 
-public class HomeFragment extends LifecycleFragment {
+public class HomeFragment extends LifecycleFragment implements BackPressListener{
 
-    private static final String DEVICE_LIST_FRAGMENT = "DeviceListFragment";
     private FragHomeBinding binding;
     private HomeViewModel viewModel;
 
@@ -61,6 +58,11 @@ public class HomeFragment extends LifecycleFragment {
                 animVisibility(device);
             }
         });
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        return false;
     }
 
     private void animVisibility(Device device) {
@@ -100,12 +102,7 @@ public class HomeFragment extends LifecycleFragment {
         binding.buttonOtherDevices.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DeviceListFragment deviceListFragment = DeviceListFragment.newInstance();
-                FragmentTransaction ft = getFragmentManager().beginTransaction();
-                ft.add(R.id.container, deviceListFragment);
-                ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_CLOSE);
-                ft.addToBackStack(null);
-                ft.commit();
+                // TODO: 7/24/17 swipe to list page
             }
         });
     }

@@ -31,7 +31,7 @@ import java.util.List;
 
 
 public class DeviceListFragment extends LifecycleFragment implements
-        OnItemClickListener {
+        OnItemClickListener, BackPressListener {
 
     private static final String HOME_FRAGMENT = "HomeFragment";
     private static final String DEVICE_LIST_FRAGMENT = "DeviceListFragment";
@@ -59,9 +59,9 @@ public class DeviceListFragment extends LifecycleFragment implements
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragDeviceListBinding.inflate(inflater, container, false);
-        setupToolbar();
         setupRightDrawer();
         initRecyclerView();
+        setupFilterButton();
         return binding.getRoot();
     }
 
@@ -75,8 +75,8 @@ public class DeviceListFragment extends LifecycleFragment implements
 
     @Override
     public void onItemClick(Device device) {
-//        binding.deviceDetail.setDetail(device);
-//        openDrawer();
+        binding.deviceDetail.setDetail(device);
+        openDrawer();
     }
 
     public boolean onBackPressed() {
@@ -126,38 +126,23 @@ public class DeviceListFragment extends LifecycleFragment implements
         binding.deviceList.addItemDecoration(new SimpleDividerItemDecoration(getContext()));
     }
 
-    private void openDrawer() {
-        binding.drawerLayout.openDrawer(Gravity.END);
+    private void setupFilterButton() {
+        binding.filterButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showSearchFilterDialog();
+            }
+        });
     }
 
-    private void setupToolbar() {
-        setHasOptionsMenu(true);
-        ((AppCompatActivity) getActivity()).setSupportActionBar(binding.included1.toolbar);
-        ActionBar bar = ((AppCompatActivity) getActivity()).getSupportActionBar();
-        if (bar != null) {
-            bar.setDisplayHomeAsUpEnabled(true);
-            bar.setDisplayShowHomeEnabled(true);
-        }
+    private void openDrawer() {
+        binding.drawerLayout.openDrawer(Gravity.END);
     }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
         super.onCreateOptionsMenu(menu, inflater);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            // Respond to the action bar's back button
-            case android.R.id.home:
-                getActivity().getSupportFragmentManager().popBackStack();
-                return true;
-            case R.id.filter:
-                showSearchFilterDialog();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private void showSearchFilterDialog() {

@@ -32,12 +32,6 @@ public class DeviceDetailView extends FrameLayout {
         binding = ViewDeviceDetailBinding.inflate(LayoutInflater.from(context), this, true);
     }
 
-    // TODO: 5/10/17 handle rotation when this view is displayed
-    @Override
-    protected Parcelable onSaveInstanceState() {
-        return super.onSaveInstanceState();
-    }
-
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
         super.onRestoreInstanceState(state);
@@ -112,6 +106,8 @@ public class DeviceDetailView extends FrameLayout {
     private void setStatus(Device device) {
         if (device.isCheckedOut()) {
             binding.status.setText(getString(R.string.checked_out_by, device.checkedOutBy));
+        } else if (device.hasRequest()) {
+            binding.status.setText(getString(R.string.requested_by, device.requestedBy));
         } else {
             binding.status.setText(R.string.available);
         }

@@ -1,9 +1,7 @@
 <resources>
 
     <style name="AppTheme" parent="BaseTheme" />
-    <!-- Base application theme. -->
     <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -30,5 +28,10 @@
     <style name="HorizontalProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal" />
 
     <style name="AppBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="WindowAnimationTransition">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
 
 </resources>
