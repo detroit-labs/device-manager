@@ -4,6 +4,7 @@
 
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:name=".DmApplication"
@@ -17,7 +18,7 @@
 
         <service android:name=".sync.RegistrationService" />
         <service android:name=".sync.SyncingService" />
-        <service android:name=".data.DeviceUpdateService" />
+        <service android:name=".sync.DeviceUpdateService" />
         <service android:name=".sync.FirebaseTokenSyncService" />
         <service android:name=".notification.MyFirebaseInstanceIDService">
             <intent-filter>
@@ -41,6 +42,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <receiver android:name=".PowerOnOffReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

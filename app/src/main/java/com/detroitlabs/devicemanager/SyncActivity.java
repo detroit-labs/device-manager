@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.detroitlabs.devicemanager.databinding.ActivitySyncBinding;
+import com.detroitlabs.devicemanager.sync.DeviceUpdateService;
 import com.detroitlabs.devicemanager.sync.RegistrationService;
 import com.detroitlabs.devicemanager.sync.SyncingService;
 import com.detroitlabs.devicemanager.utils.DeviceUtil;
@@ -67,19 +68,28 @@ public class SyncActivity extends AppCompatActivity {
 
     private void authenticate() {
         updateStatusText(R.string.authentication);
-        FirebaseAuth.getInstance().signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (task.isSuccessful()) {
-                    checkRegisterStateAndInitSyncing();
-                } else {
-                    Log.w(TAG, "linkWithCredential:failure", task.getException());
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (!isSignedIn()) {
+            auth.signInAnonymously().addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()) {
+                        checkRegisterStateAndInitSyncing();
+                    } else {
+                        Log.w(TAG, "linkWithCredential:failure", task.getException());
 //                    startPagerActivity();
-                    updateStatusText(R.string.not_authorized);
-                    binding.progressBar.setVisibility(View.GONE);
+                        updateStatusText(R.string.not_authorized);
+                        binding.progressBar.setVisibility(View.GONE);
+                    }
                 }
-            }
-        });
+            });
+        } else {
+            checkRegisterStateAndInitSyncing();
+        }
+    }
+
+    private boolean isSignedIn() {
+        return FirebaseAuth.getInstance().getCurrentUser() != null;
     }
 
     private void initReceiver() {
@@ -127,6 +137,7 @@ public class SyncActivity extends AppCompatActivity {
 
     private void syncDatabase() {
         updateStatusText(R.string.status_sync_database);
+        DeviceUpdateService.updateLastKnownBattery(this, DeviceUtil.getBatteryLevel(this));
         SyncingService.initSync(this);
     }
 

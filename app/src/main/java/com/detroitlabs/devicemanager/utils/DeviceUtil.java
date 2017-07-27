@@ -3,10 +3,12 @@ package com.detroitlabs.devicemanager.utils;
 import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Point;
+import android.os.BatteryManager;
 import android.os.Build;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
@@ -51,6 +53,14 @@ public class DeviceUtil {
     public static String getSerialNumber() {
         //this is so that emulated devices get some kind of serial value
         return Build.SERIAL.equals("unknown") ? "12345" : Build.SERIAL;
+    }
+
+    public static float getBatteryLevel(Context context) {
+        IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
+        Intent batteryStatus = context.registerReceiver(null, ifilter);
+        int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
+        int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
+        return level / (float) scale;
     }
 
     private static String getSize(Context context) {

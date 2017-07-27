@@ -14,27 +14,31 @@ import com.google.firebase.database.PropertyName;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.detroitlabs.devicemanager.data.DatabaseContract.DeviceColumns.*;
+
 @Entity(primaryKeys = "serialNumber")
 public class Device {
 
     public Platform platform;
-    @PropertyName("brand_and_model")
+    @PropertyName(BRAND_AND_MODEL)
     public String brandAndModel;
     public String version;
-    @PropertyName("screen_size")
+    @PropertyName(SCREEN_SIZE)
     public String screenSize;
-    @PropertyName("screen_resolution")
+    @PropertyName(SCREEN_RESOLUTION)
     public String screenResolution;
-    @PropertyName("serial_number")
+    @PropertyName(SERIAL_NUMBER)
     public String serialNumber;
-    @PropertyName("checked_out_by")
+    @PropertyName(CHECKED_OUT_BY)
     public String checkedOutBy;
-    @PropertyName("requested_by")
+    @PropertyName(REQUESTED_BY)
     public String requestedBy;
-    @PropertyName("year_class")
+    @PropertyName(YEAR_CLASS)
     public String yearClass;
-    @PropertyName("is_samsung")
+    @PropertyName(IS_SAMSUNG)
     public String isSamsung;
+    @PropertyName(LAST_KNOWN_BATTERY)
+    public String lastKnownBattery;
     @Exclude
     public boolean notRegisterable;
 
