@@ -1,0 +1,49 @@
+# Customise this file, documentation can be found here:
+# https://github.com/fastlane/fastlane/tree/master/fastlane/docs
+# All available actions: https://docs.fastlane.tools/actions
+# can also be listed using the `fastlane actions` command
+
+# Change the syntax highlighting to Ruby
+# All lines starting with a # are ignored when running `fastlane`
+
+# If you want to automatically update fastlane if a new version is available:
+update_fastlane
+
+# This is the minimum version number required.
+# Update this, if you use features of a newer version
+fastlane_version "2.50.1"
+
+# This value helps us track success metrics for Fastfiles
+# we automatically generate. Feel free to remove this line
+# once you get things running smoothly!
+generated_fastfile_id "a5f1c78f-6b80-4a0f-8a61-0cb1c468e16d"
+
+default_platform :android
+
+# Fastfile actions accept additional configuration, but
+# don't worry, fastlane will prompt you for required
+# info which you can add here later
+lane :beta do
+  # build the release variant
+  gradle(
+    task: "assembleDebug",
+    properties: {
+      'BUILD_NUMBER' => options[:build_number]
+    }
+  )
+
+  # upload to Beta by Crashlytics
+  crashlytics(
+    api_token: "2abbd3768efce5a40e96de83cb479fe0360ba2de",
+    build_secret: "75baed502be3fd561ae3852452c2d583ae3ebb54c60dca92c35c9fcf8271880a"
+    notes: options[:release_note],
+    emails: "test_user_1@detroitlabs.com"
+  )
+end
+
+
+# More information about multiple platforms in fastlane: https://github.com/fastlane/fastlane/blob/master/fastlane/docs/Platforms.md
+# All available actions: https://docs.fastlane.tools/actions
+
+# fastlane reports which actions are used. No personal data is recorded. 
+# Learn more at https://github.com/fastlane/fastlane#metrics

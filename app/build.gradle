@@ -3,13 +3,14 @@ apply plugin: 'io.fabric'
 
 android {
     compileSdkVersion 26
-    buildToolsVersion "26.0.0"
+    buildToolsVersion "26.0.1"
     defaultConfig {
         applicationId "com.detroitlabs.devicemanager"
         minSdkVersion 16
         targetSdkVersion 26
-        versionCode 1
-        versionName "1.0"
+        versionCode 2
+        versionName "1.1"
+        versionNameSuffix computeBuildNumber()
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -21,6 +22,14 @@ android {
 
     dataBinding {
         enabled = true
+    }
+}
+
+def computeBuildNumber() {
+    if (project.hasProperty("BUILD_NUMBER")) {
+        return ", Build #" + project.BUILD_NUMBER
+    } else {
+        return ", Build #unknown"
     }
 }
 
