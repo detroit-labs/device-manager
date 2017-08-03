@@ -23,7 +23,7 @@ default_platform :android
 # Fastfile actions accept additional configuration, but
 # don't worry, fastlane will prompt you for required
 # info which you can add here later
-lane :beta do
+lane :beta do |options|
   # build the release variant
   gradle(
     task: "assembleDebug",
