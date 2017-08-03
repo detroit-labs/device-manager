@@ -37,8 +37,6 @@ public class Device {
     public String yearClass;
     @PropertyName(IS_SAMSUNG)
     public String isSamsung;
-    @PropertyName(LAST_KNOWN_BATTERY)
-    public String lastKnownBattery;
     @Exclude
     public boolean notRegisterable;
 
