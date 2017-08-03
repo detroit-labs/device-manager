@@ -59,7 +59,7 @@ public class DeviceUpdateService extends IntentService {
         context.startService(intent);
     }
 
-    public static void updateLastKnownBattery(Context context, float batteryPct) {
+    public static void updateLastKnownBattery(Context context, double batteryPct) {
         Intent intent = new Intent(context, DeviceUpdateService.class);
         intent.setAction(ACTION_UPDATE_BATTERY);
         intent.putExtra(EXTRA_BATTERY_PERCENT, batteryPct);
@@ -87,12 +87,12 @@ public class DeviceUpdateService extends IntentService {
             String requestedBy = intent.getStringExtra(EXTRA_REQUESTED_BY);
             performPersistRequest(serialNumber, requestedBy);
         } else if (ACTION_UPDATE_BATTERY.equals(action)) {
-            float percent = intent.getFloatExtra(EXTRA_BATTERY_PERCENT, -1F);
+            double percent = intent.getDoubleExtra(EXTRA_BATTERY_PERCENT, -1D);
             performUpdateBattery(serialNumber, percent);
         }
     }
 
-    private void performUpdateBattery(String serialNumber, float percent) {
+    private void performUpdateBattery(String serialNumber, double percent) {
         FirebaseDatabase.getInstance().getReference()
                 .child(TABLE_DEVICES)
                 .child(serialNumber)

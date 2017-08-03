@@ -14,7 +14,7 @@ public class PowerOnOffReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        float batteryPct = DeviceUtil.getBatteryLevel(context);
+        double batteryPct = DeviceUtil.getBatteryLevel(context);
         Log.d(TAG, "Action: " + intent.getAction());
         Log.d(TAG, "Update battery percentage: " + batteryPct);
         // TODO: 7/27/17 check if logged in, if not, send notification
