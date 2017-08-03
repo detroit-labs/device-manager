@@ -4,7 +4,6 @@ package com.detroitlabs.devicemanager.ui.filter;
 import android.util.Pair;
 
 import com.detroitlabs.devicemanager.constants.FilterType;
-import com.detroitlabs.devicemanager.data.DatabaseContract;
 import com.detroitlabs.devicemanager.ui.filter.adapters.FilterOptionAdapter;
 import com.detroitlabs.devicemanager.ui.filter.adapters.IsSamsungAdapter;
 import com.detroitlabs.devicemanager.ui.filter.adapters.PlatformFilterAdapter;
@@ -12,7 +11,6 @@ import com.detroitlabs.devicemanager.ui.filter.adapters.ScreenResolutionAdapter;
 import com.detroitlabs.devicemanager.ui.filter.adapters.ScreenSizeAdapter;
 import com.detroitlabs.devicemanager.ui.filter.adapters.VersionFilterAdapter;
 import com.detroitlabs.devicemanager.ui.filter.adapters.YearClassAdapter;
-import com.detroitlabs.devicemanager.utils.DeviceUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,13 +26,6 @@ public class FilterUtil {
                 new YearClassAdapter(),
                 new IsSamsungAdapter()
         };
-    }
-
-    public static String getThisDeviceSelection() {
-        return DatabaseContract.DeviceColumns.SERIAL_NUMBER +
-                " = '" +
-                DeviceUtil.getSerialNumber() +
-                "'";
     }
 
     public static Pair<String, Object[]> convertSelectionToQuery(Filter.Selection selection) {

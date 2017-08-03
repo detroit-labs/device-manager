@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
-import com.detroitlabs.devicemanager.data.DeviceUpdateService;
+import com.detroitlabs.devicemanager.sync.DeviceUpdateService;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
 

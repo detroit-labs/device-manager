@@ -24,6 +24,7 @@ public class DatabaseContract {
         public static final String CHECKED_OUT_BY = "checked_out_by";
         public static final String BRAND_AND_MODEL = "brand_and_model";
         public static final String SCREEN_RESOLUTION = "screen_resolution";
+        public static final String LAST_KNOWN_BATTERY = "last_known_battery";
     }
 
     public static final String CONTENT_AUTHORITY = "com.detroitlabs.devicemanager";

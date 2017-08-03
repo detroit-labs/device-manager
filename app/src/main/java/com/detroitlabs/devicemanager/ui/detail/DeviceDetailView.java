@@ -13,7 +13,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.detroitlabs.devicemanager.R;
-import com.detroitlabs.devicemanager.data.DeviceUpdateService;
+import com.detroitlabs.devicemanager.sync.DeviceUpdateService;
 import com.detroitlabs.devicemanager.databinding.ViewDeviceDetailBinding;
 import com.detroitlabs.devicemanager.db.Device;
 
