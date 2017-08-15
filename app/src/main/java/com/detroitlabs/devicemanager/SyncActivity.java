@@ -32,7 +32,6 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import javax.inject.Inject;
 
-import io.reactivex.Single;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 
