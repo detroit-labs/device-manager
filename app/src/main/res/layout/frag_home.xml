@@ -107,6 +107,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_toLeftOf="@id/button_checkout"
                     android:layout_toStartOf="@id/button_checkout"
+                    android:maxLines="1"
                     android:hint="@string/enter_your_name"
                     android:imeOptions="actionGo"
                     android:inputType="textPersonName"

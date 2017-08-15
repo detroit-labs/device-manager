@@ -9,8 +9,6 @@ import com.detroitlabs.devicemanager.db.DeviceDatabase;
 import com.detroitlabs.devicemanager.db.FilterDao;
 import com.detroitlabs.devicemanager.di.qualifiers.ApplicationContext;
 import com.detroitlabs.devicemanager.repository.DeviceRepository;
-import com.detroitlabs.devicemanager.sync.RegistrationService;
-import com.detroitlabs.devicemanager.sync.SyncingService;
 import com.detroitlabs.devicemanager.ui.DeviceListViewModel;
 import com.detroitlabs.devicemanager.ui.HomeViewModel;
 import com.detroitlabs.devicemanager.ui.filter.FilterViewModel;
@@ -45,10 +43,6 @@ public interface AppComponent {
     DeviceRepository deviceRepository();
 
     FilterDao filterDao();
-
-    void inject(SyncingService syncingService);
-
-    void inject(RegistrationService registrationService);
 
     void inject(HomeViewModel homeViewModel);
 

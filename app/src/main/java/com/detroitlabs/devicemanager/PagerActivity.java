@@ -10,7 +10,6 @@ import android.util.SparseArray;
 import android.view.ViewGroup;
 
 import com.crashlytics.android.Crashlytics;
-import com.detroitlabs.devicemanager.sync.SyncingService;
 import com.detroitlabs.devicemanager.ui.BackPressListener;
 import com.detroitlabs.devicemanager.ui.DeviceListFragment;
 import com.detroitlabs.devicemanager.ui.HomeFragment;
@@ -28,12 +27,6 @@ public class PagerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         setupViewPager();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        SyncingService.unregisterSync(this);
     }
 
     @Override

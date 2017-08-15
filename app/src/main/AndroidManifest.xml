@@ -16,8 +16,6 @@
         android:theme="@style/AppTheme">
         <activity android:name=".PagerActivity" />
 
-        <service android:name=".sync.RegistrationService" />
-        <service android:name=".sync.SyncingService" />
         <service android:name=".sync.DeviceUpdateService" />
         <service android:name=".sync.FirebaseTokenSyncService" />
         <service android:name=".notification.MyFirebaseInstanceIDService">
