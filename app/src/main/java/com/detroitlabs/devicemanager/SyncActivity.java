@@ -2,56 +2,93 @@ package com.detroitlabs.devicemanager;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
 import com.detroitlabs.devicemanager.databinding.ActivitySyncBinding;
+import com.detroitlabs.devicemanager.di.DaggerActivityComponent;
 import com.detroitlabs.devicemanager.sync.DeviceUpdateService;
+import com.detroitlabs.devicemanager.sync.InitialSyncSequence;
 import com.detroitlabs.devicemanager.sync.RegistrationService;
 import com.detroitlabs.devicemanager.sync.SyncingService;
+import com.detroitlabs.devicemanager.sync.Ui;
 import com.detroitlabs.devicemanager.utils.DeviceUtil;
-import com.detroitlabs.devicemanager.utils.PrefUtil;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-import static com.detroitlabs.devicemanager.constants.Constants.BROADCAST_ACTION_REGISTER_RESULT;
-import static com.detroitlabs.devicemanager.constants.Constants.BROADCAST_ACTION_SYNC_RESULT;
+import javax.inject.Inject;
 
-public class SyncActivity extends AppCompatActivity {
+import io.reactivex.Single;
+import io.reactivex.SingleObserver;
+import io.reactivex.disposables.Disposable;
+
+import static com.detroitlabs.devicemanager.data.DatabaseContract.TABLE_DEVICES;
+
+public class SyncActivity extends AppCompatActivity implements Ui, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = SyncActivity.class.getName();
     private static final int PERMISSION_REQUEST_GET_ACCOUNTS = 7;
     private static final String TEST_USER_1_DETROITLABS = "test_user_1@detroitlabs.com";
+    @Inject
+    InitialSyncSequence syncSequence;
+
     private ActivitySyncBinding binding;
-    private RegistrationStatusReceiver receiver;
+
+    private ActivityResult activityResult;
+
+    private int requestCode;
+
+    private SingleObserver<? super Boolean> syncSequenceObserver = new SingleObserver<Boolean>() {
+        @Override
+        public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
+
+        }
+
+        @Override
+        public void onSuccess(@io.reactivex.annotations.NonNull Boolean aBoolean) {
+            Log.d(TAG, "initial sync sequence finished!!!");
+        }
+
+        @Override
+        public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+            Log.e(TAG, "initial sync sequence error", e);
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        DaggerActivityComponent.builder()
+                .appComponent(DmApplication.getInjector())
+                .fragmentActivity(this)
+                .ui(this)
+                .listener(this)
+                .build()
+                .inject(this);
         super.onCreate(savedInstanceState);
+        // TODO: 8/11/17 inject here
         binding = DataBindingUtil.setContentView(this, R.layout.activity_sync);
-
-        initReceiver();
-        authenticate();
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(receiver);
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == this.requestCode && activityResult != null) {
+            activityResult.onActivityResult(resultCode, data);
+        }
     }
 
     @Override
@@ -64,6 +101,19 @@ public class SyncActivity extends AppCompatActivity {
             }
             syncDatabase();
         }
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode, ActivityResult activityResult) {
+        this.requestCode = requestCode;
+        this.activityResult = activityResult;
+        startActivityForResult(intent, requestCode);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        syncSequence.run().subscribe(syncSequenceObserver);
     }
 
     private void authenticate() {
@@ -92,14 +142,6 @@ public class SyncActivity extends AppCompatActivity {
         return FirebaseAuth.getInstance().getCurrentUser() != null;
     }
 
-    private void initReceiver() {
-        receiver = new RegistrationStatusReceiver();
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(BROADCAST_ACTION_REGISTER_RESULT);
-        intentFilter.addAction(BROADCAST_ACTION_SYNC_RESULT);
-        LocalBroadcastManager.getInstance(this).registerReceiver(receiver, intentFilter);
-    }
-
     private void checkRegisterStateAndInitSyncing() {
         if (DeviceUtil.hasGetAccountsPermission(this)) {
             registerDevice();
@@ -112,7 +154,11 @@ public class SyncActivity extends AppCompatActivity {
     private void registerDevice() {
         if (usingTestingAccount(AccountManager.get(this).getAccountsByType("com.google"))) {
             updateStatusText(R.string.status_register_device);
-            RegistrationService.initRegister(this);
+
+            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
+            DatabaseReference rowRef = dbRef.child(TABLE_DEVICES).child(DmApplication.getThisDevice().serialNumber);
+            rowRef.updateChildren(DmApplication.getThisDevice().toMap());
+
             Log.d(TAG, "Registered device with service");
         } else {
             RegistrationService.saveWithoutRegister(this);
@@ -160,23 +206,8 @@ public class SyncActivity extends AppCompatActivity {
         binding.statusText.setText(statusRes);
     }
 
-    private class RegistrationStatusReceiver extends BroadcastReceiver {
-
-        private RegistrationStatusReceiver() {
-        }
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action.equals(BROADCAST_ACTION_SYNC_RESULT)) {
-                Log.d(TAG, "Sync done");
-                onSyncSuccess();
-            } else if (action.equals(BROADCAST_ACTION_REGISTER_RESULT)) {
-                Log.d(TAG, "Registration done");
-                PrefUtil.setRegisterSuccessful(SyncActivity.this, true);
-                onRegisterSuccessful();
-            }
-        }
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 }

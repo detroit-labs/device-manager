@@ -35,7 +35,7 @@ public class DeviceRepository {
     }
 
     public LiveData<Device> getSelfDevice() {
-        return deviceDao.getDevice(DmApplication.getThisDevice().serialNumber);
+        return deviceDao.getDevice(DmApplication.getSerialNumber());
     }
 
     public void insert(Device device) {
