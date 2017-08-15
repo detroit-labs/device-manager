@@ -14,7 +14,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".PagerActivity" />
+        <activity
+            android:windowSoftInputMode="adjustPan"
+            android:name=".PagerActivity" />
 
         <service android:name=".sync.RegistrationService" />
         <service android:name=".sync.SyncingService" />
