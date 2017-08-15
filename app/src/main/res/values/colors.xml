@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#212121</color>
-    <color name="colorPrimaryDark">@color/black</color>
-    <color name="colorAccent">@color/orange</color>
+    <color name="colorPrimary">@color/bg_dark</color>
+    <color name="colorPrimaryDark">@color/bg_black</color>
+    <color name="colorAccent">@color/dl_yellow</color>
 
 
     <color name="indigo">#3f5185</color>
@@ -33,5 +33,20 @@
     <color name="dark_grey">#616161</color>
 
     <color name="black">#000000</color>
+
+
+    <!-- Branding Colors -->
+    <color name="dl_yellow">#fcb814</color>
+    <color name="bg_white">#fdf7f7</color>
+    <color name="bg_light">#a8a8a8</color>
+    <color name="bg_dark">#3f3f3f</color>
+    <color name="bg_black">#020808</color>
+
+    <color name="status_red">#FFFF4444</color>
+    <color name="status_darkred">#FFCC0000</color>
+    <color name="status_orange">#FCC62E</color>
+    <color name="status_darkorange">#FFFF8800</color>
+    <color name="status_green">#FF99CC00</color>
+    <color name="status_darkgreen">#FF669900</color>
 
 </resources>

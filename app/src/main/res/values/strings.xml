@@ -36,7 +36,7 @@
     <string name="year_class">Year Class</string>
     <string name="is_samsung">Is Samsung</string>
     <string name="no_more_requests">No more requests can be made at this time</string>
-    <string name="enter_your_name">Enter your name</string>
+    <string name="enter_your_name">Enter your name...</string>
     <string name="release">RELEASE</string>
     <string name="cancel_allcaps">@android:string/cancel</string>
     <string name="this_device_cannot_be_registered">This device cannot be registered</string>

@@ -8,4 +8,13 @@
     <dimen name="text_margin">144dp</dimen>
 
     <dimen name="highlightable_text_min_width">48dp</dimen>
+
+    <!-- Branding Dimensions -->
+    <dimen name="button_width">96dp</dimen>
+    <dimen name="button_height">48dp</dimen>
+    <dimen name="button_height_short">32dp</dimen>
+
+    <dimen name="fontsize_small">10sp</dimen>
+    <dimen name="fontsize_normal">14sp</dimen>
+    <dimen name="fontsize_large">30sp</dimen>
 </resources>
