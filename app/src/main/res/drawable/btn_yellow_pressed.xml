@@ -4,11 +4,11 @@
     <item>
         <shape>
             <corners
-                android:radius="2dp" />
+                android:radius="6dp" />
             <padding
                 android:left="0dp"
                 android:right="0dp"
-                android:top="3dp"
+                android:top="4dp"
                 android:bottom="0dp"/>
             <solid android:color="@android:color/transparent"/>
         </shape>
@@ -16,7 +16,7 @@
     <item>
         <shape>
             <corners
-                android:radius="3dp" />
+                android:radius="6dp" />
             <solid android:color="@color/dl_yellow_light"/>
         </shape>
     </item>

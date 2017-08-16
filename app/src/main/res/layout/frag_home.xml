@@ -106,6 +106,7 @@
                     android:background="@drawable/branded_edittext"
                     android:layout_width="match_parent"
                     android:layout_alignParentLeft="true"
+                    android:padding="6dp"
                     android:layout_height="48dp"
                     android:layout_marginRight="@dimen/normal_padding"
                     android:layout_toLeftOf="@id/button_checkout"
