@@ -33,37 +33,47 @@ def computeBuildNumber() {
     }
 }
 
+def google_play_revision = "11.0.4"
+def support_lib_revision = "26.0.1"
+def android_arch_revision = "1.0.0-alpha5"
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
 
     testCompile 'junit:junit:4.12'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
+        exclude group: 'com.google.code.findbugs'
     })
 
-    compile 'com.android.support:appcompat-v7:26.0.0'
-    compile 'com.android.support:recyclerview-v7:26.0.0'
-    compile 'com.android.support:design:26.0.0'
-    compile 'com.google.firebase:firebase-database:11.0.2'
-    compile 'com.google.firebase:firebase-auth:11.0.2'
-    compile 'com.google.firebase:firebase-messaging:11.0.2'
-    compile 'com.google.android.gms:play-services-auth:11.0.2'
+    compile "com.android.support:design:${support_lib_revision}"
+    compile "com.android.support:appcompat-v7:${support_lib_revision}"
+    compile "com.android.support:recyclerview-v7:${support_lib_revision}"
 
-    compile 'android.arch.lifecycle:runtime:1.0.0-alpha3'
-    compile 'android.arch.lifecycle:extensions:1.0.0-alpha3'
-    compile 'android.arch.persistence.room:runtime:1.0.0-alpha3'
-    compile 'android.arch.persistence.room:rxjava2:1.0.0-alpha3'
-    annotationProcessor 'android.arch.lifecycle:compiler:1.0.0-alpha3'
-    annotationProcessor 'android.arch.persistence.room:compiler:1.0.0-alpha3'
+    compile "com.google.firebase:firebase-auth:${google_play_revision}"
+    compile "com.google.firebase:firebase-database:${google_play_revision}"
+    compile "com.google.firebase:firebase-messaging:${google_play_revision}"
+    compile "com.google.android.gms:play-services-auth:${google_play_revision}"
+
+    compile "android.arch.lifecycle:runtime:${android_arch_revision}"
+    compile "android.arch.lifecycle:extensions:${android_arch_revision}"
+    compile "android.arch.persistence.room:runtime:${android_arch_revision}"
+    compile "android.arch.persistence.room:rxjava2:${android_arch_revision}"
+    annotationProcessor "android.arch.lifecycle:compiler:${android_arch_revision}"
+    annotationProcessor "android.arch.persistence.room:compiler:${android_arch_revision}"
 
     compile ('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true
     }
 
     compile 'com.google.dagger:dagger:2.11'
+    compile 'com.google.dagger:dagger-android:2.11'
+    //compile 'com.google.dagger:dagger-android-support:2.11' // if you use the support libraries
+    annotationProcessor 'com.google.dagger:dagger-android-processor:2.11'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
 
-    compile 'io.reactivex.rxjava2:rxjava:2.1.1'
+    compile 'io.reactivex.rxjava2:rxjava:2.1.2'
+    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
 
     compile 'com.facebook.device.yearclass:yearclass:2.0.0'
     compile 'com.jaredrummler:android-device-names:1.1.3'

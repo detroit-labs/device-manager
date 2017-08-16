@@ -18,8 +18,6 @@
             android:windowSoftInputMode="adjustPan"
             android:name=".PagerActivity" />
 
-        <service android:name=".sync.RegistrationService" />
-        <service android:name=".sync.SyncingService" />
         <service android:name=".sync.DeviceUpdateService" />
         <service android:name=".sync.FirebaseTokenSyncService" />
         <service android:name=".notification.MyFirebaseInstanceIDService">

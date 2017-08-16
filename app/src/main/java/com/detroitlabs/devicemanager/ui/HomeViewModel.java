@@ -37,7 +37,7 @@ public class HomeViewModel extends AndroidViewModel {
     }
 
     public void dismissRequest() {
-        DeviceUpdateService.requestDevice(getApplication(), DmApplication.getThisDevice().serialNumber, "");
+        DeviceUpdateService.requestDevice(getApplication(), DmApplication.getSerialNumber(), "");
     }
 
     public void checkIn() {

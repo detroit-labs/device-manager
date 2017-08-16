@@ -44,4 +44,5 @@
     <string name="other_devices">other devices</string>
     <string name="authentication">authentication…</string>
     <string name="not_authorized">Not authorized</string>
+    <string name="sign_in">Sign In</string>
 </resources>
