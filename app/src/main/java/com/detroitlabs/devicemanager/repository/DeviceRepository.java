@@ -35,10 +35,13 @@ public class DeviceRepository {
     }
 
     public LiveData<Device> getSelfDevice() {
-        return deviceDao.getDevice(DmApplication.getThisDevice().serialNumber);
+        return deviceDao.getDevice(DmApplication.getSerialNumber());
     }
 
     public void insert(Device device) {
+        if (!hasEnoughProperty(device)) {
+            return;
+        }
         new AsyncTask<Device, Void, Void>() {
             @Override
             protected Void doInBackground(Device... devices) {
@@ -99,5 +102,11 @@ public class DeviceRepository {
                 return allOptions;
             }
         });
+    }
+
+    private boolean hasEnoughProperty(Device device) {
+        return device.brandAndModel != null && device.platform != null &&
+                device.screenSize != null && device.screenResolution != null &&
+                device.version != null && device.serialNumber != null;
     }
 }

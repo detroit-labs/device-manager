@@ -10,7 +10,6 @@ import android.util.SparseArray;
 import android.view.ViewGroup;
 
 import com.crashlytics.android.Crashlytics;
-import com.detroitlabs.devicemanager.sync.SyncingService;
 import com.detroitlabs.devicemanager.ui.BackPressListener;
 import com.detroitlabs.devicemanager.ui.DeviceListFragment;
 import com.detroitlabs.devicemanager.ui.HomeFragment;
@@ -20,6 +19,7 @@ import io.fabric.sdk.android.Fabric;
 public class PagerActivity extends AppCompatActivity {
 
     private DevicePagerAdapter pagerAdapter;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,18 +31,9 @@ public class PagerActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        SyncingService.unregisterSync(this);
-    }
-
-    @Override
     public void onBackPressed() {
-        boolean backPressHandled = false;
-        for (int i = 0; i < pagerAdapter.getCount(); ++i) {
-            BackPressListener listener = (BackPressListener) pagerAdapter.getRegisteredFragment(i);
-            backPressHandled |= listener.onBackPressed();
-        }
+        int currentPagerIndex = viewPager.getCurrentItem();
+        boolean backPressHandled = pagerAdapter.onBackPressed(currentPagerIndex);
         if (!backPressHandled) {
             super.onBackPressed();
         }
@@ -50,7 +41,7 @@ public class PagerActivity extends AppCompatActivity {
 
     private void setupViewPager() {
         pagerAdapter = new DevicePagerAdapter(getSupportFragmentManager());
-        ViewPager viewPager = findViewById(R.id.view_pager);
+        viewPager = findViewById(R.id.view_pager);
         viewPager.setAdapter(pagerAdapter);
     }
 
@@ -88,8 +79,14 @@ public class PagerActivity extends AppCompatActivity {
             return 2;
         }
 
+
         public Fragment getRegisteredFragment(int position) {
             return registeredFragments.get(position);
+        }
+
+        public boolean onBackPressed(int currentPagerIndex) {
+            Fragment registeredFragment = getRegisteredFragment(currentPagerIndex);
+            return ((BackPressListener) registeredFragment).onBackPressed();
         }
     }
 }
