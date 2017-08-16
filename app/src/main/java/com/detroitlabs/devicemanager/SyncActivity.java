@@ -45,6 +45,7 @@ public class SyncActivity extends LifecycleActivity implements Ui, GoogleApiClie
             if (!isSyncSuccess) {
                 binding.progressBar.setVisibility(View.GONE);
                 binding.statusText.setText("You are not authorised");
+                binding.signInButton.setVisibility(View.VISIBLE);
             } else {
                 startPagerActivity();
             }
@@ -55,6 +56,7 @@ public class SyncActivity extends LifecycleActivity implements Ui, GoogleApiClie
             Log.e(TAG, "initial sync sequence error", e);
             binding.progressBar.setVisibility(View.GONE);
             binding.statusText.setText("You are not authorised");
+            binding.signInButton.setVisibility(View.VISIBLE);
         }
     };
     private Consumer<String> statusObserver = new Consumer<String>() {
