@@ -4,6 +4,7 @@ package com.detroitlabs.devicemanager.sync.tasks;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
+import com.detroitlabs.devicemanager.di.qualifiers.AccountRestricted;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -21,7 +22,7 @@ public class TestDeviceSilentSignInTask extends AsyncTask<GoogleSignInResult> {
     private final GoogleApiClient testDeviceGoogleApiClient;
 
     @Inject
-    TestDeviceSilentSignInTask(GoogleApiClient googleApiClient) {
+    TestDeviceSilentSignInTask(@AccountRestricted GoogleApiClient googleApiClient) {
         this.testDeviceGoogleApiClient = googleApiClient;
     }
 

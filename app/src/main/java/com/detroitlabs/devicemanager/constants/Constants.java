@@ -10,4 +10,5 @@ public class Constants {
 
 
     public static final String RESTRICTED_TEST_DEVICE_ACCOUNT = "test_user_1@detroitlabs.com";
+    public static final String RESTRICTED_DOMAIN = "detroitlabs.com";
 }

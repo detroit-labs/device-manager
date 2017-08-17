@@ -4,10 +4,9 @@ package com.detroitlabs.devicemanager.sync;
 import android.util.Log;
 
 import com.detroitlabs.devicemanager.sync.tasks.FirebaseAuthTask;
-import com.detroitlabs.devicemanager.sync.tasks.PromptForPermissionTask;
+import com.detroitlabs.devicemanager.sync.tasks.RequestAccountPermissionTask;
 import com.detroitlabs.devicemanager.sync.tasks.TestDeviceSilentSignInTask;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.firebase.auth.FirebaseUser;
 
 import javax.inject.Inject;
 
@@ -15,15 +14,15 @@ import io.reactivex.Single;
 import io.reactivex.SingleSource;
 import io.reactivex.functions.Function;
 
-public class TestDeviceSignInSequence extends AsyncTaskSequence<FirebaseUser> {
+public class TestDeviceSignInSequence extends AsyncTaskSequence<SignInResult> {
     private static final String TAG = TestDeviceSignInSequence.class.getName();
     private final TestDeviceSilentSignInTask silentSignInTask;
-    private final PromptForPermissionTask promptForPermissionTask;
+    private final RequestAccountPermissionTask promptForPermissionTask;
     private final FirebaseAuthTask firebaseAuthTask;
 
     @Inject
     public TestDeviceSignInSequence(TestDeviceSilentSignInTask silentSignInTask,
-                                    PromptForPermissionTask promptForPermissionTask,
+                                    RequestAccountPermissionTask promptForPermissionTask,
                                     FirebaseAuthTask firebaseAuthTask) {
 
         this.silentSignInTask = silentSignInTask;

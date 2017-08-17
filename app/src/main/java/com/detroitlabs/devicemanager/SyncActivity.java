@@ -10,13 +10,16 @@ import android.view.View;
 
 import com.detroitlabs.devicemanager.databinding.ActivitySyncBinding;
 import com.detroitlabs.devicemanager.di.DaggerActivityComponent;
+import com.detroitlabs.devicemanager.sync.DomainSignInSequence;
 import com.detroitlabs.devicemanager.sync.InitialSyncSequence;
+import com.detroitlabs.devicemanager.sync.SignInResult;
 import com.detroitlabs.devicemanager.sync.Ui;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import javax.inject.Inject;
 
+import dagger.Lazy;
 import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
@@ -26,6 +29,9 @@ public class SyncActivity extends LifecycleActivity implements Ui, GoogleApiClie
     private static final String TAG = SyncActivity.class.getName();
     @Inject
     InitialSyncSequence syncSequence;
+
+    @Inject
+    Lazy<DomainSignInSequence> domainSignInSequenceLazy;
 
     private ActivitySyncBinding binding;
 
@@ -59,10 +65,30 @@ public class SyncActivity extends LifecycleActivity implements Ui, GoogleApiClie
             binding.signInButton.setVisibility(View.VISIBLE);
         }
     };
+
     private Consumer<String> statusObserver = new Consumer<String>() {
         @Override
         public void accept(String status) throws Exception {
             binding.statusText.setText(status);
+        }
+    };
+
+    private SingleObserver<SignInResult> signInObserver = new SingleObserver<SignInResult>() {
+        @Override
+        public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
+
+        }
+
+        @Override
+        public void onSuccess(@io.reactivex.annotations.NonNull SignInResult result) {
+            if (result.isSuccess()) {
+
+            }
+        }
+
+        @Override
+        public void onError(@io.reactivex.annotations.NonNull Throwable e) {
+
         }
     };
 
@@ -76,8 +102,13 @@ public class SyncActivity extends LifecycleActivity implements Ui, GoogleApiClie
                 .build()
                 .inject(this);
         super.onCreate(savedInstanceState);
-        // TODO: 8/11/17 inject here
         binding = DataBindingUtil.setContentView(this, R.layout.activity_sync);
+        binding.signInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                domainSignInSequenceLazy.get().run().subscribe(signInObserver);
+            }
+        });
     }
 
     @Override
