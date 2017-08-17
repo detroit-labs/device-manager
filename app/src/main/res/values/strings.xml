@@ -22,7 +22,7 @@
     <string name="screen_size">Screen Size</string>
     <string name="check_out">Check Out</string>
     <string name="confirm">Confirm</string>
-    <string name="your_name">your name</string>
+    <string name="your_name">Your name...</string>
     <string name="check_in">Check In</string>
     <string name="request">request</string>`
     <string name="requested_by">Requested by %1$s</string>

@@ -13,9 +13,20 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity
-            android:windowSoftInputMode="adjustPan"
-            android:name=".PagerActivity" />
+            android:name=".SyncActivity"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".PagerActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" >
+        </activity>
 
         <service android:name=".sync.DeviceUpdateService" />
         <service android:name=".sync.FirebaseTokenSyncService" />
@@ -30,23 +41,17 @@
             </intent-filter>
         </service>
 
-        <meta-data
-            android:name="io.fabric.ApiKey"
-            android:value="2abbd3768efce5a40e96de83cb479fe0360ba2de" />
-
-        <activity android:name=".SyncActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <receiver android:name=".PowerOnOffReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <action android:name="android.intent.action.ACTION_SHUTDOWN" />
             </intent-filter>
         </receiver>
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="2abbd3768efce5a40e96de83cb479fe0360ba2de" />
+
     </application>
 
 </manifest>
