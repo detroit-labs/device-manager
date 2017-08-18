@@ -16,6 +16,8 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import dagger.Module;
 import dagger.Provides;
 
+import static com.detroitlabs.devicemanager.constants.Constants.ACCOUNT_GOOGLE_API_CLIENT_ID;
+import static com.detroitlabs.devicemanager.constants.Constants.DOMAIN_GOOGLE_API_CLIENT_ID;
 import static com.detroitlabs.devicemanager.constants.Constants.RESTRICTED_DOMAIN;
 import static com.detroitlabs.devicemanager.constants.Constants.RESTRICTED_TEST_DEVICE_ACCOUNT;
 
@@ -50,7 +52,7 @@ public class GoogleApiModule {
                                                              @ApplicationContext Context context,
                                                              GoogleApiClient.OnConnectionFailedListener listener) {
         return new GoogleApiClient.Builder(context)
-                .enableAutoManage(fragmentActivity, listener)
+                .enableAutoManage(fragmentActivity, ACCOUNT_GOOGLE_API_CLIENT_ID, listener)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
     }
@@ -63,7 +65,7 @@ public class GoogleApiModule {
                                                             @ApplicationContext Context context,
                                                             GoogleApiClient.OnConnectionFailedListener listener) {
         return new GoogleApiClient.Builder(context)
-                .enableAutoManage(fragmentActivity, listener)
+                .enableAutoManage(fragmentActivity, DOMAIN_GOOGLE_API_CLIENT_ID, listener)
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
                 .build();
     }

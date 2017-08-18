@@ -4,6 +4,10 @@ package com.detroitlabs.devicemanager.sync.tasks;
 import android.util.Log;
 
 import com.detroitlabs.devicemanager.DmApplication;
+import com.detroitlabs.devicemanager.constants.Constants;
+import com.detroitlabs.devicemanager.utils.DeviceUtil;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -25,6 +29,16 @@ public class RegisterTask extends AsyncTask<AsyncTask.Result> {
     @Override
     protected void task(final SingleEmitter<Result> emitter) {
         Log.d(TAG, "start register task");
+        if (!isTestDevice()) {
+            emitter.onSuccess(Result.error(new IllegalStateException("Not test account")));
+        } else if (DeviceUtil.isEmulator()) {
+            emitter.onSuccess(Result.error(new IllegalStateException("Running on Emulator")));
+        } else {
+            performRegister(emitter);
+        }
+    }
+
+    private void performRegister(final SingleEmitter<Result> emitter) {
         String serialNumber = DmApplication.getSerialNumber();
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference rowRef = dbRef.child(TABLE_DEVICES).child(serialNumber);
@@ -40,5 +54,15 @@ public class RegisterTask extends AsyncTask<AsyncTask.Result> {
                 }
             }
         });
+    }
+
+    /**
+     * By default only user who logged in with
+     * test_user_1@detroitlabs.com is allow to register device
+     */
+    protected boolean isTestDevice() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        return user != null && user.getEmail() != null &&
+                user.getEmail().equalsIgnoreCase(Constants.RESTRICTED_TEST_DEVICE_ACCOUNT);
     }
 }

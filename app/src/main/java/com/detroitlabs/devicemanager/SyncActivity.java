@@ -10,9 +10,8 @@ import android.view.View;
 
 import com.detroitlabs.devicemanager.databinding.ActivitySyncBinding;
 import com.detroitlabs.devicemanager.di.DaggerActivityComponent;
-import com.detroitlabs.devicemanager.sync.DomainSignInSequence;
-import com.detroitlabs.devicemanager.sync.InitialSyncSequence;
-import com.detroitlabs.devicemanager.sync.SignInResult;
+import com.detroitlabs.devicemanager.sync.sequences.ManualSignInSyncSequence;
+import com.detroitlabs.devicemanager.sync.sequences.InitialSyncSequence;
 import com.detroitlabs.devicemanager.sync.Ui;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -31,7 +30,7 @@ public class SyncActivity extends LifecycleActivity implements Ui, GoogleApiClie
     InitialSyncSequence syncSequence;
 
     @Inject
-    Lazy<DomainSignInSequence> domainSignInSequenceLazy;
+    Lazy<ManualSignInSyncSequence> manualSignInSyncSequenceLazy;
 
     private ActivitySyncBinding binding;
 
@@ -39,7 +38,7 @@ public class SyncActivity extends LifecycleActivity implements Ui, GoogleApiClie
 
     private int requestCode;
 
-    private SingleObserver<Boolean> syncSequenceObserver = new SingleObserver<Boolean>() {
+    private SingleObserver<Boolean> autoSequenceObserver = new SingleObserver<Boolean>() {
         @Override
         public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
 
@@ -49,9 +48,7 @@ public class SyncActivity extends LifecycleActivity implements Ui, GoogleApiClie
         public void onSuccess(@io.reactivex.annotations.NonNull Boolean isSyncSuccess) {
             Log.d(TAG, "initial sync sequence finished!!!");
             if (!isSyncSuccess) {
-                binding.progressBar.setVisibility(View.GONE);
-                binding.statusText.setText("You are not authorised");
-                binding.signInButton.setVisibility(View.VISIBLE);
+                displayUnauthorisedMsg();
             } else {
                 startPagerActivity();
             }
@@ -60,9 +57,7 @@ public class SyncActivity extends LifecycleActivity implements Ui, GoogleApiClie
         @Override
         public void onError(@io.reactivex.annotations.NonNull Throwable e) {
             Log.e(TAG, "initial sync sequence error", e);
-            binding.progressBar.setVisibility(View.GONE);
-            binding.statusText.setText("You are not authorised");
-            binding.signInButton.setVisibility(View.VISIBLE);
+            displayUnauthorisedMsg();
         }
     };
 
@@ -73,16 +68,18 @@ public class SyncActivity extends LifecycleActivity implements Ui, GoogleApiClie
         }
     };
 
-    private SingleObserver<SignInResult> signInObserver = new SingleObserver<SignInResult>() {
+    private SingleObserver<Boolean> manualSequenceObserver = new SingleObserver<Boolean>() {
         @Override
         public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
 
         }
 
         @Override
-        public void onSuccess(@io.reactivex.annotations.NonNull SignInResult result) {
-            if (result.isSuccess()) {
-
+        public void onSuccess(@io.reactivex.annotations.NonNull Boolean isSuccess) {
+            if (isSuccess) {
+                startPagerActivity();
+            } else {
+                displayUnauthorisedMsg();
             }
         }
 
@@ -106,7 +103,7 @@ public class SyncActivity extends LifecycleActivity implements Ui, GoogleApiClie
         binding.signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                domainSignInSequenceLazy.get().run().subscribe(signInObserver);
+                manualSignInSyncSequenceLazy.get().run().subscribe(manualSequenceObserver);
             }
         });
     }
@@ -130,12 +127,18 @@ public class SyncActivity extends LifecycleActivity implements Ui, GoogleApiClie
     protected void onStart() {
         super.onStart();
         syncSequence.status().subscribe(statusObserver);
-        syncSequence.run().subscribe(syncSequenceObserver);
+        syncSequence.run().subscribe(autoSequenceObserver);
     }
 
     private void startPagerActivity() {
         startActivity(new Intent(this, PagerActivity.class));
         finish();
+    }
+
+    private void displayUnauthorisedMsg() {
+        binding.progressBar.setVisibility(View.GONE);
+        binding.statusText.setText(R.string.not_authorised);
+        binding.signInButton.setVisibility(View.VISIBLE);
     }
 
     @Override
