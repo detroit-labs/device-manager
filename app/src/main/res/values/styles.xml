@@ -34,4 +34,32 @@
         <item name="android:windowExitAnimation">@android:anim/fade_out</item>
     </style>
 
+    <!-- Branding Styles -->
+    <style name="brandedButtonYellow" parent="@android:style/Widget.Button">
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+        <item name="android:textColor">@color/bg_dark</item>
+        <item name="android:textSize">@dimen/fontsize_normal</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:layout_height">@dimen/button_height</item>
+        <item name="android:layout_width">@dimen/button_width</item>
+        <item name="android:background">@drawable/btn_yellow</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="brandedButtonLight" parent="@style/brandedButtonYellow">
+        <item name="android:textColor">@color/bg_white</item>
+        <item name="android:background">@drawable/btn_light</item>
+    </style>
+
+    <style name="brandedEditText" parent="@android:style/Widget.EditText">
+        <item name="android:padding">6dp</item>
+        <item name="android:layout_height">@dimen/button_height</item>
+        <item name="android:textColor">@color/bg_dark</item>
+        <item name="android:textColorHint">@color/bg_light</item>
+        <item name="android:textSize">@dimen/fontsize_normal</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/branded_edittext</item>
+    </style>
+
 </resources>

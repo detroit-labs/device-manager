@@ -18,9 +18,7 @@
         android:id="@+id/status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/normal_padding"
-        android:paddingRight="@dimen/normal_padding"
-        tools:background="@color/colorPrimary">
+        tools:background="@color/bg_dark">
 
         <TextView
             android:id="@+id/text_not_registerable"
@@ -67,36 +65,37 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageView
+                <FrameLayout
                     android:id="@+id/icon1"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_centerVertical="true"
                     android:contentDescription="@string/device_status"
-                    android:src="@drawable/ic_checkbox_blank_circle_grey600_24dp"
-                    android:tint="@color/orange" />
+                    android:background="@drawable/indicator_circle"
+                    android:backgroundTint="@color/status_orange" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:textSize="@dimen/fontsize_normal"
+                    android:textColor="@color/bg_white"
                     android:layout_marginLeft="@dimen/normal_padding"
-                    android:layout_marginStart="@dimen/normal_padding"
-                    android:layout_toEndOf="@id/icon1"
                     android:layout_toRightOf="@id/icon1"
                     android:text="@{@string/requested_by(device.requestedBy)}"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
                     tools:text="Requested By Peike" />
 
                 <Button
                     android:id="@+id/dismiss_button"
-                    style="@style/TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/brandedButtonLight"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="@dimen/button_height_short"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:onClick="@{() -> viewModel.dismissRequest()}"
-                    android:textColor="@color/white"
                     tools:text="DISMISS" />
             </RelativeLayout>
 
@@ -105,21 +104,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <ImageView
+                <FrameLayout
                     android:id="@+id/icon2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_centerVertical="true"
                     android:contentDescription="@string/device_status"
-                    android:src="@drawable/ic_checkbox_blank_circle_grey600_24dp"
-                    android:tint="@color/red" />
+                    android:background="@drawable/indicator_circle"
+                    android:backgroundTint="@color/status_red" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:textSize="@dimen/fontsize_normal"
+                    android:textColor="@color/bg_white"
                     android:layout_marginLeft="@dimen/normal_padding"
-                    android:layout_marginStart="@dimen/normal_padding"
-                    android:layout_toEndOf="@id/icon2"
                     android:layout_toRightOf="@id/icon2"
                     android:text="@{@string/borrowed_by(device.checkedOutBy)}"
                     android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
@@ -128,15 +128,16 @@
 
                 <Button
                     android:id="@+id/release_button"
-                    style="@style/TextButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    style="@style/brandedButtonLight"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="@dimen/button_height_short"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:onClick="@{() -> viewModel.checkIn()}"
-                    android:text="@string/release"
-                    android:textColor="@color/white" />
+                    android:text="@string/release" />
             </RelativeLayout>
         </LinearLayout>
     </FrameLayout>
