@@ -4,7 +4,6 @@ package com.detroitlabs.devicemanager.sync.sequences;
 import android.util.Log;
 
 import com.detroitlabs.devicemanager.sync.SignInResult;
-import com.detroitlabs.devicemanager.sync.tasks.GetUserTask;
 
 import javax.inject.Inject;
 
@@ -12,19 +11,16 @@ import io.reactivex.Observable;
 import io.reactivex.Single;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
-import io.reactivex.subjects.PublishSubject;
 
 public final class InitialSyncSequence extends AsyncTaskSequence<Boolean> {
     private static final String TAG = InitialSyncSequence.class.getName();
 
     private final TestDeviceAutoSignInSequence autoSignInSequence;
 
-    private final PublishSubject<String> statusSubject = PublishSubject.create();
     private final RegisterAndSyncDbSequence registerAndSyncDbSequence;
 
     @Inject
-    public InitialSyncSequence(GetUserTask getUserTask,
-                               RegisterAndSyncDbSequence registerAndSyncDbSequence,
+    public InitialSyncSequence(RegisterAndSyncDbSequence registerAndSyncDbSequence,
                                TestDeviceAutoSignInSequence autoSignInSequence) {
         this.registerAndSyncDbSequence = registerAndSyncDbSequence;
         this.autoSignInSequence = autoSignInSequence;
@@ -37,7 +33,7 @@ public final class InitialSyncSequence extends AsyncTaskSequence<Boolean> {
     }
 
     public Observable<String> status() {
-        return Observable.merge(statusSubject, registerAndSyncDbSequence.status());
+        return Observable.merge(statusSubject, registerAndSyncDbSequence.status(), autoSignInSequence.status());
     }
 
     private Function<SignInResult, Single<Boolean>> registerAndSync() {

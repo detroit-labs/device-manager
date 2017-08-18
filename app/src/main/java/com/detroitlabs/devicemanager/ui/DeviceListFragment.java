@@ -33,8 +33,6 @@ import java.util.List;
 public class DeviceListFragment extends LifecycleFragment implements
         OnItemClickListener, BackPressListener {
 
-    private static final String HOME_FRAGMENT = "HomeFragment";
-    private static final String DEVICE_LIST_FRAGMENT = "DeviceListFragment";
 
     private FragDeviceListBinding binding;
     private DeviceListAdapter adapter;
@@ -44,7 +42,7 @@ public class DeviceListFragment extends LifecycleFragment implements
         @Override
         public void onChanged(@Nullable List<Device> devices) {
             sort(devices);
-            adapter.setData(devices);
+            adapter.swapItems(devices);
         }
     };
 

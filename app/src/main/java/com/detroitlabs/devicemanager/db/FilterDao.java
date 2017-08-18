@@ -3,19 +3,26 @@ package com.detroitlabs.devicemanager.db;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
+import android.arch.persistence.room.InvalidationTracker;
 import android.database.Cursor;
+import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 
 @Singleton
 public class FilterDao {
+    private static final String TAG = FilterDao.class.getName();
     private final DeviceDatabase db;
-    // TODO: 7/18/17 should Dao class maintain a LiveData?
     private final MutableLiveData<List<Device>> liveData;
+    private InvalidationTracker.Observer observer;
+    private String query;
+    private Object[] args;
 
     @Inject
     public FilterDao(DeviceDatabase db) {
@@ -24,11 +31,18 @@ public class FilterDao {
     }
 
     public LiveData<List<Device>> getFilteredDevices(String query, Object[] args) {
+        this.query = query;
+        this.args = args;
+        if (observer == null) {
+            observer = createObserver();
+            InvalidationTracker invalidationTracker = db.getInvalidationTracker();
+            invalidationTracker.addObserver(observer);
+        }
         updateFilterQuery(query, args);
         return liveData;
     }
 
-    public void updateFilterQuery(String query, Object[] args) {
+    private void updateFilterQuery(String query, Object[] args) {
         Cursor cursor = db.query(query, args);
         try {
             final int _cursorIndexOfPlatform = cursor.getColumnIndexOrThrow("platform");
@@ -60,9 +74,20 @@ public class FilterDao {
                 device.notRegisterable = _tmp_1 != 0;
                 _result.add(device);
             }
-            liveData.setValue(_result);
+            liveData.postValue(_result);
         } finally {
             cursor.close();
         }
+    }
+
+    private InvalidationTracker.Observer createObserver() {
+        return new InvalidationTracker.Observer(new String[]{"device"}) {
+
+            @Override
+            public void onInvalidated(@NonNull Set<String> set) {
+                Log.d(TAG, "the database is updated");
+                updateFilterQuery(query, args);
+            }
+        };
     }
 }

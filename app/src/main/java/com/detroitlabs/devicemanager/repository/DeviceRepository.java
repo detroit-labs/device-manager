@@ -82,7 +82,7 @@ public class DeviceRepository {
 
     public void refreshList(Filter.Selection selections) {
         Pair<String, Object[]> queryArg = FilterUtil.convertSelectionToQuery(selections);
-        filterDao.updateFilterQuery(queryArg.first, queryArg.second);
+        filterDao.getFilteredDevices(queryArg.first, queryArg.second);
     }
 
     public LiveData<Filter.Options> loadAllFilterOptions(Filter.Selection selection) {
