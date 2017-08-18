@@ -56,7 +56,13 @@ public class DeviceRepository {
     }
 
     public void delete(Device device) {
-        deviceDao.delete(device);
+        new AsyncTask<Device, Void, Void>() {
+            @Override
+            protected Void doInBackground(Device... devices) {
+                deviceDao.delete(devices[0]);
+                return null;
+            }
+        }.execute(device);
     }
 
     public void update(Device device) {

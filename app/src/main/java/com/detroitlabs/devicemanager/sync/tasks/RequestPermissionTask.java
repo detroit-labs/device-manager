@@ -15,16 +15,16 @@ import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 
-public class PromptForPermissionTask extends AsyncTask<GoogleSignInResult> {
+class RequestPermissionTask extends AsyncTask<GoogleSignInResult> {
     private static final int REQUEST_GOOGLE_SING_IN = 223;
-    private static final String TAG = PromptForPermissionTask.class.getName();
+    private static final String TAG = RequestPermissionTask.class.getName();
 
     private final GoogleApiClient googleApiClient;
 
     private final Ui ui;
 
     @Inject
-    PromptForPermissionTask(GoogleApiClient googleApiClient, Ui ui) {
+    RequestPermissionTask(GoogleApiClient googleApiClient, Ui ui) {
         this.googleApiClient = googleApiClient;
         this.ui = ui;
     }

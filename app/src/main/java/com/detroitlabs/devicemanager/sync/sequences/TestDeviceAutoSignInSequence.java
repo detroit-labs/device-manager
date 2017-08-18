@@ -1,31 +1,35 @@
-package com.detroitlabs.devicemanager.sync;
+package com.detroitlabs.devicemanager.sync.sequences;
 
 
 import android.util.Log;
 
+import com.detroitlabs.devicemanager.sync.SignInResult;
 import com.detroitlabs.devicemanager.sync.tasks.FirebaseAuthTask;
-import com.detroitlabs.devicemanager.sync.tasks.PromptForPermissionTask;
+import com.detroitlabs.devicemanager.sync.tasks.GetUserTask;
+import com.detroitlabs.devicemanager.sync.tasks.RequestAccountPermissionTask;
 import com.detroitlabs.devicemanager.sync.tasks.TestDeviceSilentSignInTask;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
-import com.google.firebase.auth.FirebaseUser;
 
 import javax.inject.Inject;
 
 import io.reactivex.Single;
 import io.reactivex.SingleSource;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 
-public class TestDeviceSignInSequence extends AsyncTaskSequence<FirebaseUser> {
-    private static final String TAG = TestDeviceSignInSequence.class.getName();
+public final class TestDeviceAutoSignInSequence extends AsyncTaskSequence<SignInResult> {
+    private static final String TAG = TestDeviceAutoSignInSequence.class.getName();
+    private final GetUserTask getUserTask;
     private final TestDeviceSilentSignInTask silentSignInTask;
-    private final PromptForPermissionTask promptForPermissionTask;
+    private final RequestAccountPermissionTask promptForPermissionTask;
     private final FirebaseAuthTask firebaseAuthTask;
 
     @Inject
-    public TestDeviceSignInSequence(TestDeviceSilentSignInTask silentSignInTask,
-                                    PromptForPermissionTask promptForPermissionTask,
-                                    FirebaseAuthTask firebaseAuthTask) {
-
+    public TestDeviceAutoSignInSequence(GetUserTask getUserTask,
+                                        TestDeviceSilentSignInTask silentSignInTask,
+                                        RequestAccountPermissionTask promptForPermissionTask,
+                                        FirebaseAuthTask firebaseAuthTask) {
+        this.getUserTask = getUserTask;
         this.silentSignInTask = silentSignInTask;
         this.promptForPermissionTask = promptForPermissionTask;
         this.firebaseAuthTask = firebaseAuthTask;
@@ -33,6 +37,28 @@ public class TestDeviceSignInSequence extends AsyncTaskSequence<FirebaseUser> {
 
     @Override
     public Single<SignInResult> run() {
+        return getUserTask.run()
+                .flatMap(checkUser());
+
+    }
+
+    private Function<GetUserTask.Result, Single<SignInResult>> checkUser() {
+        return new Function<GetUserTask.Result, Single<SignInResult>>() {
+            @Override
+            public Single<SignInResult> apply(@NonNull GetUserTask.Result result) throws Exception {
+                Log.d(TAG, "start checking getting user result");
+                if (result.isSuccess()) {
+                    updateStatus("Already logged in");
+                    return Single.just(new SignInResult(result.user));
+                } else {
+                    updateStatus("Authenticating...");
+                    return performSignIn();
+                }
+            }
+        };
+    }
+
+    private Single<SignInResult> performSignIn() {
         return silentSignInTask.run()
                 .flatMap(prompt())
                 .flatMap(firebaseAuth());

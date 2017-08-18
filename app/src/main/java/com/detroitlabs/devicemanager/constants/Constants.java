@@ -10,4 +10,8 @@ public class Constants {
 
 
     public static final String RESTRICTED_TEST_DEVICE_ACCOUNT = "test_user_1@detroitlabs.com";
+    public static final String RESTRICTED_DOMAIN = "detroitlabs.com";
+
+    public static final int ACCOUNT_GOOGLE_API_CLIENT_ID = 11;
+    public static final int DOMAIN_GOOGLE_API_CLIENT_ID = 12;
 }
