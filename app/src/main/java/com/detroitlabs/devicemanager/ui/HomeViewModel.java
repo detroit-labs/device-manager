@@ -4,6 +4,7 @@ package com.detroitlabs.devicemanager.ui;
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;
 import android.arch.lifecycle.LiveData;
+import android.databinding.Observable;
 import android.databinding.ObservableField;
 
 import com.detroitlabs.devicemanager.DmApplication;
@@ -17,14 +18,27 @@ public class HomeViewModel extends AndroidViewModel {
 
     private final LiveData<Device> self;
     public final ObservableField<String> name = new ObservableField<>();
+    public final ObservableField<Boolean> enabled = new ObservableField<>();
+
     @Inject
     DeviceRepository deviceRepo;
 
     public HomeViewModel(final Application application) {
         super(application);
         DmApplication.getInjector().inject(this);
-
         self = deviceRepo.getSelfDevice();
+        name.addOnPropertyChangedCallback(getNameChangedCallback());
+    }
+
+    private Observable.OnPropertyChangedCallback getNameChangedCallback() {
+        return new Observable.OnPropertyChangedCallback() {
+            @Override
+            public void onPropertyChanged(Observable sender, int propertyId) {
+                if (sender == name) {
+                    enabled.set(name.get() != null && !name.get().isEmpty());
+                }
+            }
+        };
     }
 
     public LiveData<Device> getSelf() {

@@ -6,11 +6,15 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
+import android.support.v4.app.RemoteInput;
 
+import com.detroitlabs.devicemanager.DmApplication;
 import com.detroitlabs.devicemanager.data.DatabaseContract;
 import com.detroitlabs.devicemanager.utils.DeviceUtil;
 import com.google.firebase.database.FirebaseDatabase;
 
+import static com.detroitlabs.devicemanager.constants.Constants.KEY_NAME;
 import static com.detroitlabs.devicemanager.data.DatabaseContract.TABLE_DEVICES;
 
 public class DeviceUpdateService extends IntentService {
@@ -18,8 +22,8 @@ public class DeviceUpdateService extends IntentService {
     private static final String TAG = DeviceUpdateService.class.getSimpleName();
     private static final String ACTION = TAG + ".ACTION";
     private static final String EXTRA = TAG + ".EXTRA";
-    private static final String ACTION_CHECK_IN = ACTION + ".CHECK_IN";
-    private static final String ACTION_CHECK_OUT = ACTION + ".CHECK_OUT";
+    public static final String ACTION_CHECK_IN = ACTION + ".CHECK_IN";
+    public static final String ACTION_CHECK_OUT = ACTION + ".CHECK_OUT";
     private static final String ACTION_REQUEST = ACTION + ".REQUEST";
     private static final String ACTION_RECEIVE_REQUEST = ACTION + ".RECEIVE_REQUEST";
     private static final String ACTION_UPDATE_BATTERY = ACTION + ".UPDATE_BATTERY";
@@ -75,11 +79,11 @@ public class DeviceUpdateService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         String serialNumber = intent.getStringExtra(EXTRA_SERIAL_NUMBER);
         String action = intent.getAction();
+        CharSequence name = getName(intent);
         if (ACTION_CHECK_IN.equals(action)) {
             performCheckIn(serialNumber);
         } else if (ACTION_CHECK_OUT.equals(action)) {
-            String checkedOutBy = intent.getStringExtra(EXTRA_CHECKED_OUT_BY);
-            performCheckOut(serialNumber, checkedOutBy);
+            performCheckOut(name);
         } else if (ACTION_REQUEST.equals(action)) {
             String requestedBy = intent.getStringExtra(EXTRA_REQUESTED_BY);
             performRequest(serialNumber, requestedBy);
@@ -112,7 +116,8 @@ public class DeviceUpdateService extends IntentService {
                 .setValue("");
     }
 
-    private void performCheckOut(String serialNumber, String checkedOutBy) {
+    private void performCheckOut(CharSequence checkedOutBy) {
+        String serialNumber = DmApplication.getSerialNumber();
         FirebaseDatabase.getInstance().getReference()
                 .child(TABLE_DEVICES)
                 .child(serialNumber)
@@ -134,5 +139,13 @@ public class DeviceUpdateService extends IntentService {
         values.put(DatabaseContract.DeviceColumns.SERIAL_NUMBER, serialNumber);
         values.put(column, value);
         getContentResolver().update(uri, values, null, null);
+    }
+
+    private CharSequence getName(Intent intent) {
+        Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
+        if (remoteInput != null) {
+            return remoteInput.getCharSequence(KEY_NAME);
+        }
+        return null;
     }
 }
