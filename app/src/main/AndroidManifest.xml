@@ -25,8 +25,7 @@
         <activity
             android:name=".PagerActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan" >
-        </activity>
+            android:windowSoftInputMode="adjustPan" />
 
         <service android:name=".sync.DeviceUpdateService" />
         <service android:name=".sync.FirebaseTokenSyncService" />
@@ -43,7 +42,7 @@
 
         <receiver android:name=".PowerOnOffReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.ACTION_SHUTDOWN" />
             </intent-filter>
         </receiver>
