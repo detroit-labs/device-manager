@@ -10,78 +10,163 @@
             type="com.detroitlabs.devicemanager.db.Device" />
 
         <variable
-            name="listener"
+            name="itemClickListener"
+            type="com.detroitlabs.devicemanager.ui.OnItemClickListener" />
+
+        <variable
+            name="requestButtonClickListener"
             type="com.detroitlabs.devicemanager.ui.OnItemClickListener" />
 
         <import type="android.view.View" />
     </data>
 
-    <RelativeLayout
-        android:id="@+id/device_item_view"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackground"
-        android:onClick="@{() -> listener.onItemClick(device)}"
-        android:padding="@dimen/normal_padding">
-
-        <ImageView
-            android:id="@+id/icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_centerVertical="true"
-            android:contentDescription="@string/platform_icon"
-            app:imageResource="@{device.icon}"
-            tools:src="@drawable/ic_android_grey600_24dp" />
+        android:orientation="vertical">
 
         <RelativeLayout
+            android:id="@+id/device_item_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/normal_padding"
-            android:layout_marginStart="@dimen/normal_padding"
-            android:layout_toEndOf="@id/icon"
-            android:layout_toRightOf="@id/icon">
+            android:background="?attr/selectableItemBackground"
+            android:onClick="@{() -> itemClickListener.onItemClick(device)}"
+            android:padding="@dimen/normal_padding">
 
-            <TextView
-                android:id="@+id/brand_and_model"
+
+            <RelativeLayout
+                android:id="@+id/primary_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/normal_padding"
+                android:layout_marginStart="@dimen/normal_padding"
+                android:layout_toEndOf="@id/icon"
+                android:layout_toRightOf="@id/icon">
+
+                <TextView
+                    android:id="@+id/brand_and_model"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{device.brandAndModel}"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                    tools:text="Samsung Galaxy S7" />
+
+                <TextView
+                    android:id="@+id/version"
+                    android:layout_width="32dp"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/brand_and_model"
+                    android:text="@{device.version}"
+                    tools:text="7.1.1" />
+
+                <TextView
+                    android:id="@+id/status_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/brand_and_model"
+                    android:layout_marginLeft="@dimen/large_padding"
+                    android:layout_marginStart="@dimen/large_padding"
+                    android:layout_toEndOf="@id/version"
+                    android:layout_toRightOf="@id/version"
+                    app:status_text="@{device}"
+                    tools:text="Requested by Jack" />
+
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/icon"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@{device.brandAndModel}"
-                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-                tools:text="Samsung Galaxy S7" />
+                android:layout_alignBottom="@id/primary_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignTop="@id/primary_content"
+                android:contentDescription="@string/platform_icon"
+                app:imageResource="@{device.icon}"
+                tools:src="@drawable/ic_android_grey600_24dp" />
 
-            <TextView
-                android:id="@+id/version"
-                android:layout_width="32dp"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/brand_and_model"
-                android:text="@{device.version}"
-                tools:text="7.1.1" />
-
-            <TextView
-                android:id="@+id/status_text"
+            <ImageView
+                android:id="@+id/status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/brand_and_model"
-                android:layout_marginLeft="@dimen/large_padding"
-                android:layout_marginStart="@dimen/large_padding"
-                android:layout_toEndOf="@id/version"
-                android:layout_toRightOf="@id/version"
-                app:status_text="@{device}"
-                tools:text="Requested by Jack" />
+                android:layout_alignBottom="@id/primary_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@id/primary_content"
+                android:contentDescription="@string/device_status"
+                android:src="@drawable/ic_checkbox_blank_circle_grey600_24dp"
+                app:color="@{device}" />
+
+
         </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/status"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/detail"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:contentDescription="@string/device_status"
-            android:src="@drawable/ic_checkbox_blank_circle_grey600_24dp"
-            app:color="@{device}" />
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/large_padding"
+            android:paddingRight="@dimen/large_padding"
+            android:visibility="gone"
+            tools:visibility="visible">
 
-    </RelativeLayout>
+            <include
+                layout="@layout/view_list_expand_detail_item"
+                app:device="@{device}" />
+
+            <RelativeLayout
+                android:id="@+id/request_area"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/normal_padding"
+                android:paddingLeft="@dimen/normal_padding"
+                android:paddingRight="@dimen/normal_padding"
+                app:visibleGone="@{device.isCheckedOut()}">
+
+                <Button
+                    android:id="@+id/request_button"
+                    style="@style/ColoredFlatButtonStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:onClick="@{() -> requestButtonClickListener.onItemClick(device)}"
+                    android:text="@string/request" />
+
+                <RelativeLayout
+                    android:id="@+id/enter_name_area"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/list_detail_request_enter_name_area_height"
+                    android:layout_centerVertical="true"
+                    android:orientation="horizontal"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <android.support.v7.widget.AppCompatImageButton
+                        android:id="@+id/send_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentRight="true"
+                        android:adjustViewBounds="true"
+                        android:background="@android:color/transparent"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/ic_send_white_24dp"
+                        android:tint="@color/colorAccent" />
+
+                    <EditText
+                        android:id="@+id/enter_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginEnd="@dimen/normal_padding"
+                        android:layout_marginRight="@dimen/normal_padding"
+                        android:layout_toLeftOf="@id/send_button"
+                        android:layout_toStartOf="@id/send_button"
+                        android:background="@drawable/branded_edittext"
+                        android:hint="@string/enter_your_name"
+                        android:maxLines="1"
+                        android:textSize="@dimen/fontsize_normal" />
+
+                </RelativeLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </LinearLayout>
 </layout>

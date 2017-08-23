@@ -17,4 +17,6 @@
     <dimen name="fontsize_small">10sp</dimen>
     <dimen name="fontsize_normal">14sp</dimen>
     <dimen name="fontsize_large">30sp</dimen>
+
+    <dimen name="list_detail_request_enter_name_area_height">48dp</dimen>
 </resources>

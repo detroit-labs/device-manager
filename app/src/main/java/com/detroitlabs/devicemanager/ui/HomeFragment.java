@@ -20,7 +20,7 @@ import com.detroitlabs.devicemanager.db.Device;
 import com.detroitlabs.devicemanager.utils.ViewUtil;
 
 
-public class HomeFragment extends LifecycleFragment implements BackPressListener {
+public class HomeFragment extends LifecycleFragment {
 
     private FragHomeBinding binding;
     private HomeViewModel viewModel;
@@ -54,14 +54,11 @@ public class HomeFragment extends LifecycleFragment implements BackPressListener
             @Override
             public void onChanged(@Nullable Device device) {
                 binding.setDevice(device);
-                animVisibility(device);
+                if (device != null) {
+                    animVisibility(device);
+                }
             }
         });
-    }
-
-    @Override
-    public boolean onBackPressed() {
-        return false;
     }
 
     private void animVisibility(Device device) {
