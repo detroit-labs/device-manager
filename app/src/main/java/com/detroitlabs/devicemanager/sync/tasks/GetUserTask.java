@@ -1,16 +1,11 @@
 package com.detroitlabs.devicemanager.sync.tasks;
 
-import android.util.Log;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import javax.inject.Inject;
 
-import io.reactivex.Single;
 import io.reactivex.SingleEmitter;
-import io.reactivex.SingleOnSubscribe;
-import io.reactivex.annotations.NonNull;
 
 
 public class GetUserTask extends AsyncTask<GetUserTask.Result> {

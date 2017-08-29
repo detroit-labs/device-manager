@@ -24,6 +24,12 @@ import java.util.Locale;
 
 public class DeviceUtil {
 
+    private static final String SERIAL_NUMBER;
+
+    static {
+        SERIAL_NUMBER = Build.SERIAL.equals("unknown") ? "12345" : Build.SERIAL;
+    }
+
     public static boolean hasGetAccountsPermission(Context context) {
         return ContextCompat.checkSelfPermission(context,
                 android.Manifest.permission.GET_ACCOUNTS) == PackageManager.PERMISSION_GRANTED;
@@ -51,8 +57,7 @@ public class DeviceUtil {
     }
 
     public static String getSerialNumber() {
-        //this is so that emulated devices get some kind of serial value
-        return Build.SERIAL.equals("unknown") ? "12345" : Build.SERIAL;
+        return SERIAL_NUMBER;
     }
 
     public static double getBatteryLevel(Context context) {
@@ -73,6 +78,10 @@ public class DeviceUtil {
                 || Build.MANUFACTURER.contains("Genymotion")
                 || (Build.BRAND.startsWith("generic") && Build.DEVICE.startsWith("generic"))
                 || "google_sdk".equals(Build.PRODUCT);
+    }
+
+    public static String getBrandAndModel() {
+        return DeviceName.getDeviceName();
     }
 
     private static String getSize(Context context) {
@@ -98,10 +107,6 @@ public class DeviceUtil {
         int width = size.x;
         int height = size.y;
         return width + " × " + height + " px";
-    }
-
-    private static String getBrandAndModel() {
-        return DeviceName.getDeviceName();
     }
 
     private static String getYearClass(Context context) {

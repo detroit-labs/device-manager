@@ -41,7 +41,7 @@ public class TestDeviceSilentSignInTask extends AsyncTask<GoogleSignInResult> {
                 public void onResult(@NonNull GoogleSignInResult googleSignInResult) {
                     emitter.onSuccess(googleSignInResult);
                 }
-            }, 5000, TimeUnit.MILLISECONDS);
+            }, 2000, TimeUnit.MILLISECONDS);
         }
     }
 }
