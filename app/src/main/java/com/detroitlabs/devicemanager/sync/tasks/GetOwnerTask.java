@@ -1,6 +1,7 @@
 package com.detroitlabs.devicemanager.sync.tasks;
 
 import com.detroitlabs.devicemanager.data.DatabaseContract;
+import com.detroitlabs.devicemanager.sync.Result;
 import com.detroitlabs.devicemanager.utils.DeviceUtil;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -32,7 +33,7 @@ public class GetOwnerTask extends AsyncTask<GetOwnerTask.Result> {
                         if (checkedOutBy == null) {
                             checkedOutBy = "";
                         }
-                        emitter.onSuccess(new Result(checkedOutBy));
+                        emitter.onSuccess(Result.success(checkedOutBy));
                     }
 
                     @Override
@@ -42,19 +43,22 @@ public class GetOwnerTask extends AsyncTask<GetOwnerTask.Result> {
                 });
     }
 
-    public static class Result extends AsyncTask.Result {
+    public static class Result extends com.detroitlabs.devicemanager.sync.Result {
         public String owner;
 
-        public Result(String owner) {
+        protected Result(String owner) {
+            super(null);
             this.owner = owner;
         }
 
-        public boolean isSuccess() {
-            return owner != null && !owner.isEmpty();
+        public static Result success(String owner) {
+            return new Result(owner);
         }
 
-        public static Result fail() {
-            return new Result("");
+        public boolean isSuccess() {
+            return super.isSuccess() && owner != null && !owner.isEmpty();
         }
+
+
     }
 }

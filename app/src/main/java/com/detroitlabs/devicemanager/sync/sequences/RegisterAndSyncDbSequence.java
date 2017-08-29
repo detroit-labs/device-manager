@@ -2,6 +2,7 @@ package com.detroitlabs.devicemanager.sync.sequences;
 
 import android.util.Log;
 
+import com.detroitlabs.devicemanager.sync.Result;
 import com.detroitlabs.devicemanager.sync.tasks.DbSyncTask;
 import com.detroitlabs.devicemanager.sync.tasks.RegisterTask;
 
@@ -32,10 +33,10 @@ public final class RegisterAndSyncDbSequence extends AsyncTaskSequence<Boolean> 
                 .flatMap(syncDb());
     }
 
-    private Function<RegisterTask.Result, Single<Boolean>> syncDb() {
-        return new Function<RegisterTask.Result, Single<Boolean>>() {
+    private Function<Result, Single<Boolean>> syncDb() {
+        return new Function<Result, Single<Boolean>>() {
             @Override
-            public Single<Boolean> apply(@NonNull RegisterTask.Result result) throws Exception {
+            public Single<Boolean> apply(@NonNull Result result) throws Exception {
                 if (result.isSuccess()) {
                     Log.d(TAG, "register successful. start syncing db");
                     updateStatus("Syncing Db");

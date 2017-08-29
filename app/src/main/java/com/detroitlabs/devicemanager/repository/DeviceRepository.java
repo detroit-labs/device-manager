@@ -13,13 +13,20 @@ import com.detroitlabs.devicemanager.constants.FilterType;
 import com.detroitlabs.devicemanager.db.Device;
 import com.detroitlabs.devicemanager.db.DeviceDao;
 import com.detroitlabs.devicemanager.db.FilterDao;
+import com.detroitlabs.devicemanager.sync.Result;
+import com.detroitlabs.devicemanager.sync.sequences.DeviceCheckInSequence;
+import com.detroitlabs.devicemanager.sync.sequences.DeviceCheckOutSequence;
 import com.detroitlabs.devicemanager.ui.filter.Filter;
 import com.detroitlabs.devicemanager.ui.filter.FilterUtil;
 
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.inject.Singleton;
+
+import dagger.Lazy;
+import io.reactivex.Single;
 
 @Singleton
 public class DeviceRepository {
@@ -27,11 +34,18 @@ public class DeviceRepository {
     private static final String TAG = DeviceRepository.class.getName();
     private final DeviceDao deviceDao;
     private final FilterDao filterDao;
+    private final Provider<DeviceCheckOutSequence> checkOutSequenceProvider;
+    private final Provider<DeviceCheckInSequence> checkInSequenceProvider;
 
     @Inject
-    public DeviceRepository(DeviceDao deviceDao, FilterDao filterDao) {
+    public DeviceRepository(DeviceDao deviceDao,
+                            FilterDao filterDao,
+                            Provider<DeviceCheckOutSequence> checkOutSequenceProvider,
+                            Provider<DeviceCheckInSequence> checkInSequenceProvider) {
         this.deviceDao = deviceDao;
         this.filterDao = filterDao;
+        this.checkOutSequenceProvider = checkOutSequenceProvider;
+        this.checkInSequenceProvider = checkInSequenceProvider;
     }
 
     public LiveData<Device> getSelfDevice() {
@@ -91,6 +105,16 @@ public class DeviceRepository {
 
     public LiveData<Filter.Options> loadAllFilterOptions() {
         return loadAllFilterOptions(deviceDao.getAllDevices());
+    }
+
+    public Single<Result> checkOutDevice(String name) {
+        DeviceCheckOutSequence checkOutSequence = checkOutSequenceProvider.get();
+        return checkOutSequence.run(name);
+    }
+
+    public Single<Result>  checkInDevice() {
+        DeviceCheckInSequence checkInSequence = checkInSequenceProvider.get();
+        return checkInSequence.run();
     }
 
     private LiveData<Filter.Options> loadAllFilterOptions(LiveData<List<Device>> deviceLiveData) {

@@ -17,5 +17,5 @@ public class Constants {
 
     public static final int NOTIFICATION_ID = 1;
     public static final String NOTIFICATION_CHANNEL_ID = "dm_channle_1";
-    public static final String KEY_NAME = "key_name_checkout";
+    public static final String KEY_QUICK_CHECKOUT = "key_name_checkout";
 }

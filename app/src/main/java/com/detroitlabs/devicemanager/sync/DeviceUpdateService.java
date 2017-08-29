@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.RemoteInput;
 
 import com.detroitlabs.devicemanager.DmApplication;
@@ -14,9 +15,14 @@ import com.detroitlabs.devicemanager.data.DatabaseContract;
 import com.detroitlabs.devicemanager.utils.DeviceUtil;
 import com.google.firebase.database.FirebaseDatabase;
 
-import static com.detroitlabs.devicemanager.constants.Constants.KEY_NAME;
+import static com.detroitlabs.devicemanager.constants.Constants.KEY_QUICK_CHECKOUT;
 import static com.detroitlabs.devicemanager.data.DatabaseContract.TABLE_DEVICES;
 
+/**
+ * This service is responsible for taking and handling the input
+ * from the notification. The input contains check out and check in
+ * the using device.
+ */
 public class DeviceUpdateService extends IntentService {
 
     private static final String TAG = DeviceUpdateService.class.getSimpleName();
@@ -77,6 +83,9 @@ public class DeviceUpdateService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        // TODO: 8/29/17 get the input from notification RemoteInput
+
+
         String serialNumber = intent.getStringExtra(EXTRA_SERIAL_NUMBER);
         String action = intent.getAction();
         CharSequence name = getName(intent);
@@ -144,7 +153,7 @@ public class DeviceUpdateService extends IntentService {
     private CharSequence getName(Intent intent) {
         Bundle remoteInput = RemoteInput.getResultsFromIntent(intent);
         if (remoteInput != null) {
-            return remoteInput.getCharSequence(KEY_NAME);
+            return remoteInput.getCharSequence(KEY_QUICK_CHECKOUT);
         }
         return null;
     }

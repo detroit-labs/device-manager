@@ -95,11 +95,5 @@ public class HomeFragment extends LifecycleFragment {
                 return false;
             }
         });
-        binding.buttonOtherDevices.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO: 7/24/17 swipe to list page
-            }
-        });
     }
 }

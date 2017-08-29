@@ -18,18 +18,23 @@ public class GetUserTask extends AsyncTask<GetUserTask.Result> {
 
     @Override
     protected void task(SingleEmitter<Result> emitter) {
-        emitter.onSuccess(new Result(FirebaseAuth.getInstance().getCurrentUser()));
+        emitter.onSuccess(Result.success(FirebaseAuth.getInstance().getCurrentUser()));
     }
 
-    public static class Result extends AsyncTask.Result{
+    public static class Result extends com.detroitlabs.devicemanager.sync.Result {
         public FirebaseUser user;
 
-        public Result(FirebaseUser user) {
+        protected Result(FirebaseUser user) {
+            super(null);
             this.user = user;
         }
 
+        public static Result success(FirebaseUser user) {
+            return new Result(user);
+        }
+
         public boolean isSuccess() {
-            return user != null;
+            return super.isSuccess() && user != null;
         }
     }
 }

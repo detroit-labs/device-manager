@@ -12,7 +12,6 @@ import io.reactivex.SingleOnSubscribe;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.schedulers.Schedulers;
-import io.reactivex.subjects.BehaviorSubject;
 
 abstract class AsyncTask<T> implements Task {
     protected abstract void task(SingleEmitter<T> emitter);
@@ -30,32 +29,5 @@ abstract class AsyncTask<T> implements Task {
             }
         });
         return single.subscribeOn(scheduler).observeOn(AndroidSchedulers.mainThread());
-    }
-
-    public static class Result {
-        public final Exception exception;
-
-        public Result() {
-            this(null);
-        }
-
-        public Result(Exception exception) {
-            this.exception = exception;
-        }
-
-        public boolean isSuccess() {
-            return exception == null;
-        }
-
-        public static Result error(Exception exception) {
-            if (exception == null) {
-                exception = new IllegalStateException();
-            }
-            return new Result(exception);
-        }
-
-        public static Result empty() {
-            return new Result();
-        }
     }
 }
