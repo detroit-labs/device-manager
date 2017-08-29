@@ -34,16 +34,6 @@ public class DetailItemView extends FrameLayout {
         }
     }
 
-    @Override
-    protected Parcelable onSaveInstanceState() {
-        return super.onSaveInstanceState();
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Parcelable state) {
-        super.onRestoreInstanceState(state);
-    }
-
     public void setLabel(String label) {
         this.label.setText(label);
     }

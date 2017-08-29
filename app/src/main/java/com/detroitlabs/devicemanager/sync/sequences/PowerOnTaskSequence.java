@@ -50,7 +50,9 @@ public final class PowerOnTaskSequence extends AsyncTaskSequence<Boolean> {
             @Override
             public Single<Boolean> apply(@NonNull GetUserTask.Result result) throws Exception {
                 if (result.isSuccess()) {
-                    return owningNotificationSequence.run();
+                    // TODO: 8/22/17 change this back
+                    return Single.just(true);
+//                    return owningNotificationSequence.run();
                 } else {
                     return Single.just(false);
                 }

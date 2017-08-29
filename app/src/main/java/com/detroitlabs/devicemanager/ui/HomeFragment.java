@@ -15,28 +15,18 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
-import com.detroitlabs.devicemanager.DmApplication;
 import com.detroitlabs.devicemanager.databinding.FragHomeBinding;
 import com.detroitlabs.devicemanager.db.Device;
-import com.detroitlabs.devicemanager.sync.tasks.CheckOutNotificationTask;
 import com.detroitlabs.devicemanager.utils.ViewUtil;
 
-import javax.inject.Inject;
 
-import io.reactivex.functions.BiConsumer;
-
-
-public class HomeFragment extends LifecycleFragment implements BackPressListener {
+public class HomeFragment extends LifecycleFragment {
 
     private FragHomeBinding binding;
     private HomeViewModel viewModel;
 
-    @Inject
-    CheckOutNotificationTask checkOutNotificationTask;
-
     public HomeFragment() {
         // Required empty public constructor
-        DmApplication.getInjector().inject(this);
     }
 
     public static HomeFragment newInstance() {
@@ -64,14 +54,11 @@ public class HomeFragment extends LifecycleFragment implements BackPressListener
             @Override
             public void onChanged(@Nullable Device device) {
                 binding.setDevice(device);
-                animVisibility(device);
+                if (device != null) {
+                    animVisibility(device);
+                }
             }
         });
-    }
-
-    @Override
-    public boolean onBackPressed() {
-        return false;
     }
 
     private void animVisibility(Device device) {
@@ -112,19 +99,6 @@ public class HomeFragment extends LifecycleFragment implements BackPressListener
             @Override
             public void onClick(View v) {
                 // TODO: 7/24/17 swipe to list page
-            }
-        });
-
-        // test notification
-        binding.brandAndModel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                checkOutNotificationTask.run().subscribe(new BiConsumer<Boolean, Throwable>() {
-                    @Override
-                    public void accept(Boolean aBoolean, Throwable throwable) throws Exception {
-
-                    }
-                });
             }
         });
     }

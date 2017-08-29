@@ -30,9 +30,11 @@ public class RegisterTask extends AsyncTask<AsyncTask.Result> {
     protected void task(final SingleEmitter<Result> emitter) {
         Log.d(TAG, "start register task");
         if (!isTestDevice()) {
-            emitter.onSuccess(Result.error(new IllegalStateException("Not test account")));
+            Log.e(TAG, "register failed: not testing device");
+            emitter.onSuccess(Result.empty());
         } else if (DeviceUtil.isEmulator()) {
-            emitter.onSuccess(Result.error(new IllegalStateException("Running on Emulator")));
+            Log.e(TAG, "register failed: running on emulator");
+            emitter.onSuccess(Result.empty());
         } else {
             performRegister(emitter);
         }
