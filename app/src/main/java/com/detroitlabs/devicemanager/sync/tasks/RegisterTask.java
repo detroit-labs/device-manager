@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.detroitlabs.devicemanager.DmApplication;
 import com.detroitlabs.devicemanager.constants.Constants;
+import com.detroitlabs.devicemanager.sync.Result;
 import com.detroitlabs.devicemanager.utils.DeviceUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -18,7 +19,7 @@ import io.reactivex.SingleEmitter;
 
 import static com.detroitlabs.devicemanager.data.DatabaseContract.TABLE_DEVICES;
 
-public class RegisterTask extends AsyncTask<AsyncTask.Result> {
+public class RegisterTask extends AsyncTask<Result> {
 
     private static final String TAG = RegisterTask.class.getName();
 
@@ -31,10 +32,10 @@ public class RegisterTask extends AsyncTask<AsyncTask.Result> {
         Log.d(TAG, "start register task");
         if (!isTestDevice()) {
             Log.e(TAG, "register failed: not testing device");
-            emitter.onSuccess(Result.empty());
+            emitter.onSuccess(Result.failure(new IllegalStateException("Cannot register on non test device")));
         } else if (DeviceUtil.isEmulator()) {
             Log.e(TAG, "register failed: running on emulator");
-            emitter.onSuccess(Result.empty());
+            emitter.onSuccess(Result.failure(new IllegalStateException("Cannot register on emulator")));
         } else {
             performRegister(emitter);
         }
@@ -49,10 +50,10 @@ public class RegisterTask extends AsyncTask<AsyncTask.Result> {
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 if (databaseError == null) {
                     Log.d(TAG, "register success");
-                    emitter.onSuccess(Result.empty());
+                    emitter.onSuccess(Result.success());
                 } else {
                     Log.e(TAG, "register failed", databaseError.toException());
-                    emitter.onSuccess(new Result(databaseError.toException()));
+                    emitter.onSuccess(Result.failure(databaseError.toException()));
                 }
             }
         });

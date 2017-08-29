@@ -46,7 +46,7 @@ public class HomeViewModel extends AndroidViewModel {
     }
 
     public void checkOut() {
-        DeviceUpdateService.checkOutDevice(getApplication(), name.get());
+        deviceRepo.checkOutDevice(name.get()).subscribe();
         name.set("");
     }
 
@@ -55,6 +55,6 @@ public class HomeViewModel extends AndroidViewModel {
     }
 
     public void checkIn() {
-        DeviceUpdateService.checkInDevice(getApplication());
+        deviceRepo.checkInDevice().subscribe();
     }
 }

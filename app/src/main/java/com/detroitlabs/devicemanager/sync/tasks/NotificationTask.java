@@ -15,7 +15,7 @@ import com.detroitlabs.devicemanager.utils.DeviceUtil;
 
 import io.reactivex.SingleEmitter;
 
-import static com.detroitlabs.devicemanager.constants.Constants.KEY_NAME;
+import static com.detroitlabs.devicemanager.constants.Constants.KEY_QUICK_CHECKOUT;
 import static com.detroitlabs.devicemanager.constants.Constants.NOTIFICATION_CHANNEL_ID;
 import static com.detroitlabs.devicemanager.constants.Constants.NOTIFICATION_ID;
 
@@ -48,7 +48,7 @@ abstract class NotificationTask extends AsyncTask<Boolean> {
                         0,
                         deviceUpdateIntent,
                         PendingIntent.FLAG_UPDATE_CURRENT);
-        RemoteInput remoteInput = new RemoteInput.Builder(KEY_NAME)
+        RemoteInput remoteInput = new RemoteInput.Builder(KEY_QUICK_CHECKOUT)
                 .setLabel("Type your name")
                 .build();
         NotificationCompat.Action action =
@@ -62,9 +62,9 @@ abstract class NotificationTask extends AsyncTask<Boolean> {
         PendingIntent resultPendingIntent = PendingIntent.getActivity(context, 0, resultIntent, PendingIntent.FLAG_UPDATE_CURRENT);
         builder.setContentIntent(resultPendingIntent);
 
-        NotificationManager mNotificationManager =
+        NotificationManager notificationManager =
                 (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(NOTIFICATION_ID, builder.build());
+        notificationManager.notify(NOTIFICATION_ID, builder.build());
         emitter.onSuccess(true);
     }
 

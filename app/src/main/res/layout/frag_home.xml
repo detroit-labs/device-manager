@@ -47,7 +47,7 @@
                 android:id="@+id/status"
                 layout="@layout/layout_device_status"
                 android:layout_width="match_parent"
-                android:layout_height="78dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 app:device="@{device}"
                 app:viewModel="@{viewModel}" />
