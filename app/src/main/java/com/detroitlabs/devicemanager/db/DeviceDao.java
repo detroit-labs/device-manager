@@ -12,11 +12,8 @@ import java.util.List;
 
 @Dao
 public interface DeviceDao {
-    @Insert
-    void insertAll(Device... devices);
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Device device);
+    long insert(Device device);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void update(Device device);
@@ -24,12 +21,12 @@ public interface DeviceDao {
     @Delete
     void delete(Device... devices);
 
-    @Query("DELETE FROM device")
-    int emptyDeviceTable();
-
     @Query("SELECT * FROM device")
     LiveData<List<Device>> getAllDevices();
 
     @Query("SELECT * FROM device WHERE serialNumber = :serialNumber")
     LiveData<Device> getDevice(String serialNumber);
+
+    @Query("UPDATE device SET isRegistrable = :isRegistrable WHERE serialNumber = :serialNumber")
+    void updateRegistrable(boolean isRegistrable, String serialNumber);
 }

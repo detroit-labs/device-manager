@@ -10,7 +10,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import javax.inject.Inject;
 
@@ -31,30 +30,10 @@ public class DbSyncTask extends AsyncTask<Boolean> {
 
     @Override
     protected void task(SingleEmitter<Boolean> emitter) {
-        int rowsDeleted = deviceRepo.emptyDeviceTable();
-        Log.d(TAG, rowsDeleted + " rows cleared in devices table");
-
         DatabaseReference tableDevice = FirebaseDatabase.getInstance().getReference()
                 .child(TABLE_DEVICES);
         tableDevice.addChildEventListener(getChildEventListener());
-        notifyWhenDone(tableDevice, emitter);
-
-    }
-
-    private void notifyWhenDone(DatabaseReference tableDevice, final SingleEmitter<Boolean> emitter) {
-
-        tableDevice.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG, "Sync is done, rows inserted: " + dataSnapshot.getChildrenCount());
-                emitter.onSuccess(true);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                emitter.onError(databaseError.toException());
-            }
-        });
+        emitter.onSuccess(true);
     }
 
     private ChildEventListener getChildEventListener() {
@@ -63,7 +42,7 @@ public class DbSyncTask extends AsyncTask<Boolean> {
                 @Override
                 public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                     Device device = dataSnapshot.getValue(Device.class);
-                    deviceRepo.insert(device);
+                    deviceRepo.insert(device).subscribe();
                     Log.d(TAG, device.serialNumber + " device inserted");
                 }
 
@@ -84,12 +63,10 @@ public class DbSyncTask extends AsyncTask<Boolean> {
 
                 @Override
                 public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-
                 }
             };
         }

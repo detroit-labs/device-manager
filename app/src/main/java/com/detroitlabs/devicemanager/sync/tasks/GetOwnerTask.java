@@ -1,7 +1,6 @@
 package com.detroitlabs.devicemanager.sync.tasks;
 
 import com.detroitlabs.devicemanager.data.DatabaseContract;
-import com.detroitlabs.devicemanager.sync.Result;
 import com.detroitlabs.devicemanager.utils.DeviceUtil;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -44,21 +43,28 @@ public class GetOwnerTask extends AsyncTask<GetOwnerTask.Result> {
     }
 
     public static class Result extends com.detroitlabs.devicemanager.sync.Result {
-        public String owner;
+        public final String owner;
 
         protected Result(String owner) {
             super(null);
             this.owner = owner;
         }
 
+        protected Result(Exception exception) {
+            super(exception);
+            this.owner = null;
+        }
+
         public static Result success(String owner) {
             return new Result(owner);
         }
 
-        public boolean isSuccess() {
-            return super.isSuccess() && owner != null && !owner.isEmpty();
+        public static Result failure(Exception exception) {
+            return new Result(exception);
         }
 
-
+        public boolean isCheckedOut() {
+            return owner != null && !owner.isEmpty();
+        }
     }
 }

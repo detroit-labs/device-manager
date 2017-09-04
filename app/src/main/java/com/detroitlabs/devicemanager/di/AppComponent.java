@@ -10,6 +10,7 @@ import com.detroitlabs.devicemanager.db.DeviceDatabase;
 import com.detroitlabs.devicemanager.db.FilterDao;
 import com.detroitlabs.devicemanager.di.qualifiers.ApplicationContext;
 import com.detroitlabs.devicemanager.repository.DeviceRepository;
+import com.detroitlabs.devicemanager.sync.DeviceUpdateService;
 import com.detroitlabs.devicemanager.ui.DeviceListViewModel;
 import com.detroitlabs.devicemanager.ui.HomeFragment;
 import com.detroitlabs.devicemanager.ui.HomeViewModel;
@@ -23,6 +24,8 @@ import dagger.Component;
 @Singleton
 @Component(modules = {DatabaseModule.class, AppModule.class})
 public interface AppComponent {
+
+    void inject(HomeFragment homeFragment);
 
     @Component.Builder
     interface Builder {
@@ -52,4 +55,6 @@ public interface AppComponent {
     void inject(FilterViewModel filterViewModel);
 
     void inject(PowerOnOffReceiver powerOnOffReceiver);
+
+    void inject(DeviceUpdateService deviceUpdateService);
 }

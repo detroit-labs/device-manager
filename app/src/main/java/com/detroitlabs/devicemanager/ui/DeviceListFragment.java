@@ -18,9 +18,11 @@ import com.detroitlabs.devicemanager.databinding.FragDeviceListBinding;
 import com.detroitlabs.devicemanager.db.Device;
 import com.detroitlabs.devicemanager.ui.filter.FilterViewModel;
 import com.detroitlabs.devicemanager.ui.filter.SearchFilterDialog;
+import com.detroitlabs.devicemanager.utils.DeviceUtil;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 
@@ -35,6 +37,7 @@ public class DeviceListFragment extends LifecycleFragment {
         @Override
         public void onChanged(@Nullable List<Device> devices) {
             sort(devices);
+            removeSelf(devices);
             adapter.swapItems(devices);
         }
     };
@@ -97,16 +100,25 @@ public class DeviceListFragment extends LifecycleFragment {
         Collections.sort(devices, new Comparator<Device>() {
             @Override
             public int compare(Device d1, Device d2) {
-                int c;
                 if (d1.isCheckedOut() == d2.isCheckedOut()) {
-                    c = d1.brandAndModel.compareTo(d2.brandAndModel);
+                    return d1.brandAndModel.compareTo(d2.brandAndModel);
                 } else if (d1.isCheckedOut()) {
-                    c = 1;
+                    return 1;
                 } else {
-                    c = -1;
+                    return -1;
                 }
-                return c;
             }
         });
+    }
+
+    private void removeSelf(List<Device> devices) {
+        Iterator<Device> iterator = devices.iterator();
+        String selfSerialNumber = DeviceUtil.getSerialNumber();
+        while (iterator.hasNext()) {
+            if (selfSerialNumber.equalsIgnoreCase(iterator.next().serialNumber)) {
+                iterator.remove();
+                break;
+            }
+        }
     }
 }

@@ -37,6 +37,8 @@ abstract class NotificationTask extends AsyncTask<Boolean> {
                         .setCategory(NotificationCompat.CATEGORY_STATUS)
                         .setPriority(NotificationCompat.PRIORITY_MAX)
                         .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                        .setOngoing(true)
+                        .setLocalOnly(true)
                         .setSmallIcon(R.mipmap.ic_launcher);
 
 

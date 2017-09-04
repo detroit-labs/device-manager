@@ -49,7 +49,7 @@ public final class TestDeviceAutoSignInSequence extends AsyncTaskSequence<SignIn
                 Log.d(TAG, "start checking getting user result");
                 if (result.isSuccess()) {
                     updateStatus("Already logged in");
-                    return Single.just(new SignInResult(result.user));
+                    return Single.just(SignInResult.success(result.user));
                 } else {
                     updateStatus("Authenticating...");
                     return performSignIn();
@@ -89,7 +89,7 @@ public final class TestDeviceAutoSignInSequence extends AsyncTaskSequence<SignIn
                 } else {
                     Log.d(TAG, "User decline google sign-in, go to home screen");
                     Log.d(TAG, "status code: " + result.getStatus().getStatusCode());
-                    return Single.just(SignInResult.empty());
+                    return Single.just(SignInResult.failure(null));
                 }
             }
         };

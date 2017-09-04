@@ -2,7 +2,7 @@ package com.detroitlabs.devicemanager.sync.sequences;
 
 import com.detroitlabs.devicemanager.sync.Result;
 import com.detroitlabs.devicemanager.sync.tasks.DeviceCheckOutTask;
-import com.detroitlabs.devicemanager.sync.tasks.GetUserTask;
+import com.detroitlabs.devicemanager.sync.tasks.GetRegistrableTask;
 
 import javax.inject.Inject;
 
@@ -11,16 +11,16 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 
 
-public class DeviceCheckOutSequence extends AsyncTaskSequence<Result> {
-    private final GetUserTask getUserTask;
+public final class DeviceCheckOutSequence extends AsyncTaskSequence<Result> {
+    private final GetRegistrableTask getRegistrableTask;
     private final DeviceCheckOutTask checkOutTask;
     private String checkOutBy;
 
     @Inject
-    public DeviceCheckOutSequence(GetUserTask getUserTask,
+    public DeviceCheckOutSequence(GetRegistrableTask getRegistrableTask,
                                   DeviceCheckOutTask checkOutTask) {
 
-        this.getUserTask = getUserTask;
+        this.getRegistrableTask = getRegistrableTask;
         this.checkOutTask = checkOutTask;
     }
 
@@ -34,18 +34,18 @@ public class DeviceCheckOutSequence extends AsyncTaskSequence<Result> {
         if (checkOutBy == null) {
             return Single.error(new IllegalArgumentException("Please use run(String checkOutBy) and pass the parameter"));
         }
-        return getUserTask.run()
+        return getRegistrableTask.run()
                 .flatMap(checkout());
     }
 
-    private Function<Result, Single<Result>> checkout() {
-        return new Function<Result, Single<Result>>() {
+    private Function<Boolean, Single<Result>> checkout() {
+        return new Function<Boolean, Single<Result>>() {
             @Override
-            public Single<Result> apply(@NonNull Result result) throws Exception {
-                if (result.isSuccess()) {
+            public Single<Result> apply(@NonNull Boolean result) throws Exception {
+                if (result) {
                     return checkOutTask.run(checkOutBy);
                 } else {
-                    return Single.just(Result.failure(result.exception));
+                    return Single.just(Result.failure(new IllegalStateException("Not allow to check out this device")));
                 }
             }
         };

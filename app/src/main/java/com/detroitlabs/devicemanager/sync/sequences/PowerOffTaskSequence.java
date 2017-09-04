@@ -1,7 +1,7 @@
 package com.detroitlabs.devicemanager.sync.sequences;
 
 
-import com.detroitlabs.devicemanager.sync.tasks.GetUserTask;
+import com.detroitlabs.devicemanager.sync.tasks.GetRegistrableTask;
 import com.detroitlabs.devicemanager.sync.tasks.UpdateBatteryTask;
 
 import javax.inject.Inject;
@@ -13,26 +13,26 @@ import io.reactivex.functions.Function;
 public final class PowerOffTaskSequence extends AsyncTaskSequence<Boolean> {
 
     private final UpdateBatteryTask updateBatteryTask;
-    private final GetUserTask getUserTask;
+    private final GetRegistrableTask getRegistrableTask;
 
     @Inject
     PowerOffTaskSequence(UpdateBatteryTask updateBatteryTask,
-                         GetUserTask getUserTask) {
+                         GetRegistrableTask getRegistrableTask) {
         this.updateBatteryTask = updateBatteryTask;
-        this.getUserTask = getUserTask;
+        this.getRegistrableTask = getRegistrableTask;
     }
 
     @Override
     public Single<Boolean> run() {
-        return getUserTask.run()
+        return getRegistrableTask.run()
                 .flatMap(updateBattery());
     }
 
-    private Function<GetUserTask.Result, Single<Boolean>> updateBattery() {
-        return new Function<GetUserTask.Result, Single<Boolean>>() {
+    private Function<Boolean, Single<Boolean>> updateBattery() {
+        return new Function<Boolean, Single<Boolean>>() {
             @Override
-            public Single<Boolean> apply(@NonNull GetUserTask.Result result) throws Exception {
-                if (result.isSuccess()) {
+            public Single<Boolean> apply(@NonNull Boolean isRegistrable) throws Exception {
+                if (isRegistrable) {
                     return updateBatteryTask.run();
                 } else {
                     return Single.just(false);

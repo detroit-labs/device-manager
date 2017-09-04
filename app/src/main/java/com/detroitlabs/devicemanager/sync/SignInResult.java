@@ -1,30 +1,34 @@
 package com.detroitlabs.devicemanager.sync;
 
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.google.firebase.auth.FirebaseUser;
 
-public class SignInResult {
+public class SignInResult extends Result {
     public final FirebaseUser user;
-    public final Exception exception;
 
-    public SignInResult(FirebaseUser user) {
-        this(user, null);
-    }
-
-    public SignInResult(Exception exception) {
-        this(null, exception);
-    }
-
-    public SignInResult(FirebaseUser user, Exception exception) {
-        this.exception = exception;
+    protected SignInResult(FirebaseUser user) {
+        super(null);
         this.user = user;
     }
 
-    public boolean isSuccess() {
-        return user != null;
+    protected SignInResult(Exception exception) {
+        super(exception);
+        this.user = null;
     }
 
-    public static SignInResult empty() {
-        return new SignInResult(null, null);
+    public static SignInResult success(@NonNull FirebaseUser user) {
+        return new SignInResult(user);
+    }
+
+    public static SignInResult failure(@Nullable Exception exception) {
+        return new SignInResult(exception);
+    }
+
+    @Override
+    public boolean isSuccess() {
+        return super.isSuccess() && user != null;
     }
 }

@@ -1,10 +1,9 @@
 package com.detroitlabs.devicemanager.sync.sequences;
 
-import com.detroitlabs.devicemanager.sync.Result;
 import com.detroitlabs.devicemanager.sync.tasks.CheckInNotificationTask;
 import com.detroitlabs.devicemanager.sync.tasks.CheckOutNotificationTask;
 import com.detroitlabs.devicemanager.sync.tasks.GetOwnerTask;
-import com.detroitlabs.devicemanager.sync.tasks.GetUserTask;
+import com.detroitlabs.devicemanager.sync.tasks.GetRegistrableTask;
 
 import javax.inject.Inject;
 
@@ -16,47 +15,47 @@ import io.reactivex.functions.Function;
 public final class OwningNotificationSequence extends AsyncTaskSequence<Boolean> {
 
     private final GetOwnerTask getOwnerTask;
-    private final GetUserTask getUserTask;
+    private final GetRegistrableTask getRegistrableTask;
     private final CheckOutNotificationTask checkOutNotificationTask;
     private final CheckInNotificationTask checkInNotificationTask;
 
     @Inject
     public OwningNotificationSequence(GetOwnerTask getOwnerTask,
-                                      GetUserTask getUserTask,
+                                      GetRegistrableTask getRegistrableTask,
                                       CheckOutNotificationTask checkOutNotificationTask,
                                       CheckInNotificationTask checkInNotificationTask) {
 
         this.getOwnerTask = getOwnerTask;
-        this.getUserTask = getUserTask;
+        this.getRegistrableTask = getRegistrableTask;
         this.checkOutNotificationTask = checkOutNotificationTask;
         this.checkInNotificationTask = checkInNotificationTask;
     }
 
     @Override
     public Single<Boolean> run() {
-        return getUserTask.run()
+        return getRegistrableTask.run()
                 .flatMap(checkUser())
                 .flatMap(checkOwner());
     }
 
-    private Function<Result, Single<? extends Result>> checkUser() {
-        return new Function<Result, Single<? extends Result>>() {
+    private Function<Boolean, Single<GetOwnerTask.Result>> checkUser() {
+        return new Function<Boolean, Single<GetOwnerTask.Result>>() {
             @Override
-            public Single<? extends Result> apply(@NonNull Result result) throws Exception {
-                if (result.isSuccess()) {
+            public Single<GetOwnerTask.Result> apply(@NonNull Boolean isRegistrable) throws Exception {
+                if (isRegistrable) {
                     return getOwnerTask.run();
                 } else {
-                    return Single.just(Result.failure(result.exception));
+                    return Single.just(GetOwnerTask.Result.failure(new IllegalStateException("Not allow to check in/out this device")));
                 }
             }
         };
     }
 
-    private Function<Result, Single<Boolean>> checkOwner() {
-        return new Function<Result, Single<Boolean>>() {
+    private Function<GetOwnerTask.Result, Single<Boolean>> checkOwner() {
+        return new Function<GetOwnerTask.Result, Single<Boolean>>() {
             @Override
-            public Single<Boolean> apply(@NonNull Result result) throws Exception {
-                if (result.isSuccess()) {
+            public Single<Boolean> apply(@NonNull GetOwnerTask.Result result) throws Exception {
+                if (result.isCheckedOut()) {
                     return checkInNotificationTask.run();
                 } else {
                     return checkOutNotificationTask.run();

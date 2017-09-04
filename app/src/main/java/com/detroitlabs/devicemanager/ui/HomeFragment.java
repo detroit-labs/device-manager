@@ -15,9 +15,13 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.TextView;
 
+import com.detroitlabs.devicemanager.DmApplication;
 import com.detroitlabs.devicemanager.databinding.FragHomeBinding;
 import com.detroitlabs.devicemanager.db.Device;
+import com.detroitlabs.devicemanager.sync.tasks.CheckOutNotificationTask;
 import com.detroitlabs.devicemanager.utils.ViewUtil;
+
+import javax.inject.Inject;
 
 
 public class HomeFragment extends LifecycleFragment {
@@ -25,7 +29,11 @@ public class HomeFragment extends LifecycleFragment {
     private FragHomeBinding binding;
     private HomeViewModel viewModel;
 
+    @Inject
+    CheckOutNotificationTask checkOutNotificationTask;
+
     public HomeFragment() {
+        DmApplication.getInjector().inject(this);
         // Required empty public constructor
     }
 
@@ -66,9 +74,9 @@ public class HomeFragment extends LifecycleFragment {
             TransitionManager.beginDelayedTransition(binding.transitionContainer);
         }
 
-        setVisible(binding.checkoutArea, !device.notRegisterable && !device.isCheckedOut());
-        setVisible(binding.status.textNotRegisterable, device.notRegisterable);
-        setVisible(binding.status.viewAvailable, !device.notRegisterable && !device.hasRequest() && !device.isCheckedOut());
+        setVisible(binding.checkoutArea, device.isRegistrable && !device.isCheckedOut());
+        setVisible(binding.status.textNotRegistrable, !device.isRegistrable);
+        setVisible(binding.status.viewAvailable, device.isRegistrable && !device.hasRequest() && !device.isCheckedOut());
         setVisible(binding.status.viewRequest, device.hasRequest());
         setVisible(binding.status.viewCheckout, device.isCheckedOut());
     }
@@ -93,6 +101,12 @@ public class HomeFragment extends LifecycleFragment {
                     viewModel.checkOut();
                 }
                 return false;
+            }
+        });
+        binding.buttonOtherDevices.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                checkOutNotificationTask.run().subscribe();
             }
         });
     }

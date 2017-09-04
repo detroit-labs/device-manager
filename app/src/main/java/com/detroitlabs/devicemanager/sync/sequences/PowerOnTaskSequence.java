@@ -1,58 +1,52 @@
 package com.detroitlabs.devicemanager.sync.sequences;
 
-import com.detroitlabs.devicemanager.sync.tasks.GetUserTask;
+import android.util.Log;
+
+import com.detroitlabs.devicemanager.sync.tasks.GetRegistrableTask;
 import com.detroitlabs.devicemanager.sync.tasks.UpdateBatteryTask;
 
 import javax.inject.Inject;
 
 import io.reactivex.Single;
 import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
 
 public final class PowerOnTaskSequence extends AsyncTaskSequence<Boolean> {
 
+    private static final String TAG = PowerOnTaskSequence.class.getName();
     private final UpdateBatteryTask updateBatteryTask;
-    private final GetUserTask getUserTask;
+    private final GetRegistrableTask getRegistrable;
     private final OwningNotificationSequence owningNotificationSequence;
 
     @Inject
     public PowerOnTaskSequence(UpdateBatteryTask updateBatteryTask,
-                               GetUserTask getUserTask,
+                               GetRegistrableTask getRegistrableTask,
                                OwningNotificationSequence owningNotificationSequence) {
         this.updateBatteryTask = updateBatteryTask;
-        this.getUserTask = getUserTask;
+        this.getRegistrable = getRegistrableTask;
         this.owningNotificationSequence = owningNotificationSequence;
     }
 
     @Override
     public Single<Boolean> run() {
-
-        return getUserTask.run()
-                .flatMap(updateBattery())
-                .flatMap(checkUser());
+        return getRegistrable.run()
+                .flatMap(updateBattery());
     }
 
-    private Function<GetUserTask.Result, Single<GetUserTask.Result>> updateBattery() {
-        return new Function<GetUserTask.Result, Single<GetUserTask.Result>>() {
+    private Function<Boolean, Single<Boolean>> updateBattery() {
+        return new Function<Boolean, Single<Boolean>>() {
             @Override
-            public Single<GetUserTask.Result> apply(@NonNull GetUserTask.Result result) throws Exception {
-                if (result.isSuccess()) {
-                    updateBatteryTask.run().subscribe();
-                }
-                return Single.just(result);
-            }
-        };
-    }
-
-    private Function<GetUserTask.Result, Single<Boolean>> checkUser() {
-        return new Function<GetUserTask.Result, Single<Boolean>>() {
-            @Override
-            public Single<Boolean> apply(@NonNull GetUserTask.Result result) throws Exception {
-                if (result.isSuccess()) {
-                    // TODO: 8/22/17 change this back
-                    return Single.just(true);
-//                    return owningNotificationSequence.run();
+            public Single<Boolean> apply(@NonNull Boolean isRegistrable) throws Exception {
+                if (isRegistrable) {
+                    Log.d(TAG, "Start updating battery percentage");
+                    return updateBatteryTask.run().zipWith(Single.just(true), new BiFunction<Boolean, Boolean, Boolean>() {
+                        @Override
+                        public Boolean apply(@NonNull Boolean updateBatteryResult, @NonNull Boolean sendNotificationResult) throws Exception {
+                            return updateBatteryResult && sendNotificationResult;
+                        }
+                    });
                 } else {
                     return Single.just(false);
                 }
