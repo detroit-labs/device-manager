@@ -11,7 +11,7 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 
 
-public class DeviceCheckOutSequence extends AsyncTaskSequence<Result> {
+public final class DeviceCheckOutSequence extends AsyncTaskSequence<Result> {
     private final GetUserTask getUserTask;
     private final DeviceCheckOutTask checkOutTask;
     private String checkOutBy;

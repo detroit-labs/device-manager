@@ -31,9 +31,6 @@ public class DbSyncTask extends AsyncTask<Boolean> {
 
     @Override
     protected void task(SingleEmitter<Boolean> emitter) {
-        int rowsDeleted = deviceRepo.emptyDeviceTable();
-        Log.d(TAG, rowsDeleted + " rows cleared in devices table");
-
         DatabaseReference tableDevice = FirebaseDatabase.getInstance().getReference()
                 .child(TABLE_DEVICES);
         tableDevice.addChildEventListener(getChildEventListener());
@@ -84,12 +81,10 @@ public class DbSyncTask extends AsyncTask<Boolean> {
 
                 @Override
                 public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
                 }
 
                 @Override
                 public void onCancelled(DatabaseError databaseError) {
-
                 }
             };
         }

@@ -24,6 +24,8 @@ import dagger.Component;
 @Component(modules = {DatabaseModule.class, AppModule.class})
 public interface AppComponent {
 
+    void inject(HomeFragment homeFragment);
+
     @Component.Builder
     interface Builder {
 

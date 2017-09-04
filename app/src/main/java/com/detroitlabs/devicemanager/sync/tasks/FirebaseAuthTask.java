@@ -42,10 +42,10 @@ public class FirebaseAuthTask extends AsyncTask<SignInResult> {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "Firebase sign in successful");
-                            emitter.onSuccess(new SignInResult(task.getResult().getUser()));
+                            emitter.onSuccess(SignInResult.success(task.getResult().getUser()));
                         } else {
                             Log.e(TAG, "Firebase sign in failed", task.getException());
-                            emitter.onSuccess(new SignInResult(task.getException()));
+                            emitter.onSuccess(SignInResult.failure(task.getException()));
                         }
                     }
                 });

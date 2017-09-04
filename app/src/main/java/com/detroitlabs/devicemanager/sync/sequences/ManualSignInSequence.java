@@ -44,7 +44,8 @@ public final class ManualSignInSequence extends AsyncTaskSequence<SignInResult> 
                 } else {
                     Log.d(TAG, "User decline google sign-in, go to home screen");
                     Log.d(TAG, "status code: " + result.getStatus().getStatusCode());
-                    return Single.just(SignInResult.empty());
+                    Log.d(TAG, result.getStatus().getStatusMessage());
+                    return Single.just(SignInResult.failure(null));
                 }
             }
         };

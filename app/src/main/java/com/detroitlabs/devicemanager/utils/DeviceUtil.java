@@ -1,16 +1,11 @@
 package com.detroitlabs.devicemanager.utils;
 
-import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.os.BatteryManager;
 import android.os.Build;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
@@ -27,20 +22,13 @@ public class DeviceUtil {
     private static final String SERIAL_NUMBER;
 
     static {
-        SERIAL_NUMBER = Build.SERIAL.equals("unknown") ? "12345" : Build.SERIAL;
-    }
-
-    public static boolean hasGetAccountsPermission(Context context) {
-        return ContextCompat.checkSelfPermission(context,
-                android.Manifest.permission.GET_ACCOUNTS) == PackageManager.PERMISSION_GRANTED;
-    }
-
-    public static void requestGetAccountsPermission(Fragment fragment, int requestCode) {
-        fragment.requestPermissions(new String[]{Manifest.permission.GET_ACCOUNTS}, requestCode);
-    }
-
-    public static void requestGetAccountsPermission(Activity activity, int requestCode) {
-        activity.requestPermissions(new String[]{Manifest.permission.GET_ACCOUNTS}, requestCode);
+        String serial;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            serial = Build.getSerial();
+        } else {
+            serial = Build.SERIAL;
+        }
+        SERIAL_NUMBER = serial.equalsIgnoreCase("unknown") ? "emulator_fake_serial_number" : serial;
     }
 
     public static Device readThisDevice(Context context) {

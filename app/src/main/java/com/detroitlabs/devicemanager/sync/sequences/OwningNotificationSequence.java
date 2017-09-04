@@ -46,7 +46,7 @@ public final class OwningNotificationSequence extends AsyncTaskSequence<Boolean>
                 if (result.isSuccess()) {
                     return getOwnerTask.run();
                 } else {
-                    return Single.just(Result.failure(result.exception));
+                    return Single.just(result);
                 }
             }
         };

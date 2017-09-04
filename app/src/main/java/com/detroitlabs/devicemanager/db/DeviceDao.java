@@ -32,4 +32,7 @@ public interface DeviceDao {
 
     @Query("SELECT * FROM device WHERE serialNumber = :serialNumber")
     LiveData<Device> getDevice(String serialNumber);
+
+    @Query("UPDATE device SET isRegistrable = :isRegistrable WHERE serialNumber = :serialNumber")
+    void updateRegistrable(boolean isRegistrable, String serialNumber);
 }

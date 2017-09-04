@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
@@ -21,11 +20,12 @@
         tools:background="@color/bg_dark">
 
         <TextView
-            android:id="@+id/text_not_registerable"
+            android:id="@+id/text_not_registrable"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/this_device_cannot_be_registered"
-            android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
+            android:textColor="@color/bg_white"
+            android:textSize="@dimen/fontsize_normal"
             tools:visibility="gone" />
 
         <RelativeLayout
@@ -70,19 +70,19 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_centerVertical="true"
-                    android:contentDescription="@string/device_status"
                     android:background="@drawable/indicator_circle"
-                    android:backgroundTint="@color/status_orange" />
+                    android:backgroundTint="@color/status_orange"
+                    android:contentDescription="@string/device_status" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:textSize="@dimen/fontsize_normal"
-                    android:textColor="@color/bg_white"
                     android:layout_marginLeft="@dimen/normal_padding"
                     android:layout_toRightOf="@id/icon1"
                     android:text="@{@string/requested_by(device.requestedBy)}"
+                    android:textColor="@color/bg_white"
+                    android:textSize="@dimen/fontsize_normal"
                     tools:text="Requested By Peike" />
 
                 <Button
@@ -90,11 +90,11 @@
                     style="@style/brandedButtonLight"
                     android:layout_width="@dimen/button_width"
                     android:layout_height="@dimen/button_height_short"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="4dp"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="4dp"
                     android:onClick="@{() -> viewModel.dismissRequest()}"
                     tools:text="DISMISS" />
             </RelativeLayout>
@@ -109,20 +109,20 @@
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_centerVertical="true"
-                    android:contentDescription="@string/device_status"
                     android:background="@drawable/indicator_circle"
-                    android:backgroundTint="@color/status_red" />
+                    android:backgroundTint="@color/status_red"
+                    android:contentDescription="@string/device_status" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:textSize="@dimen/fontsize_normal"
-                    android:textColor="@color/bg_white"
                     android:layout_marginLeft="@dimen/normal_padding"
                     android:layout_toRightOf="@id/icon2"
                     android:text="@{@string/borrowed_by(device.checkedOutBy)}"
                     android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
+                    android:textColor="@color/bg_white"
+                    android:textSize="@dimen/fontsize_normal"
                     android:visibility="visible"
                     tools:text="Borrowed By Peike" />
 
@@ -131,11 +131,11 @@
                     style="@style/brandedButtonLight"
                     android:layout_width="@dimen/button_width"
                     android:layout_height="@dimen/button_height_short"
-                    android:layout_marginTop="4dp"
-                    android:layout_marginBottom="4dp"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="4dp"
                     android:onClick="@{() -> viewModel.checkIn()}"
                     android:text="@string/release" />
             </RelativeLayout>

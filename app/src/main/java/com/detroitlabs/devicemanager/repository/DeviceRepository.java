@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.util.Pair;
 
-import com.detroitlabs.devicemanager.DmApplication;
 import com.detroitlabs.devicemanager.constants.FilterType;
 import com.detroitlabs.devicemanager.db.Device;
 import com.detroitlabs.devicemanager.db.DeviceDao;
@@ -18,6 +17,7 @@ import com.detroitlabs.devicemanager.sync.sequences.DeviceCheckInSequence;
 import com.detroitlabs.devicemanager.sync.sequences.DeviceCheckOutSequence;
 import com.detroitlabs.devicemanager.ui.filter.Filter;
 import com.detroitlabs.devicemanager.ui.filter.FilterUtil;
+import com.detroitlabs.devicemanager.utils.DeviceUtil;
 
 import java.util.List;
 
@@ -25,8 +25,12 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
 
-import dagger.Lazy;
 import io.reactivex.Single;
+import io.reactivex.SingleEmitter;
+import io.reactivex.SingleOnSubscribe;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.schedulers.Schedulers;
 
 @Singleton
 public class DeviceRepository {
@@ -49,24 +53,20 @@ public class DeviceRepository {
     }
 
     public LiveData<Device> getSelfDevice() {
-        return deviceDao.getDevice(DmApplication.getSerialNumber());
+        return deviceDao.getDevice(DeviceUtil.getSerialNumber());
     }
 
-    public void insert(Device device) {
+    public Single<Boolean> insert(final Device device) {
         if (!hasEnoughProperty(device)) {
-            return;
+            return Single.just(false);
         }
-        new AsyncTask<Device, Void, Void>() {
+        return Single.create(new SingleOnSubscribe<Boolean>() {
             @Override
-            protected Void doInBackground(Device... devices) {
-                deviceDao.insert(devices[0]);
-                return null;
+            public void subscribe(@NonNull SingleEmitter<Boolean> e) throws Exception {
+                deviceDao.insert(device);
+                e.onSuccess(true);
             }
-        }.execute(device);
-    }
-
-    public int emptyDeviceTable() {
-        return deviceDao.emptyDeviceTable();
+        }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
     }
 
     public void delete(Device device) {
@@ -112,9 +112,19 @@ public class DeviceRepository {
         return checkOutSequence.run(name);
     }
 
-    public Single<Result>  checkInDevice() {
+    public Single<Result> checkInDevice() {
         DeviceCheckInSequence checkInSequence = checkInSequenceProvider.get();
         return checkInSequence.run();
+    }
+
+    public Single<Boolean> setRegistrable(final boolean isRegistrable) {
+        return Single.create(new SingleOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull SingleEmitter<Boolean> e) throws Exception {
+                deviceDao.updateRegistrable(isRegistrable, DeviceUtil.getSerialNumber());
+                e.onSuccess(true);
+            }
+        });
     }
 
     private LiveData<Filter.Options> loadAllFilterOptions(LiveData<List<Device>> deviceLiveData) {
