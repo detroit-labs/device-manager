@@ -106,7 +106,7 @@ public class HomeFragment extends LifecycleFragment {
         binding.buttonOtherDevices.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                checkOutNotificationTask.run();
+                checkOutNotificationTask.run().subscribe();
             }
         });
     }

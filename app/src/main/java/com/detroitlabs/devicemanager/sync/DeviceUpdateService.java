@@ -12,8 +12,11 @@ import android.support.v4.app.RemoteInput;
 
 import com.detroitlabs.devicemanager.DmApplication;
 import com.detroitlabs.devicemanager.data.DatabaseContract;
+import com.detroitlabs.devicemanager.repository.DeviceRepository;
 import com.detroitlabs.devicemanager.utils.DeviceUtil;
 import com.google.firebase.database.FirebaseDatabase;
+
+import javax.inject.Inject;
 
 import static com.detroitlabs.devicemanager.constants.Constants.KEY_QUICK_CHECKOUT;
 import static com.detroitlabs.devicemanager.data.DatabaseContract.TABLE_DEVICES;
@@ -38,20 +41,8 @@ public class DeviceUpdateService extends IntentService {
     private static final String EXTRA_REQUESTED_BY = EXTRA + ".REQUESTED_BY";
     private static final String EXTRA_BATTERY_PERCENT = EXTRA + ".BATTERY_PERCENT";
 
-    public static void checkInDevice(Context context) {
-        Intent intent = new Intent(context, DeviceUpdateService.class);
-        intent.setAction(ACTION_CHECK_IN);
-        intent.putExtra(EXTRA_SERIAL_NUMBER, DeviceUtil.getSerialNumber());
-        context.startService(intent);
-    }
-
-    public static void checkOutDevice(Context context, String checkedOutBy) {
-        Intent intent = new Intent(context, DeviceUpdateService.class);
-        intent.setAction(ACTION_CHECK_OUT);
-        intent.putExtra(EXTRA_SERIAL_NUMBER, DeviceUtil.getSerialNumber());
-        intent.putExtra(EXTRA_CHECKED_OUT_BY, checkedOutBy);
-        context.startService(intent);
-    }
+    @Inject
+    DeviceRepository deviceRepo;
 
     public static void requestDevice(Context context, String serialNumber, String requestBy) {
         Intent intent = new Intent(context, DeviceUpdateService.class);
@@ -69,16 +60,14 @@ public class DeviceUpdateService extends IntentService {
         context.startService(intent);
     }
 
-    public static void updateLastKnownBattery(Context context, double batteryPct) {
-        Intent intent = new Intent(context, DeviceUpdateService.class);
-        intent.setAction(ACTION_UPDATE_BATTERY);
-        intent.putExtra(EXTRA_BATTERY_PERCENT, batteryPct);
-        intent.putExtra(EXTRA_SERIAL_NUMBER, DeviceUtil.getSerialNumber());
-        context.startService(intent);
-    }
-
     public DeviceUpdateService() {
         super(TAG);
+    }
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        DmApplication.getInjector().inject(this);
     }
 
     @Override
