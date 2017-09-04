@@ -23,7 +23,7 @@ public class GetRegistrableTask extends AsyncTask<Boolean> {
     @Override
     protected void task(SingleEmitter<Boolean> emitter) {
         boolean isRegistrable = !DeviceUtil.isEmulator() && isTestAccount();
-        deviceRepo.setRegistrable(isRegistrable);
+        deviceRepo.setRegistrable(isRegistrable).subscribe();
         emitter.onSuccess(isRegistrable);
     }
 

@@ -63,7 +63,8 @@ public class DeviceRepository {
         return Single.create(new SingleOnSubscribe<Boolean>() {
             @Override
             public void subscribe(@NonNull SingleEmitter<Boolean> e) throws Exception {
-                deviceDao.insert(device);
+                long rowId = deviceDao.insert(device);
+                Log.d(TAG, "Row Id: " + rowId);
                 e.onSuccess(true);
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());
@@ -87,6 +88,16 @@ public class DeviceRepository {
                 return null;
             }
         }.execute(device);
+    }
+
+    public Single<Boolean> setRegistrable(final boolean isRegistrable) {
+        return Single.create(new SingleOnSubscribe<Boolean>() {
+            @Override
+            public void subscribe(@NonNull SingleEmitter<Boolean> e) throws Exception {
+                deviceDao.updateRegistrable(isRegistrable, DeviceUtil.getSerialNumber());
+                e.onSuccess(true);
+            }
+        });
     }
 
     public LiveData<List<Device>> getAllDevices(Filter.Selection selection) {
@@ -115,16 +126,6 @@ public class DeviceRepository {
     public Single<Result> checkInDevice() {
         DeviceCheckInSequence checkInSequence = checkInSequenceProvider.get();
         return checkInSequence.run();
-    }
-
-    public Single<Boolean> setRegistrable(final boolean isRegistrable) {
-        return Single.create(new SingleOnSubscribe<Boolean>() {
-            @Override
-            public void subscribe(@NonNull SingleEmitter<Boolean> e) throws Exception {
-                deviceDao.updateRegistrable(isRegistrable, DeviceUtil.getSerialNumber());
-                e.onSuccess(true);
-            }
-        });
     }
 
     private LiveData<Filter.Options> loadAllFilterOptions(LiveData<List<Device>> deviceLiveData) {

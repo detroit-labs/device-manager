@@ -12,20 +12,14 @@ import java.util.List;
 
 @Dao
 public interface DeviceDao {
-    @Insert
-    void insertAll(Device... devices);
-
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    void insert(Device device);
+    long insert(Device device);
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
     void update(Device device);
 
     @Delete
     void delete(Device... devices);
-
-    @Query("DELETE FROM device")
-    int emptyDeviceTable();
 
     @Query("SELECT * FROM device")
     LiveData<List<Device>> getAllDevices();
