@@ -90,16 +90,6 @@ public class DeviceRepository {
         }.execute(device);
     }
 
-    public Single<Boolean> setRegistrable(final boolean isRegistrable) {
-        return Single.create(new SingleOnSubscribe<Boolean>() {
-            @Override
-            public void subscribe(@NonNull SingleEmitter<Boolean> e) throws Exception {
-                deviceDao.updateRegistrable(isRegistrable, DeviceUtil.getSerialNumber());
-                e.onSuccess(true);
-            }
-        });
-    }
-
     public LiveData<List<Device>> getAllDevices(Filter.Selection selection) {
         Pair<String, Object[]> queryArg = FilterUtil.convertSelectionToQuery(selection);
         return filterDao.getFilteredDevices(queryArg.first, queryArg.second);

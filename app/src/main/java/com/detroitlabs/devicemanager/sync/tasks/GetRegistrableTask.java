@@ -2,8 +2,8 @@ package com.detroitlabs.devicemanager.sync.tasks;
 
 
 import com.detroitlabs.devicemanager.constants.Constants;
-import com.detroitlabs.devicemanager.repository.DeviceRepository;
 import com.detroitlabs.devicemanager.utils.DeviceUtil;
+import com.detroitlabs.devicemanager.utils.PrefUtil;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -13,17 +13,17 @@ import io.reactivex.SingleEmitter;
 
 public class GetRegistrableTask extends AsyncTask<Boolean> {
 
-    private final DeviceRepository deviceRepo;
+    private final PrefUtil prefUtil;
 
     @Inject
-    GetRegistrableTask(DeviceRepository deviceRepo) {
-        this.deviceRepo = deviceRepo;
+    GetRegistrableTask(PrefUtil prefUtil) {
+        this.prefUtil = prefUtil;
     }
 
     @Override
     protected void task(SingleEmitter<Boolean> emitter) {
         boolean isRegistrable = !DeviceUtil.isEmulator() && isTestAccount();
-        deviceRepo.setRegistrable(isRegistrable).subscribe();
+        prefUtil.saveIsRegistrable(isRegistrable);
         emitter.onSuccess(isRegistrable);
     }
 
