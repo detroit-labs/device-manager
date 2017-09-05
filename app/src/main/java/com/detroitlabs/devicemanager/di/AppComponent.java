@@ -15,6 +15,7 @@ import com.detroitlabs.devicemanager.ui.DeviceListViewModel;
 import com.detroitlabs.devicemanager.ui.HomeFragment;
 import com.detroitlabs.devicemanager.ui.HomeViewModel;
 import com.detroitlabs.devicemanager.ui.filter.FilterViewModel;
+import com.detroitlabs.devicemanager.utils.PrefUtil;
 
 import javax.inject.Singleton;
 
@@ -47,6 +48,8 @@ public interface AppComponent {
     DeviceRepository deviceRepository();
 
     FilterDao filterDao();
+
+    PrefUtil prefUtil();
 
     void inject(HomeViewModel homeViewModel);
 

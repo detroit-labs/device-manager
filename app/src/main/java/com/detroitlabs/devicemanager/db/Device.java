@@ -37,8 +37,6 @@ public class Device {
     public String yearClass;
     @PropertyName(IS_SAMSUNG)
     public String isSamsung;
-    @Exclude
-    public boolean isRegistrable;
 
     @Exclude
     public boolean isCheckedOut() {
@@ -101,7 +99,6 @@ public class Device {
 
         Device device = (Device) o;
 
-        if (isRegistrable != device.isRegistrable) return false;
         if (platform != device.platform) return false;
         if (brandAndModel != null ? !brandAndModel.equals(device.brandAndModel) : device.brandAndModel != null)
             return false;
@@ -135,7 +132,6 @@ public class Device {
         result = 31 * result + (requestedBy != null ? requestedBy.hashCode() : 0);
         result = 31 * result + (yearClass != null ? yearClass.hashCode() : 0);
         result = 31 * result + (isSamsung != null ? isSamsung.hashCode() : 0);
-        result = 31 * result + (isRegistrable ? 1 : 0);
         return result;
     }
 }

@@ -26,13 +26,12 @@
             android:text="@string/this_device_cannot_be_registered"
             android:textColor="@color/bg_white"
             android:textSize="@dimen/fontsize_normal"
-            tools:visibility="gone" />
+            android:visibility="gone" />
 
         <RelativeLayout
             android:id="@+id/view_available"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            tools:visibility="gone">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/icon"
@@ -57,13 +56,13 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            tools:visibility="visible">
+            android:orientation="vertical">
 
             <RelativeLayout
                 android:id="@+id/view_request"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="gone">
 
                 <FrameLayout
                     android:id="@+id/icon1"
@@ -100,9 +99,10 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/view_checkout"
+                android:id="@+id/view_checkIn"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:visibility="gone">
 
                 <FrameLayout
                     android:id="@+id/icon2"
@@ -123,7 +123,6 @@
                     android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
                     android:textColor="@color/bg_white"
                     android:textSize="@dimen/fontsize_normal"
-                    android:visibility="visible"
                     tools:text="Borrowed By Peike" />
 
                 <Button
