@@ -11,6 +11,7 @@ import com.detroitlabs.devicemanager.db.FilterDao;
 import com.detroitlabs.devicemanager.di.qualifiers.ApplicationContext;
 import com.detroitlabs.devicemanager.repository.DeviceRepository;
 import com.detroitlabs.devicemanager.sync.DeviceUpdateService;
+import com.detroitlabs.devicemanager.sync.SelfDeviceUpdateService;
 import com.detroitlabs.devicemanager.ui.DeviceListViewModel;
 import com.detroitlabs.devicemanager.ui.HomeFragment;
 import com.detroitlabs.devicemanager.ui.HomeViewModel;
@@ -27,6 +28,8 @@ import dagger.Component;
 public interface AppComponent {
 
     void inject(HomeFragment homeFragment);
+
+    void inject(SelfDeviceUpdateService selfDeviceUpdateService);
 
     @Component.Builder
     interface Builder {

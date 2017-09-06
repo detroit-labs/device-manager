@@ -1,6 +1,8 @@
 package com.detroitlabs.devicemanager.sync.tasks;
 
 
+import android.util.Log;
+
 import com.detroitlabs.devicemanager.constants.Constants;
 import com.detroitlabs.devicemanager.utils.DeviceUtil;
 import com.detroitlabs.devicemanager.utils.PrefUtil;
@@ -13,6 +15,7 @@ import io.reactivex.SingleEmitter;
 
 public class GetRegistrableTask extends AsyncTask<Boolean> {
 
+    private static final String TAG = GetRegistrableTask.class.getName();
     private final PrefUtil prefUtil;
 
     @Inject
@@ -23,6 +26,7 @@ public class GetRegistrableTask extends AsyncTask<Boolean> {
     @Override
     protected void task(SingleEmitter<Boolean> emitter) {
         boolean isRegistrable = !DeviceUtil.isEmulator() && isTestAccount();
+        Log.d(TAG, "Device is registrable: " + isRegistrable);
         prefUtil.saveIsRegistrable(isRegistrable);
         emitter.onSuccess(isRegistrable);
     }

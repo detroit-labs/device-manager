@@ -134,4 +134,20 @@ public class Device {
         result = 31 * result + (isSamsung != null ? isSamsung.hashCode() : 0);
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "Device{" +
+                "platform=" + platform +
+                ", brandAndModel='" + brandAndModel + '\'' +
+                ", version='" + version + '\'' +
+                ", screenSize='" + screenSize + '\'' +
+                ", screenResolution='" + screenResolution + '\'' +
+                ", serialNumber='" + serialNumber + '\'' +
+                ", checkedOutBy='" + checkedOutBy + '\'' +
+                ", requestedBy='" + requestedBy + '\'' +
+                ", yearClass='" + yearClass + '\'' +
+                ", isSamsung='" + isSamsung + '\'' +
+                '}';
+    }
 }

@@ -64,7 +64,7 @@ public class DeviceRepository {
             @Override
             public void subscribe(@NonNull SingleEmitter<Boolean> e) throws Exception {
                 long rowId = deviceDao.insert(device);
-                Log.d(TAG, "Row Id: " + rowId);
+                Log.d(TAG, "Insert done. Row Id: " + rowId);
                 e.onSuccess(true);
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());

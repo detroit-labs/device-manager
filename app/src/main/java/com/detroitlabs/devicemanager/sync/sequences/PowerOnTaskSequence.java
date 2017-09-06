@@ -2,6 +2,7 @@ package com.detroitlabs.devicemanager.sync.sequences;
 
 import android.util.Log;
 
+import com.detroitlabs.devicemanager.sync.Result;
 import com.detroitlabs.devicemanager.sync.tasks.GetRegistrableTask;
 import com.detroitlabs.devicemanager.sync.tasks.UpdateBatteryTask;
 
@@ -13,7 +14,7 @@ import io.reactivex.functions.BiFunction;
 import io.reactivex.functions.Function;
 
 
-public final class PowerOnTaskSequence extends AsyncTaskSequence<Boolean> {
+public final class PowerOnTaskSequence extends AsyncTaskSequence<Result> {
 
     private static final String TAG = PowerOnTaskSequence.class.getName();
     private final UpdateBatteryTask updateBatteryTask;
@@ -30,25 +31,33 @@ public final class PowerOnTaskSequence extends AsyncTaskSequence<Boolean> {
     }
 
     @Override
-    public Single<Boolean> run() {
+    public Single<Result> run() {
         return getRegistrable.run()
                 .flatMap(updateBattery());
     }
 
-    private Function<Boolean, Single<Boolean>> updateBattery() {
-        return new Function<Boolean, Single<Boolean>>() {
+    private Function<Boolean, Single<Result>> updateBattery() {
+        return new Function<Boolean, Single<Result>>() {
             @Override
-            public Single<Boolean> apply(@NonNull Boolean isRegistrable) throws Exception {
+            public Single<Result> apply(@NonNull Boolean isRegistrable) throws Exception {
                 if (isRegistrable) {
                     Log.d(TAG, "Start updating battery percentage");
-                    return updateBatteryTask.run().zipWith(Single.just(true), new BiFunction<Boolean, Boolean, Boolean>() {
-                        @Override
-                        public Boolean apply(@NonNull Boolean updateBatteryResult, @NonNull Boolean sendNotificationResult) throws Exception {
-                            return updateBatteryResult && sendNotificationResult;
-                        }
-                    });
+                    return updateBatteryTask.run().zipWith(owningNotificationSequence.run(),
+                            new BiFunction<Result, Result, Result>() {
+                                @Override
+                                public Result apply(@NonNull Result updateBatteryResult,
+                                                    @NonNull Result sendNotificationResult) throws Exception {
+                                    if (!updateBatteryResult.isSuccess()) {
+                                        return updateBatteryResult;
+                                    } else if (!sendNotificationResult.isSuccess()) {
+                                        return sendNotificationResult;
+                                    } else {
+                                        return Result.success();
+                                    }
+                                }
+                            });
                 } else {
-                    return Single.just(false);
+                    return Single.just(Result.failure(new IllegalStateException("Device not registrable")));
                 }
             }
         };

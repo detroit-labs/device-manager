@@ -1,5 +1,7 @@
 package com.detroitlabs.devicemanager.sync.sequences;
 
+import android.util.Log;
+
 import com.detroitlabs.devicemanager.sync.Result;
 import com.detroitlabs.devicemanager.sync.tasks.DeviceCheckOutTask;
 import com.detroitlabs.devicemanager.sync.tasks.GetRegistrableTask;
@@ -12,6 +14,7 @@ import io.reactivex.functions.Function;
 
 
 public final class DeviceCheckOutSequence extends AsyncTaskSequence<Result> {
+    private static final String TAG = DeviceCheckOutSequence.class.getName();
     private final GetRegistrableTask getRegistrableTask;
     private final DeviceCheckOutTask checkOutTask;
     private String checkOutBy;
@@ -41,11 +44,13 @@ public final class DeviceCheckOutSequence extends AsyncTaskSequence<Result> {
     private Function<Boolean, Single<Result>> checkout() {
         return new Function<Boolean, Single<Result>>() {
             @Override
-            public Single<Result> apply(@NonNull Boolean result) throws Exception {
-                if (result) {
+            public Single<Result> apply(@NonNull Boolean isRegistrable) throws Exception {
+                if (isRegistrable) {
+                    Log.d(TAG, "Device registrable, start check out");
                     return checkOutTask.run(checkOutBy);
                 } else {
-                    return Single.just(Result.failure(new IllegalStateException("Not allow to check out this device")));
+                    Log.d(TAG, "Device not registrable");
+                    return Single.just(Result.failure(new IllegalStateException("Device not registrable")));
                 }
             }
         };

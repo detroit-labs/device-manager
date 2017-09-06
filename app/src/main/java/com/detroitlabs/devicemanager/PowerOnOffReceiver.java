@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.detroitlabs.devicemanager.sync.Result;
 import com.detroitlabs.devicemanager.sync.sequences.PowerOffTaskSequence;
 import com.detroitlabs.devicemanager.sync.sequences.PowerOnTaskSequence;
 
@@ -35,9 +36,12 @@ public class PowerOnOffReceiver extends BroadcastReceiver {
     }
 
     private void powerOn() {
-        powerOnTaskSequence.run().subscribe(new Consumer<Boolean>() {
+        powerOnTaskSequence.run().subscribe(new Consumer<Result>() {
             @Override
-            public void accept(Boolean aBoolean) throws Exception {
+            public void accept(Result result) throws Exception {
+                if (!result.isSuccess()) {
+                    Log.e(TAG, "failure", result.exception);
+                }
                 Log.d(TAG, "Notification is generated");
             }
         }, new Consumer<Throwable>() {
@@ -49,9 +53,12 @@ public class PowerOnOffReceiver extends BroadcastReceiver {
     }
 
     private void powerOff() {
-        powerOffTaskSequence.run().subscribe(new Consumer<Boolean>() {
+        powerOffTaskSequence.run().subscribe(new Consumer<Result>() {
             @Override
-            public void accept(Boolean aBoolean) throws Exception {
+            public void accept(Result result) throws Exception {
+                if (!result.isSuccess()) {
+                    Log.e(TAG, "failure", result.exception);
+                }
                 Log.d(TAG, "battery information is updated to server");
             }
         }, new Consumer<Throwable>() {

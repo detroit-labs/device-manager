@@ -31,8 +31,8 @@ public class DeviceUpdateService extends IntentService {
     private static final String TAG = DeviceUpdateService.class.getSimpleName();
     private static final String ACTION = TAG + ".ACTION";
     private static final String EXTRA = TAG + ".EXTRA";
-    public static final String ACTION_CHECK_IN = ACTION + ".CHECK_IN";
-    public static final String ACTION_CHECK_OUT = ACTION + ".CHECK_OUT";
+    private static final String ACTION_CHECK_IN = ACTION + ".CHECK_IN";
+    private static final String ACTION_CHECK_OUT = ACTION + ".CHECK_OUT";
     private static final String ACTION_REQUEST = ACTION + ".REQUEST";
     private static final String ACTION_RECEIVE_REQUEST = ACTION + ".RECEIVE_REQUEST";
     private static final String ACTION_UPDATE_BATTERY = ACTION + ".UPDATE_BATTERY";
@@ -79,7 +79,7 @@ public class DeviceUpdateService extends IntentService {
         String action = intent.getAction();
         CharSequence name = getName(intent);
         if (ACTION_CHECK_IN.equals(action)) {
-            performCheckIn(serialNumber);
+            performCheckIn();
         } else if (ACTION_CHECK_OUT.equals(action)) {
             performCheckOut(name);
         } else if (ACTION_REQUEST.equals(action)) {
@@ -106,7 +106,8 @@ public class DeviceUpdateService extends IntentService {
 //        updateLocalDb(THIS_DEVICE_URI, serialNumber, DatabaseContract.DeviceColumns.REQUESTED_BY, requestedBy);
     }
 
-    private void performCheckIn(String serialNumber) {
+    private void performCheckIn() {
+        String serialNumber = DeviceUtil.getSerialNumber();
         FirebaseDatabase.getInstance().getReference()
                 .child(TABLE_DEVICES)
                 .child(serialNumber)
@@ -115,7 +116,7 @@ public class DeviceUpdateService extends IntentService {
     }
 
     private void performCheckOut(CharSequence checkedOutBy) {
-        String serialNumber = DmApplication.getSerialNumber();
+        String serialNumber = DeviceUtil.getSerialNumber();
         FirebaseDatabase.getInstance().getReference()
                 .child(TABLE_DEVICES)
                 .child(serialNumber)

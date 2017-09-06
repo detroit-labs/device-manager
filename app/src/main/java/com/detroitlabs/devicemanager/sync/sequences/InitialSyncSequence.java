@@ -4,6 +4,7 @@ package com.detroitlabs.devicemanager.sync.sequences;
 import android.util.Log;
 
 import com.detroitlabs.devicemanager.sync.SignInResult;
+import com.detroitlabs.devicemanager.sync.tasks.GetSerialNumberTask;
 
 import javax.inject.Inject;
 
@@ -17,19 +18,32 @@ public final class InitialSyncSequence extends AsyncTaskSequence<Boolean> {
 
     private final TestDeviceAutoSignInSequence autoSignInSequence;
 
+    private final GetSerialNumberTask getSerialNumberTask;
     private final RegisterAndSyncDbSequence registerAndSyncDbSequence;
 
     @Inject
-    public InitialSyncSequence(RegisterAndSyncDbSequence registerAndSyncDbSequence,
+    public InitialSyncSequence(GetSerialNumberTask getSerialNumberTask,
+                               RegisterAndSyncDbSequence registerAndSyncDbSequence,
                                TestDeviceAutoSignInSequence autoSignInSequence) {
+        this.getSerialNumberTask = getSerialNumberTask;
         this.registerAndSyncDbSequence = registerAndSyncDbSequence;
         this.autoSignInSequence = autoSignInSequence;
     }
 
     @Override
     public Single<Boolean> run() {
-        return autoSignInSequence.run()
+        return getSerialNumberTask.run()
+                .flatMap(signIn())
                 .flatMap(registerAndSync());
+    }
+
+    private Function<String, Single<SignInResult>> signIn() {
+        return new Function<String, Single<SignInResult>>() {
+            @Override
+            public Single<SignInResult> apply(@NonNull String serialNumber) throws Exception {
+                return autoSignInSequence.run();
+            }
+        };
     }
 
     public Observable<String> status() {

@@ -1,5 +1,6 @@
 package com.detroitlabs.devicemanager.sync.sequences;
 
+import com.detroitlabs.devicemanager.sync.Result;
 import com.detroitlabs.devicemanager.sync.tasks.CheckInNotificationTask;
 import com.detroitlabs.devicemanager.sync.tasks.CheckOutNotificationTask;
 import com.detroitlabs.devicemanager.sync.tasks.GetOwnerTask;
@@ -12,7 +13,7 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 
 
-public final class OwningNotificationSequence extends AsyncTaskSequence<Boolean> {
+public final class OwningNotificationSequence extends AsyncTaskSequence<Result> {
 
     private final GetOwnerTask getOwnerTask;
     private final GetRegistrableTask getRegistrableTask;
@@ -32,7 +33,7 @@ public final class OwningNotificationSequence extends AsyncTaskSequence<Boolean>
     }
 
     @Override
-    public Single<Boolean> run() {
+    public Single<Result> run() {
         return getRegistrableTask.run()
                 .flatMap(checkUser())
                 .flatMap(checkOwner());
@@ -51,14 +52,16 @@ public final class OwningNotificationSequence extends AsyncTaskSequence<Boolean>
         };
     }
 
-    private Function<GetOwnerTask.Result, Single<Boolean>> checkOwner() {
-        return new Function<GetOwnerTask.Result, Single<Boolean>>() {
+    private Function<GetOwnerTask.Result, Single<Result>> checkOwner() {
+        return new Function<GetOwnerTask.Result, Single<Result>>() {
             @Override
-            public Single<Boolean> apply(@NonNull GetOwnerTask.Result result) throws Exception {
+            public Single<Result> apply(@NonNull GetOwnerTask.Result result) throws Exception {
                 if (result.isCheckedOut()) {
-                    return checkInNotificationTask.run();
-                } else {
+                    return checkInNotificationTask.run(result.owner);
+                } else if (result.isSuccess()) {
                     return checkOutNotificationTask.run();
+                } else {
+                    return Single.just(Result.failure(result.exception));
                 }
             }
         };
