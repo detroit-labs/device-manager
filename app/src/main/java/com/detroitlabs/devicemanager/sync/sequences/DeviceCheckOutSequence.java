@@ -1,8 +1,10 @@
 package com.detroitlabs.devicemanager.sync.sequences;
 
+import android.util.Log;
+
+import com.detroitlabs.devicemanager.specification.CanUpdateDevice;
 import com.detroitlabs.devicemanager.sync.Result;
 import com.detroitlabs.devicemanager.sync.tasks.DeviceCheckOutTask;
-import com.detroitlabs.devicemanager.sync.tasks.GetRegistrableTask;
 
 import javax.inject.Inject;
 
@@ -12,15 +14,15 @@ import io.reactivex.functions.Function;
 
 
 public final class DeviceCheckOutSequence extends AsyncTaskSequence<Result> {
-    private final GetRegistrableTask getRegistrableTask;
+    private static final String TAG = DeviceCheckOutSequence.class.getName();
+    private final CanUpdateDevice canUpdateDevice;
     private final DeviceCheckOutTask checkOutTask;
     private String checkOutBy;
 
     @Inject
-    public DeviceCheckOutSequence(GetRegistrableTask getRegistrableTask,
+    public DeviceCheckOutSequence(CanUpdateDevice canUpdateDevice,
                                   DeviceCheckOutTask checkOutTask) {
-
-        this.getRegistrableTask = getRegistrableTask;
+        this.canUpdateDevice = canUpdateDevice;
         this.checkOutTask = checkOutTask;
     }
 
@@ -34,18 +36,22 @@ public final class DeviceCheckOutSequence extends AsyncTaskSequence<Result> {
         if (checkOutBy == null) {
             return Single.error(new IllegalArgumentException("Please use run(String checkOutBy) and pass the parameter"));
         }
-        return getRegistrableTask.run()
-                .flatMap(checkout());
+        if (!canUpdateDevice.isSatisfied()) {
+            return Single.just(Result.failure(new IllegalAccessException("Not allow to check out")));
+        }
+        return checkOutTask.run(checkOutBy);
     }
 
     private Function<Boolean, Single<Result>> checkout() {
         return new Function<Boolean, Single<Result>>() {
             @Override
-            public Single<Result> apply(@NonNull Boolean result) throws Exception {
-                if (result) {
+            public Single<Result> apply(@NonNull Boolean isRegistrable) throws Exception {
+                if (isRegistrable) {
+                    Log.d(TAG, "Device registrable, start check out");
                     return checkOutTask.run(checkOutBy);
                 } else {
-                    return Single.just(Result.failure(new IllegalStateException("Not allow to check out this device")));
+                    Log.d(TAG, "Device not registrable");
+                    return Single.just(Result.failure(new IllegalStateException("Device not registrable")));
                 }
             }
         };

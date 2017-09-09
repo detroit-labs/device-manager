@@ -6,7 +6,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -14,11 +13,10 @@ import android.widget.EditText;
 import com.crashlytics.android.Crashlytics;
 import com.detroitlabs.devicemanager.ui.DeviceListFragment;
 import com.detroitlabs.devicemanager.ui.HomeFragment;
-import com.detroitlabs.devicemanager.utils.ViewUtil;
 
 import io.fabric.sdk.android.Fabric;
 
-public class PagerActivity extends AppCompatActivity {
+public class PagerActivity extends NotificationActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

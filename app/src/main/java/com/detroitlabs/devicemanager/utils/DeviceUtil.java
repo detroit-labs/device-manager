@@ -19,18 +19,6 @@ import java.util.Locale;
 
 public class DeviceUtil {
 
-    private static final String SERIAL_NUMBER;
-
-    static {
-        String serial;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            serial = Build.getSerial();
-        } else {
-            serial = Build.SERIAL;
-        }
-        SERIAL_NUMBER = serial.equalsIgnoreCase("unknown") ? "emulator_fake_serial_number" : serial;
-    }
-
     public static Device readThisDevice(Context context) {
         Device device = new Device();
         device.platform = Platform.ANDROID;
@@ -45,7 +33,11 @@ public class DeviceUtil {
     }
 
     public static String getSerialNumber() {
-        return SERIAL_NUMBER;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return Build.getSerial();
+        } else {
+            return Build.SERIAL;
+        }
     }
 
     public static double getBatteryLevel(Context context) {

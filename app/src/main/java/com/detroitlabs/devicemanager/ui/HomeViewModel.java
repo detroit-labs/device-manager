@@ -8,9 +8,10 @@ import android.databinding.Observable;
 import android.databinding.ObservableField;
 
 import com.detroitlabs.devicemanager.DmApplication;
-import com.detroitlabs.devicemanager.sync.DeviceUpdateService;
 import com.detroitlabs.devicemanager.db.Device;
 import com.detroitlabs.devicemanager.repository.DeviceRepository;
+import com.detroitlabs.devicemanager.sync.DeviceUpdateService;
+import com.detroitlabs.devicemanager.utils.DeviceUtil;
 
 import javax.inject.Inject;
 
@@ -51,7 +52,7 @@ public class HomeViewModel extends AndroidViewModel {
     }
 
     public void dismissRequest() {
-        DeviceUpdateService.requestDevice(getApplication(), DmApplication.getSerialNumber(), "");
+        DeviceUpdateService.requestDevice(getApplication(), DeviceUtil.getSerialNumber(), "");
     }
 
     public void checkIn() {

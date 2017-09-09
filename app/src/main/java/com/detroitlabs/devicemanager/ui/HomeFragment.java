@@ -18,8 +18,8 @@ import android.widget.TextView;
 import com.detroitlabs.devicemanager.DmApplication;
 import com.detroitlabs.devicemanager.databinding.FragHomeBinding;
 import com.detroitlabs.devicemanager.db.Device;
+import com.detroitlabs.devicemanager.specification.CanUpdateDevice;
 import com.detroitlabs.devicemanager.sync.tasks.CheckOutNotificationTask;
-import com.detroitlabs.devicemanager.utils.PrefUtil;
 import com.detroitlabs.devicemanager.utils.ViewUtil;
 
 import javax.inject.Inject;
@@ -34,7 +34,7 @@ public class HomeFragment extends LifecycleFragment {
     CheckOutNotificationTask checkOutNotificationTask;
 
     @Inject
-    PrefUtil prefUtil;
+    CanUpdateDevice canUpdateDevice;
 
     public HomeFragment() {
         DmApplication.getInjector().inject(this);
@@ -78,11 +78,11 @@ public class HomeFragment extends LifecycleFragment {
             TransitionManager.beginDelayedTransition(binding.transitionContainer);
         }
 
-        boolean isRegistrable = prefUtil.isRegistrable();
+        boolean canUpdateDevice = this.canUpdateDevice.isSatisfied();
 
-        setVisible(binding.checkoutArea, isRegistrable && !device.isCheckedOut());
-        setVisible(binding.status.textNotRegistrable, !isRegistrable);
-        setVisible(binding.status.viewAvailable, isRegistrable && !device.hasRequest() && !device.isCheckedOut());
+        setVisible(binding.checkoutArea, canUpdateDevice && !device.isCheckedOut());
+        setVisible(binding.status.textNotRegistrable, !canUpdateDevice);
+        setVisible(binding.status.viewAvailable, canUpdateDevice && !device.hasRequest() && !device.isCheckedOut());
         setVisible(binding.status.viewRequest, device.hasRequest());
         setVisible(binding.status.viewCheckIn, device.isCheckedOut());
     }

@@ -56,6 +56,10 @@ public class DeviceRepository {
         return deviceDao.getDevice(DeviceUtil.getSerialNumber());
     }
 
+    public Single<Device> getSelfDeviceSingle() {
+        return deviceDao.getDeviceSingle(DeviceUtil.getSerialNumber());
+    }
+
     public Single<Boolean> insert(final Device device) {
         if (!hasEnoughProperty(device)) {
             return Single.just(false);
@@ -64,7 +68,7 @@ public class DeviceRepository {
             @Override
             public void subscribe(@NonNull SingleEmitter<Boolean> e) throws Exception {
                 long rowId = deviceDao.insert(device);
-                Log.d(TAG, "Row Id: " + rowId);
+                Log.d(TAG, "Insert done. Row Id: " + rowId);
                 e.onSuccess(true);
             }
         }).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread());

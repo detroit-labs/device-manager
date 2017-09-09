@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.detroitlabs.devicemanager.db.Device;
 import com.detroitlabs.devicemanager.repository.DeviceRepository;
+import com.detroitlabs.devicemanager.sync.Result;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -17,7 +18,7 @@ import io.reactivex.SingleEmitter;
 
 import static com.detroitlabs.devicemanager.data.DatabaseContract.TABLE_DEVICES;
 
-public class DbSyncTask extends AsyncTask<Boolean> {
+public class DbSyncTask extends AsyncTask<Result> {
 
     private static final String TAG = DbSyncTask.class.getName();
     private final DeviceRepository deviceRepo;
@@ -29,11 +30,11 @@ public class DbSyncTask extends AsyncTask<Boolean> {
     }
 
     @Override
-    protected void task(SingleEmitter<Boolean> emitter) {
+    protected void task(SingleEmitter<Result> emitter) {
         DatabaseReference tableDevice = FirebaseDatabase.getInstance().getReference()
                 .child(TABLE_DEVICES);
         tableDevice.addChildEventListener(getChildEventListener());
-        emitter.onSuccess(true);
+        emitter.onSuccess(Result.success());
     }
 
     private ChildEventListener getChildEventListener() {
