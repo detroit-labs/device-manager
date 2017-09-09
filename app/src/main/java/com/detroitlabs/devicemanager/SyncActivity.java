@@ -10,9 +10,10 @@ import android.view.View;
 
 import com.detroitlabs.devicemanager.databinding.ActivitySyncBinding;
 import com.detroitlabs.devicemanager.di.DaggerActivityComponent;
-import com.detroitlabs.devicemanager.sync.sequences.ManualSignInSyncSequence;
-import com.detroitlabs.devicemanager.sync.sequences.InitialSyncSequence;
+import com.detroitlabs.devicemanager.sync.Result;
 import com.detroitlabs.devicemanager.sync.Ui;
+import com.detroitlabs.devicemanager.sync.sequences.InitialSyncSequence;
+import com.detroitlabs.devicemanager.sync.sequences.ManualSignInSyncSequence;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 
@@ -38,16 +39,17 @@ public class SyncActivity extends LifecycleActivity implements Ui, GoogleApiClie
 
     private int requestCode;
 
-    private SingleObserver<Boolean> autoSequenceObserver = new SingleObserver<Boolean>() {
+    private SingleObserver<Result> autoSequenceObserver = new SingleObserver<Result>() {
         @Override
         public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
 
         }
 
         @Override
-        public void onSuccess(@io.reactivex.annotations.NonNull Boolean isSyncSuccess) {
+        public void onSuccess(@io.reactivex.annotations.NonNull Result result) {
             Log.d(TAG, "initial sync sequence finished!!!");
-            if (!isSyncSuccess) {
+            if (!result.isSuccess()) {
+                Log.d(TAG, "Initial sync sequence failed", result.exception);
                 displayUnauthorisedMsg();
             } else {
                 startPagerActivity();
@@ -68,17 +70,18 @@ public class SyncActivity extends LifecycleActivity implements Ui, GoogleApiClie
         }
     };
 
-    private SingleObserver<Boolean> manualSequenceObserver = new SingleObserver<Boolean>() {
+    private SingleObserver<Result> manualSequenceObserver = new SingleObserver<Result>() {
         @Override
         public void onSubscribe(@io.reactivex.annotations.NonNull Disposable d) {
 
         }
 
         @Override
-        public void onSuccess(@io.reactivex.annotations.NonNull Boolean isSuccess) {
-            if (isSuccess) {
+        public void onSuccess(@io.reactivex.annotations.NonNull Result result) {
+            if (result.isSuccess()) {
                 startPagerActivity();
             } else {
+                Log.d(TAG, "manual sign in failed", result.exception);
                 displayUnauthorisedMsg();
             }
         }

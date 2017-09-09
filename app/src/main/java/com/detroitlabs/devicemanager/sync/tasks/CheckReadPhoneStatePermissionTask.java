@@ -12,12 +12,12 @@ import io.reactivex.SingleEmitter;
 import io.reactivex.functions.Consumer;
 
 
-public class GetSerialNumberTask extends AsyncTask<String> {
+public class CheckReadPhoneStatePermissionTask extends AsyncTask<String> {
 
     private final RxPermissions rxPermissions;
 
     @Inject
-    GetSerialNumberTask(RxPermissions rxPermissions) {
+    CheckReadPhoneStatePermissionTask(RxPermissions rxPermissions) {
         this.rxPermissions = rxPermissions;
     }
 
@@ -32,18 +32,7 @@ public class GetSerialNumberTask extends AsyncTask<String> {
                         @Override
                         public void accept(Boolean granted) throws Exception {
                             if (granted) {
-                                String serial;
-                                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                    serial = Build.getSerial();
-                                } else {
-                                    serial = Build.SERIAL;
-                                }
-                                try {
-                                    DeviceUtil.setSerialNumber(serial);
-                                } catch (IllegalAccessException e) {
-                                    emitter.onError(e);
-                                }
-                                emitter.onSuccess(serial);
+                                emitter.onSuccess(DeviceUtil.getSerialNumber());
                             } else {
                                 emitter.onSuccess(Build.UNKNOWN);
                             }

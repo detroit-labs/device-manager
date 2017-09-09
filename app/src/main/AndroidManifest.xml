@@ -55,7 +55,9 @@
         <service
             android:name=".sync.SelfDeviceUpdateService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
+
+        <activity android:name=".NotificationActivity"></activity>
     </application>
 
 </manifest>

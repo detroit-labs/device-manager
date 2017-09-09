@@ -10,6 +10,8 @@ import android.arch.persistence.room.Update;
 
 import java.util.List;
 
+import io.reactivex.Single;
+
 @Dao
 public interface DeviceDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -26,4 +28,7 @@ public interface DeviceDao {
 
     @Query("SELECT * FROM device WHERE serialNumber = :serialNumber")
     LiveData<Device> getDevice(String serialNumber);
+
+    @Query("SELECT * FROM device WHERE serialNumber = :serialNumber")
+    Single<Device> getDeviceSingle(String serialNumber);
 }

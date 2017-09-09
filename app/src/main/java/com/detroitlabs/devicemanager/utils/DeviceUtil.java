@@ -14,13 +14,10 @@ import com.detroitlabs.devicemanager.constants.Platform;
 import com.detroitlabs.devicemanager.db.Device;
 import com.facebook.device.yearclass.YearClass;
 import com.jaredrummler.android.device.DeviceName;
-import com.tbruyelle.rxpermissions2.RxPermissions;
 
 import java.util.Locale;
 
 public class DeviceUtil {
-
-    private static String SERIAL_NUMBER;
 
     public static Device readThisDevice(Context context) {
         Device device = new Device();
@@ -36,17 +33,11 @@ public class DeviceUtil {
     }
 
     public static String getSerialNumber() {
-        if (SERIAL_NUMBER == null) {
-            return "unknown";
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return Build.getSerial();
+        } else {
+            return Build.SERIAL;
         }
-        return SERIAL_NUMBER;
-    }
-
-    public static void setSerialNumber(String serialNumber) throws IllegalAccessException {
-        if (SERIAL_NUMBER != null) {
-            throw new IllegalAccessException("Device serial number not allowed to reset");
-        }
-        SERIAL_NUMBER = serialNumber;
     }
 
     public static double getBatteryLevel(Context context) {

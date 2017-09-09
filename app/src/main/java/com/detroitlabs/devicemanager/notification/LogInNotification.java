@@ -1,5 +1,6 @@
 package com.detroitlabs.devicemanager.notification;
 
+
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -7,25 +8,18 @@ import android.support.v4.app.NotificationCompat;
 
 import com.detroitlabs.devicemanager.R;
 import com.detroitlabs.devicemanager.SyncActivity;
-import com.detroitlabs.devicemanager.di.qualifiers.ApplicationContext;
-import com.detroitlabs.devicemanager.sync.SelfDeviceUpdateService;
-import com.detroitlabs.devicemanager.utils.DeviceUtil;
 
 import java.util.Collections;
 import java.util.List;
 
 import static com.detroitlabs.devicemanager.constants.Constants.DEVICE_UPDATE_NOTIFICATION_ID;
-import static com.detroitlabs.devicemanager.sync.SelfDeviceUpdateService.ACTION_CHECK_IN;
 
+public class LogInNotification implements NotificationItem {
 
-public class CheckInNotification implements NotificationItem {
     private final Context context;
-    private final String checkOutBy;
 
-    public CheckInNotification(@ApplicationContext Context context,
-                               String checkOutBy) {
+    public LogInNotification(Context context) {
         this.context = context;
-        this.checkOutBy = checkOutBy;
     }
 
     @Override
@@ -35,12 +29,12 @@ public class CheckInNotification implements NotificationItem {
 
     @Override
     public String title() {
-        return DeviceUtil.getBrandAndModel() + " - " + checkOutBy;
+        return "Log In Required";
     }
 
     @Override
     public String message() {
-        return "Check in before shutting down and returning the phone";
+        return "Click to open the app and log in";
     }
 
     @Override
@@ -50,17 +44,7 @@ public class CheckInNotification implements NotificationItem {
 
     @Override
     public List<NotificationCompat.Action> actions() {
-        Intent deviceUpdateIntent = new Intent(context, SelfDeviceUpdateService.class);
-        deviceUpdateIntent.setAction(ACTION_CHECK_IN);
-        PendingIntent updatePendingIntent =
-                PendingIntent.getService(
-                        context,
-                        0,
-                        deviceUpdateIntent,
-                        PendingIntent.FLAG_UPDATE_CURRENT);
-        NotificationCompat.Action.Builder actionBuilder = new NotificationCompat.Action.Builder(R.drawable.ic_apple_grey600_24dp,
-                "Check In", updatePendingIntent);
-        return Collections.singletonList(actionBuilder.build());
+        return Collections.emptyList();
     }
 
     @Override

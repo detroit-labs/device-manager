@@ -56,6 +56,10 @@ public class DeviceRepository {
         return deviceDao.getDevice(DeviceUtil.getSerialNumber());
     }
 
+    public Single<Device> getSelfDeviceSingle() {
+        return deviceDao.getDeviceSingle(DeviceUtil.getSerialNumber());
+    }
+
     public Single<Boolean> insert(final Device device) {
         if (!hasEnoughProperty(device)) {
             return Single.just(false);

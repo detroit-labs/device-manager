@@ -1,45 +1,37 @@
 package com.detroitlabs.devicemanager.sync.tasks;
 
-import com.detroitlabs.devicemanager.data.DatabaseContract;
-import com.detroitlabs.devicemanager.utils.DeviceUtil;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.detroitlabs.devicemanager.db.Device;
+import com.detroitlabs.devicemanager.repository.DeviceRepository;
 
 import javax.inject.Inject;
 
 import io.reactivex.SingleEmitter;
-
-import static com.detroitlabs.devicemanager.data.DatabaseContract.TABLE_DEVICES;
+import io.reactivex.functions.Consumer;
 
 
 public class GetOwnerTask extends AsyncTask<GetOwnerTask.Result> {
+
+
+    private final DeviceRepository deviceRepo;
+
     @Inject
-    public GetOwnerTask() {
+    public GetOwnerTask(DeviceRepository deviceRepo) {
+        this.deviceRepo = deviceRepo;
     }
 
     @Override
     protected void task(final SingleEmitter<GetOwnerTask.Result> emitter) {
-        FirebaseDatabase.getInstance().getReference()
-                .child(TABLE_DEVICES)
-                .child(DeviceUtil.getSerialNumber())
-                .child(DatabaseContract.DeviceColumns.CHECKED_OUT_BY)
-                .addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        String checkedOutBy = dataSnapshot.getValue(String.class);
-                        if (checkedOutBy == null) {
-                            checkedOutBy = "";
-                        }
-                        emitter.onSuccess(Result.success(checkedOutBy));
-                    }
-
-                    @Override
-                    public void onCancelled(DatabaseError databaseError) {
-                        emitter.onError(databaseError.toException());
-                    }
-                });
+        deviceRepo.getSelfDeviceSingle().subscribe(new Consumer<Device>() {
+            @Override
+            public void accept(Device device) throws Exception {
+                emitter.onSuccess(Result.success(device.checkedOutBy));
+            }
+        }, new Consumer<Throwable>() {
+            @Override
+            public void accept(Throwable throwable) throws Exception {
+                emitter.onError(throwable);
+            }
+        });
     }
 
     public static class Result extends com.detroitlabs.devicemanager.sync.Result {

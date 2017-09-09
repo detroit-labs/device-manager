@@ -2,9 +2,9 @@ package com.detroitlabs.devicemanager.sync.sequences;
 
 import android.util.Log;
 
+import com.detroitlabs.devicemanager.specification.CanUpdateDevice;
 import com.detroitlabs.devicemanager.sync.Result;
 import com.detroitlabs.devicemanager.sync.tasks.DeviceCheckOutTask;
-import com.detroitlabs.devicemanager.sync.tasks.GetRegistrableTask;
 
 import javax.inject.Inject;
 
@@ -15,15 +15,14 @@ import io.reactivex.functions.Function;
 
 public final class DeviceCheckOutSequence extends AsyncTaskSequence<Result> {
     private static final String TAG = DeviceCheckOutSequence.class.getName();
-    private final GetRegistrableTask getRegistrableTask;
+    private final CanUpdateDevice canUpdateDevice;
     private final DeviceCheckOutTask checkOutTask;
     private String checkOutBy;
 
     @Inject
-    public DeviceCheckOutSequence(GetRegistrableTask getRegistrableTask,
+    public DeviceCheckOutSequence(CanUpdateDevice canUpdateDevice,
                                   DeviceCheckOutTask checkOutTask) {
-
-        this.getRegistrableTask = getRegistrableTask;
+        this.canUpdateDevice = canUpdateDevice;
         this.checkOutTask = checkOutTask;
     }
 
@@ -37,8 +36,10 @@ public final class DeviceCheckOutSequence extends AsyncTaskSequence<Result> {
         if (checkOutBy == null) {
             return Single.error(new IllegalArgumentException("Please use run(String checkOutBy) and pass the parameter"));
         }
-        return getRegistrableTask.run()
-                .flatMap(checkout());
+        if (!canUpdateDevice.isSatisfied()) {
+            return Single.just(Result.failure(new IllegalAccessException("Not allow to check out")));
+        }
+        return checkOutTask.run(checkOutBy);
     }
 
     private Function<Boolean, Single<Result>> checkout() {
