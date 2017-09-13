@@ -5,6 +5,8 @@ import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.Nullable;
 import android.transition.TransitionManager;
 import android.view.KeyEvent;
@@ -19,7 +21,7 @@ import com.detroitlabs.devicemanager.DmApplication;
 import com.detroitlabs.devicemanager.databinding.FragHomeBinding;
 import com.detroitlabs.devicemanager.db.Device;
 import com.detroitlabs.devicemanager.specification.CanUpdateDevice;
-import com.detroitlabs.devicemanager.sync.tasks.CheckOutNotificationTask;
+import com.detroitlabs.devicemanager.specification.HasGetSerialNumberPermission;
 import com.detroitlabs.devicemanager.utils.ViewUtil;
 
 import javax.inject.Inject;
@@ -31,10 +33,10 @@ public class HomeFragment extends LifecycleFragment {
     private HomeViewModel viewModel;
 
     @Inject
-    CheckOutNotificationTask checkOutNotificationTask;
+    CanUpdateDevice canUpdateDevice;
 
     @Inject
-    CanUpdateDevice canUpdateDevice;
+    HasGetSerialNumberPermission hasGetSerialNumberPermission;
 
     public HomeFragment() {
         DmApplication.getInjector().inject(this);
@@ -56,35 +58,26 @@ public class HomeFragment extends LifecycleFragment {
         return binding.getRoot();
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        viewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
-        binding.setViewModel(viewModel);
-        // TODO: 7/13/17 clean up
-        viewModel.getSelf().observe(this, new Observer<Device>() {
+    private void animVisibility(final Device device) {
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(new Runnable() {
             @Override
-            public void onChanged(@Nullable Device device) {
-                binding.setDevice(device);
-                if (device != null) {
-                    animVisibility(device);
+            public void run() {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    TransitionManager.beginDelayedTransition(binding.transitionContainer);
                 }
+
+                boolean canUpdateDevice = HomeFragment.this.canUpdateDevice.isSatisfied();
+
+//                setVisible(binding.checkoutArea, canUpdateDevice && !device.isCheckedOut());
+//                setVisible(binding.status.viewNotRegistrable, !canUpdateDevice);
+//                setVisible(binding.status.viewAvailable, canUpdateDevice && !device.hasRequest() && !device.isCheckedOut());
+//                setVisible(binding.status.viewRequest, device.hasRequest());
+//                setVisible(binding.status.viewCheckIn, device.isCheckedOut());
+                setVisible(binding.status.requestPermission, !hasGetSerialNumberPermission.isSatisfied());
             }
-        });
-    }
+        }, 1000);
 
-    private void animVisibility(Device device) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            TransitionManager.beginDelayedTransition(binding.transitionContainer);
-        }
-
-        boolean canUpdateDevice = this.canUpdateDevice.isSatisfied();
-
-        setVisible(binding.checkoutArea, canUpdateDevice && !device.isCheckedOut());
-        setVisible(binding.status.textNotRegistrable, !canUpdateDevice);
-        setVisible(binding.status.viewAvailable, canUpdateDevice && !device.hasRequest() && !device.isCheckedOut());
-        setVisible(binding.status.viewRequest, device.hasRequest());
-        setVisible(binding.status.viewCheckIn, device.isCheckedOut());
     }
 
     private void setVisible(View view, boolean show) {
@@ -109,10 +102,19 @@ public class HomeFragment extends LifecycleFragment {
                 return false;
             }
         });
-        binding.buttonOtherDevices.setOnClickListener(new View.OnClickListener() {
+
+        viewModel = ViewModelProviders.of(this).get(HomeViewModel.class);
+        binding.setViewModel(viewModel);
+        // TODO: 7/13/17 clean up
+        viewModel.getSelf().observe(this, new Observer<Device>() {
             @Override
-            public void onClick(View view) {
-                checkOutNotificationTask.run().subscribe();
+            public void onChanged(@Nullable Device device) {
+                binding.setDevice(device);
+                binding.setCanUpdate(canUpdateDevice.isSatisfied());
+                binding.setHasGetSerialNumberPermission(hasGetSerialNumberPermission.isSatisfied());
+//                if (device != null) {
+//                    animVisibility(device);
+//                }
             }
         });
     }

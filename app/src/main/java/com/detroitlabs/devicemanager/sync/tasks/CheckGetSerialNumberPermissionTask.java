@@ -12,18 +12,19 @@ import io.reactivex.SingleEmitter;
 import io.reactivex.functions.Consumer;
 
 
-public class CheckReadPhoneStatePermissionTask extends AsyncTask<String> {
+public class CheckGetSerialNumberPermissionTask extends AsyncTask<String> {
 
     private final RxPermissions rxPermissions;
 
     @Inject
-    CheckReadPhoneStatePermissionTask(RxPermissions rxPermissions) {
+    CheckGetSerialNumberPermissionTask(RxPermissions rxPermissions) {
         this.rxPermissions = rxPermissions;
     }
 
     @Override
     protected void task(final SingleEmitter<String> emitter) {
-        if (rxPermissions.isGranted(Manifest.permission.READ_PHONE_STATE)) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O ||
+                rxPermissions.isGranted(Manifest.permission.READ_PHONE_STATE)) {
             emitter.onSuccess(DeviceUtil.getSerialNumber());
         } else {
             rxPermissions

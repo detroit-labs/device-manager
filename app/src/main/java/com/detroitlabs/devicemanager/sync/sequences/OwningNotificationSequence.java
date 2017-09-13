@@ -1,11 +1,6 @@
 package com.detroitlabs.devicemanager.sync.sequences;
 
-import android.Manifest;
-import android.content.Context;
-import android.content.pm.PackageManager;
-import android.support.v4.content.ContextCompat;
-
-import com.detroitlabs.devicemanager.di.qualifiers.ApplicationContext;
+import com.detroitlabs.devicemanager.specification.HasGetSerialNumberPermission;
 import com.detroitlabs.devicemanager.sync.Result;
 import com.detroitlabs.devicemanager.sync.tasks.CheckInNotificationTask;
 import com.detroitlabs.devicemanager.sync.tasks.CheckOutNotificationTask;
@@ -33,23 +28,23 @@ import io.reactivex.functions.Function;
 public final class OwningNotificationSequence extends AsyncTaskSequence<Result> {
 
     private final GetOwnerTask getOwnerTask;
-    private final Context context;
     private final LogInNotificationTask logInNotificationTask;
+    private final HasGetSerialNumberPermission hasGetSerialNumberPermission;
     private final RequestPermissionNotificationTask requestPermissionNotificationTask;
     private final CheckOutNotificationTask checkOutNotificationTask;
     private final CheckInNotificationTask checkInNotificationTask;
 
     @Inject
     public OwningNotificationSequence(GetOwnerTask getOwnerTask,
-                                      @ApplicationContext Context context,
                                       LogInNotificationTask logInNotificationTask,
                                       CheckInNotificationTask checkInNotificationTask,
                                       CheckOutNotificationTask checkOutNotificationTask,
+                                      HasGetSerialNumberPermission hasGetSerialNumberPermission,
                                       RequestPermissionNotificationTask requestPermissionNotificationTask) {
 
         this.getOwnerTask = getOwnerTask;
-        this.context = context;
         this.logInNotificationTask = logInNotificationTask;
+        this.hasGetSerialNumberPermission = hasGetSerialNumberPermission;
         this.requestPermissionNotificationTask = requestPermissionNotificationTask;
         this.checkOutNotificationTask = checkOutNotificationTask;
         this.checkInNotificationTask = checkInNotificationTask;
@@ -67,7 +62,7 @@ public final class OwningNotificationSequence extends AsyncTaskSequence<Result> 
         }
 
         if (AccountUtil.isTestAccount(user.getEmail())) {
-            if (hasPhoneStatePermission()) {
+            if (hasGetSerialNumberPermission.isSatisfied()) {
                 return getOwnerTask.run()
                         .flatMap(checkOwner());
             } else {
@@ -95,10 +90,5 @@ public final class OwningNotificationSequence extends AsyncTaskSequence<Result> 
 
     private Single<Result> fail(String msg) {
         return Single.just(Result.failure(new IllegalAccessException(msg)));
-    }
-
-    private boolean hasPhoneStatePermission() {
-        int value = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE);
-        return value == PackageManager.PERMISSION_GRANTED;
     }
 }

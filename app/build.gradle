@@ -34,7 +34,7 @@ def computeBuildNumber() {
 }
 
 def google_play_revision = "11.2.0"
-def support_lib_revision = "26.0.1"
+def support_lib_revision = "26.0.2"
 def android_arch_revision = "1.0.0-alpha9"
 def dagger_revision = "2.11"
 

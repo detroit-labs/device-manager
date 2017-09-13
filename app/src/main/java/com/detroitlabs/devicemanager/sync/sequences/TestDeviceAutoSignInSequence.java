@@ -70,6 +70,7 @@ public final class TestDeviceAutoSignInSequence extends AsyncTaskSequence<SignIn
             public SingleSource<GoogleSignInResult> apply(GoogleSignInResult result) throws Exception {
                 if (!result.isSuccess()) {
                     Log.d(TAG, "silently sign in failed, try prompt for permission");
+                    Log.d(TAG, "status code: " + result.getStatus().getStatusCode());
                     return promptForPermissionTask.run();
                 } else {
                     Log.d(TAG, "silently sign in successfully, move to next");

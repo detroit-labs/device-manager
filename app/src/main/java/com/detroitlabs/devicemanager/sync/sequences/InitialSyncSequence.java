@@ -5,7 +5,7 @@ import android.util.Log;
 
 import com.detroitlabs.devicemanager.sync.Result;
 import com.detroitlabs.devicemanager.sync.SignInResult;
-import com.detroitlabs.devicemanager.sync.tasks.CheckReadPhoneStatePermissionTask;
+import com.detroitlabs.devicemanager.sync.tasks.CheckGetSerialNumberPermissionTask;
 
 import javax.inject.Inject;
 
@@ -19,21 +19,21 @@ public final class InitialSyncSequence extends AsyncTaskSequence<Result> {
 
     private final TestDeviceAutoSignInSequence autoSignInSequence;
 
-    private final CheckReadPhoneStatePermissionTask checkReadPhoneStatePermissionTask;
+    private final CheckGetSerialNumberPermissionTask checkGetSerialNumberPermissionTask;
     private final RegisterAndSyncDbSequence registerAndSyncDbSequence;
 
     @Inject
-    public InitialSyncSequence(CheckReadPhoneStatePermissionTask checkReadPhoneStatePermissionTask,
+    public InitialSyncSequence(CheckGetSerialNumberPermissionTask checkGetSerialNumberPermissionTask,
                                RegisterAndSyncDbSequence registerAndSyncDbSequence,
                                TestDeviceAutoSignInSequence autoSignInSequence) {
-        this.checkReadPhoneStatePermissionTask = checkReadPhoneStatePermissionTask;
+        this.checkGetSerialNumberPermissionTask = checkGetSerialNumberPermissionTask;
         this.registerAndSyncDbSequence = registerAndSyncDbSequence;
         this.autoSignInSequence = autoSignInSequence;
     }
 
     @Override
     public Single<Result> run() {
-        return checkReadPhoneStatePermissionTask.run()
+        return checkGetSerialNumberPermissionTask.run()
                 .flatMap(signIn())
                 .flatMap(registerAndSync());
     }

@@ -55,6 +55,10 @@ public class HomeViewModel extends AndroidViewModel {
         DeviceUpdateService.requestDevice(getApplication(), DeviceUtil.getSerialNumber(), "");
     }
 
+    public void requestPermission() {
+        // TODO: 9/13/17
+    }
+
     public void checkIn() {
         deviceRepo.checkInDevice().subscribe();
     }

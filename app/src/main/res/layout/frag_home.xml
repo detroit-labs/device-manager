@@ -13,6 +13,14 @@
             name="viewModel"
             type="com.detroitlabs.devicemanager.ui.HomeViewModel" />
 
+        <variable
+            name="canUpdate"
+            type="boolean" />
+
+        <variable
+            name="hasGetSerialNumberPermission"
+            type="boolean" />
+
         <import type="android.view.View" />
     </data>
 
@@ -49,7 +57,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
+                app:canUpdate="@{canUpdate}"
                 app:device="@{device}"
+                app:hasGetSerialNumberPermission="@{hasGetSerialNumberPermission}"
                 app:viewModel="@{viewModel}" />
 
             <TextView
@@ -82,6 +92,7 @@
                 android:descendantFocusability="beforeDescendants"
                 android:focusableInTouchMode="true"
                 android:padding="@dimen/normal_padding"
+                app:visibleGone="@{canUpdate &amp;&amp; !device.checkedOut}"
                 tools:visibility="visible">
 
                 <Button
