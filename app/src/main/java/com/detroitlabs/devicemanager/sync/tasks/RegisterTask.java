@@ -34,7 +34,7 @@ public class RegisterTask extends AsyncTask<Result> {
         String serialNumber = DeviceUtil.getSerialNumber();
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
         DatabaseReference rowRef = dbRef.child(TABLE_DEVICES).child(serialNumber);
-        rowRef.setValue(DeviceUtil.readThisDevice(context), new DatabaseReference.CompletionListener() {
+        rowRef.updateChildren(DeviceUtil.readThisDevice(context).toMap(), new DatabaseReference.CompletionListener() {
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 if (databaseError == null) {
