@@ -121,7 +121,7 @@
                 android:layout_marginBottom="@dimen/normal_padding"
                 android:paddingLeft="@dimen/normal_padding"
                 android:paddingRight="@dimen/normal_padding"
-                app:visibleGone="@{device.isCheckedOut()}">
+                android:visibility="gone">
 
                 <Button
                     android:id="@+id/request_button"
