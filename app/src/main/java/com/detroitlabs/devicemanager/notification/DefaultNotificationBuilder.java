@@ -3,6 +3,7 @@ package com.detroitlabs.devicemanager.notification;
 
 import android.app.Notification;
 import android.content.Context;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 
 public class DefaultNotificationBuilder implements NotificationBuilder {
@@ -20,8 +21,10 @@ public class DefaultNotificationBuilder implements NotificationBuilder {
                         .setAutoCancel(false)
                         .setSmallIcon(item.smallIcon())
                         .setContentIntent(item.contentIntent());
-        for (NotificationCompat.Action action : item.actions()) {
-            builder.addAction(action);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            for (NotificationCompat.Action action : item.actions()) {
+                builder.addAction(action);
+            }
         }
         return builder.build();
     }
