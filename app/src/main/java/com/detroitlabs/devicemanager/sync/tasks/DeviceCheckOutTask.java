@@ -2,6 +2,7 @@ package com.detroitlabs.devicemanager.sync.tasks;
 
 
 import com.detroitlabs.devicemanager.data.DatabaseContract;
+import com.detroitlabs.devicemanager.specification.CanUpdateDevice;
 import com.detroitlabs.devicemanager.sync.Result;
 import com.detroitlabs.devicemanager.utils.DeviceUtil;
 import com.google.firebase.database.DatabaseError;
@@ -15,11 +16,12 @@ import io.reactivex.SingleEmitter;
 
 import static com.detroitlabs.devicemanager.data.DatabaseContract.TABLE_DEVICES;
 
-public class DeviceCheckOutTask extends AsyncTask<Result> {
+public class DeviceCheckOutTask extends SyncDeviceTask {
     private String checkOutBy;
 
     @Inject
-    public DeviceCheckOutTask() {
+    public DeviceCheckOutTask(CanUpdateDevice canUpdateDevice) {
+        super(canUpdateDevice);
     }
 
     public Single<Result> run(String checkOutBy) {

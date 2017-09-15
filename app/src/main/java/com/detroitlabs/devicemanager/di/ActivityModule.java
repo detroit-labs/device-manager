@@ -21,6 +21,7 @@ public class ActivityModule {
         return fragmentActivity;
     }
 
+    @PerActivity
     @Provides
     RxPermissions providesRxPermissions(@ActivityContext Context context) {
         return new RxPermissions((Activity) context);

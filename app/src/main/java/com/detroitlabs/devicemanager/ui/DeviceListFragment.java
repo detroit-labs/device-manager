@@ -113,7 +113,7 @@ public class DeviceListFragment extends LifecycleFragment {
 
     private void removeSelf(List<Device> devices) {
         Iterator<Device> iterator = devices.iterator();
-        String selfSerialNumber = DeviceUtil.getSerialNumber();
+        String selfSerialNumber = DeviceUtil.getLocalSerialNumber(getContext());
         while (iterator.hasNext()) {
             if (selfSerialNumber.equalsIgnoreCase(iterator.next().serialNumber)) {
                 iterator.remove();

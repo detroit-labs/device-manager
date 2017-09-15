@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.detroitlabs.devicemanager.data.DatabaseContract;
 import com.detroitlabs.devicemanager.di.qualifiers.ApplicationContext;
+import com.detroitlabs.devicemanager.specification.CanUpdateDevice;
 import com.detroitlabs.devicemanager.sync.Result;
 import com.detroitlabs.devicemanager.utils.DeviceUtil;
 import com.google.firebase.database.FirebaseDatabase;
@@ -16,13 +17,15 @@ import io.reactivex.SingleEmitter;
 import static com.detroitlabs.devicemanager.data.DatabaseContract.TABLE_DEVICES;
 
 
-public class UpdateBatteryTask extends AsyncTask<Result> {
+public class UpdateBatteryTask extends SyncDeviceTask {
 
     private static final String TAG = UpdateBatteryTask.class.getName();
     private final Context context;
 
     @Inject
-    UpdateBatteryTask(@ApplicationContext Context context) {
+    UpdateBatteryTask(@ApplicationContext Context context,
+                      CanUpdateDevice canUpdateDevice) {
+        super(canUpdateDevice);
         this.context = context;
     }
 

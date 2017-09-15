@@ -9,7 +9,7 @@ public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     @Override
     public void onTokenRefresh() {
         // TODO: 8/14/17 need to sign in
-        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        FirebaseTokenSyncService.initSync(getApplicationContext(), refreshedToken);
+//        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+//        FirebaseTokenSyncService.initSync(getApplicationContext(), refreshedToken);
     }
 }

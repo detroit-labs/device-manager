@@ -4,6 +4,7 @@ package com.detroitlabs.devicemanager.repository;
 import android.arch.core.util.Function;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.Transformations;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.util.Pair;
@@ -12,9 +13,10 @@ import com.detroitlabs.devicemanager.constants.FilterType;
 import com.detroitlabs.devicemanager.db.Device;
 import com.detroitlabs.devicemanager.db.DeviceDao;
 import com.detroitlabs.devicemanager.db.FilterDao;
+import com.detroitlabs.devicemanager.di.qualifiers.ApplicationContext;
 import com.detroitlabs.devicemanager.sync.Result;
-import com.detroitlabs.devicemanager.sync.sequences.DeviceCheckInSequence;
-import com.detroitlabs.devicemanager.sync.sequences.DeviceCheckOutSequence;
+import com.detroitlabs.devicemanager.sync.tasks.DeviceCheckInTask;
+import com.detroitlabs.devicemanager.sync.tasks.DeviceCheckOutTask;
 import com.detroitlabs.devicemanager.ui.filter.Filter;
 import com.detroitlabs.devicemanager.ui.filter.FilterUtil;
 import com.detroitlabs.devicemanager.utils.DeviceUtil;
@@ -38,26 +40,29 @@ public class DeviceRepository {
     private static final String TAG = DeviceRepository.class.getName();
     private final DeviceDao deviceDao;
     private final FilterDao filterDao;
-    private final Provider<DeviceCheckOutSequence> checkOutSequenceProvider;
-    private final Provider<DeviceCheckInSequence> checkInSequenceProvider;
+    private final Context context;
+    private final Provider<DeviceCheckOutTask> checkOutTaskProvider;
+    private final Provider<DeviceCheckInTask> checkInTaskProvider;
 
     @Inject
     public DeviceRepository(DeviceDao deviceDao,
                             FilterDao filterDao,
-                            Provider<DeviceCheckOutSequence> checkOutSequenceProvider,
-                            Provider<DeviceCheckInSequence> checkInSequenceProvider) {
+                            @ApplicationContext Context context,
+                            Provider<DeviceCheckOutTask> checkOutTaskProvider,
+                            Provider<DeviceCheckInTask> checkInTaskProvider) {
         this.deviceDao = deviceDao;
         this.filterDao = filterDao;
-        this.checkOutSequenceProvider = checkOutSequenceProvider;
-        this.checkInSequenceProvider = checkInSequenceProvider;
+        this.context = context;
+        this.checkOutTaskProvider = checkOutTaskProvider;
+        this.checkInTaskProvider = checkInTaskProvider;
     }
 
     public LiveData<Device> getSelfDevice() {
-        return deviceDao.getDevice(DeviceUtil.getSerialNumber());
+        return deviceDao.getDevice(DeviceUtil.getLocalSerialNumber(context));
     }
 
     public Single<Device> getSelfDeviceSingle() {
-        return deviceDao.getDeviceSingle(DeviceUtil.getSerialNumber());
+        return deviceDao.getDeviceSingle(DeviceUtil.getLocalSerialNumber(context));
     }
 
     public Single<Boolean> insert(final Device device) {
@@ -113,12 +118,12 @@ public class DeviceRepository {
     }
 
     public Single<Result> checkOutDevice(String name) {
-        DeviceCheckOutSequence checkOutSequence = checkOutSequenceProvider.get();
+        DeviceCheckOutTask checkOutSequence = checkOutTaskProvider.get();
         return checkOutSequence.run(name);
     }
 
     public Single<Result> checkInDevice() {
-        DeviceCheckInSequence checkInSequence = checkInSequenceProvider.get();
+        DeviceCheckInTask checkInSequence = checkInTaskProvider.get();
         return checkInSequence.run();
     }
 
