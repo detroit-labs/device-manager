@@ -8,7 +8,8 @@ import com.google.firebase.iid.FirebaseInstanceIdService;
 public class MyFirebaseInstanceIDService extends FirebaseInstanceIdService {
     @Override
     public void onTokenRefresh() {
-        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
-        FirebaseTokenSyncService.initSync(getApplicationContext(), refreshedToken);
+        // TODO: 8/14/17 need to sign in
+//        String refreshedToken = FirebaseInstanceId.getInstance().getToken();
+//        FirebaseTokenSyncService.initSync(getApplicationContext(), refreshedToken);
     }
 }

@@ -7,7 +7,7 @@
 
         <variable
             name="detail"
-            type="com.detroitlabs.devicemanager.models.Device" />
+            type="com.detroitlabs.devicemanager.db.Device" />
     </data>
 
     <android.support.design.widget.CoordinatorLayout
@@ -23,7 +23,6 @@
                 android:id="@+id/collapsing_toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:fitsSystemWindows="true"
                 app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
                 <android.support.v7.widget.Toolbar
@@ -50,40 +49,9 @@
                 android:clickable="true"
                 android:orientation="vertical">
 
-                <com.detroitlabs.devicemanager.detail.DetailItemView
-                    android:id="@+id/version"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:label="Version"
-                    app:value="@{detail.version}" />
-
-                <com.detroitlabs.devicemanager.detail.DetailItemView
-                    android:id="@+id/size"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:label="Size"
-                    app:value="@{detail.screenSize}" />
-
-                <com.detroitlabs.devicemanager.detail.DetailItemView
-                    android:id="@+id/resolution"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:label="Resolution"
-                    app:value="@{detail.screenResolution}" />
-
-                <com.detroitlabs.devicemanager.detail.DetailItemView
-                    android:id="@+id/requested_by"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:label="Requested By"
-                    app:value="@{detail.requestedBy ?? @string/dash}" />
-
-                <com.detroitlabs.devicemanager.detail.DetailItemView
-                    android:id="@+id/year_class"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:label="Year Class"
-                    app:value="@{detail.yearClass}" />
+                <include
+                    layout="@layout/layout_device_detail"
+                    app:device="@{detail}" />
 
                 <View
                     android:layout_width="match_parent"
@@ -119,6 +87,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignLeft="@id/status"
                         android:layout_alignStart="@id/status"
+                        app:visibleGone="@{detail.checkedOut}"
                         android:layout_below="@id/status">
 
                         <android.support.design.widget.TextInputLayout

@@ -15,7 +15,7 @@ An app to view and manage testing devices at Detroit Labs.
 <!-- ![Screen shot 3](./docs/screenshot_1.png) -->
 <!-- ![Screen shot 4](./docs/screenshot_1.png) -->
 
-<img src="./docs/screenshot_4.png" width="270" height="480"/>
-<img src="./docs/screenshot_1.png" width="270" height="480"/>
-<img src="./docs/screenshot_3.png" width="270" height="480"/>
-<img src="./docs/screenshot_2.png" width="270" height="480"/>
+<img src="./docs/1.png" width="270" height="480"/>
+<img src="./docs/2.png" width="270" height="480"/>
+<img src="./docs/3.png" width="270" height="480"/>
+<img src="./docs/4.png" width="270" height="480"/>

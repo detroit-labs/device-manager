@@ -2,36 +2,28 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <android.support.v4.widget.DrawerLayout
-        android:id="@+id/drawer_layout"
+
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
-        <!-- The main content view -->
+        android:focusable="true"
+        android:descendantFocusability="beforeDescendants"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
 
-        <LinearLayout
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/device_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:background="@color/white"
+            tools:listitem="@layout/view_device_list_item" />
 
-            <include
-                android:id="@+id/included1"
-                layout="@layout/toolbar" />
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/device_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                tools:listitem="@layout/view_device_list_item" />
-        </LinearLayout>
-        <!-- The navigation drawer -->
-        <com.detroitlabs.devicemanager.detail.DeviceDetailView
-            android:id="@+id/device_detail"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="end"
-            android:layout_marginEnd="-64dp"
-            android:layout_marginRight="-64dp"
-            android:fitsSystemWindows="true" />
-    </android.support.v4.widget.DrawerLayout>
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/filter_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/normal_padding"
+            android:src="@drawable/ic_tune_white_24dp" />
+    </android.support.design.widget.CoordinatorLayout>
 </layout>

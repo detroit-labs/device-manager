@@ -57,5 +57,5 @@ freeline.py
 freeline/
 freeline_project_description.json
 
-# Fabric
-fabric.properties
+# Fastlane
+fastlane/report.xml

@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorPrimary">@color/bg_dark</color>
+    <color name="colorPrimaryDark">@color/bg_black</color>
+    <color name="colorAccent">@color/dl_yellow</color>
 
-    <color name="blue" type="color">#FF33B5E5</color>
-    <color name="purple" type="color">#FFAA66CC</color>
-    <color name="green" type="color">#FF99CC00</color>
-    <color name="orange" type="color">#FFFFBB33</color>
-    <color name="red" type="color">#FFFF4444</color>
-    <color name="darkblue" type="color">#FF0099CC</color>
-    <color name="darkpurple" type="color">#FF9933CC</color>
-    <color name="darkgreen" type="color">#FF669900</color>
-    <color name="darkorange" type="color">#FFFF8800</color>
-    <color name="darkred" type="color">#FFCC0000</color>
+
+    <color name="indigo">#3f5185</color>
+    <color name="indigo_dark">#303f9f</color>
+    <color name="white">@android:color/white</color>
+    <color name="blue">#FF33B5E5</color>
+    <color name="purple">#FFAA66CC</color>
+    <color name="green">#FF99CC00</color>
+    <color name="orange">#FCC62E</color>
+    <color name="red">#FFFF4444</color>
+    <color name="darkblue">#FF0099CC</color>
+    <color name="darkpurple">#FF9933CC</color>
+    <color name="darkgreen">#FF669900</color>
+    <color name="darkorange">#FFFF8800</color>
+    <color name="darkred">#FFCC0000</color>
+    <color name="pink">#FF4081</color>
 
     <color name="light_pink">#FF80AB</color>
     <color name="light_indigo">#E8EAF6</color>
@@ -26,5 +31,24 @@
     <color name="light_grey">#E0E0E0</color>
     <color name="grey">#9E9E9E</color>
     <color name="dark_grey">#616161</color>
+
+    <color name="black">#000000</color>
+
+
+    <!-- Branding Colors -->
+    <color name="dl_yellow_light">#ffd163</color>
+    <color name="dl_yellow">#fcb814</color>
+    <color name="dl_yellow_dark">#c18c0d</color>
+    <color name="bg_white">#fdf7f7</color>
+    <color name="bg_light">#a8a8a8</color>
+    <color name="bg_dark">#5f5f5f</color>
+    <color name="bg_black">#020808</color>
+
+    <color name="status_red">#FFFF4444</color>
+    <color name="status_darkred">#FFCC0000</color>
+    <color name="status_orange">#FCC62E</color>
+    <color name="status_darkorange">#FFFF8800</color>
+    <color name="status_green">#FF99CC00</color>
+    <color name="status_darkgreen">#FF669900</color>
 
 </resources>

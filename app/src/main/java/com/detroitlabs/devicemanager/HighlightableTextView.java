@@ -14,7 +14,7 @@ public class HighlightableTextView extends AppCompatTextView {
 
     public interface OnHighlightListener {
 
-        void onHighlight(boolean isHighlighted);
+        void onHighlight(boolean isHighlighted, CharSequence text);
     }
 
     private boolean isHighlighted;
@@ -41,7 +41,7 @@ public class HighlightableTextView extends AppCompatTextView {
                     isHighlighted = !isHighlighted;
                     v.setActivated(isHighlighted);
                     if (onHighlightListener != null) {
-                        onHighlightListener.onHighlight(isHighlighted);
+                        onHighlightListener.onHighlight(isHighlighted, getText());
                     }
                 }
             }

@@ -4,35 +4,32 @@
 
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
 
     <application
+        android:name=".DmApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
         <activity
-            android:name="com.detroitlabs.devicemanager.MainActivity"
-            android:launchMode="singleInstance">
+            android:name=".SyncActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".PagerActivity"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" />
 
-        <provider
-            android:name="com.detroitlabs.devicemanager.data.DeviceProvider"
-            android:authorities="com.detroitlabs.devicemanager"
-            android:exported="false" />
-
-        <service android:name="com.detroitlabs.devicemanager.sync.RegistrationService" />
-        <service android:name="com.detroitlabs.devicemanager.sync.SyncingService" />
-        <service android:name="com.detroitlabs.devicemanager.data.DeviceUpdateService" />
+        <service android:name=".sync.DeviceUpdateService" />
         <service android:name=".sync.FirebaseTokenSyncService" />
-
         <service android:name=".notification.MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
@@ -40,12 +37,27 @@
         </service>
         <service android:name=".notification.MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
+
+        <receiver android:name=".PowerOnOffReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.ACTION_SHUTDOWN" />
+            </intent-filter>
+        </receiver>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="2abbd3768efce5a40e96de83cb479fe0360ba2de" />
+
+        <service
+            android:name=".sync.SelfDeviceUpdateService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity android:name=".NotificationActivity" />
     </application>
 
 </manifest>

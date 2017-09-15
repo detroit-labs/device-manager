@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="device"
+            type="com.detroitlabs.devicemanager.db.Device" />
+
+        <variable
+            name="viewModel"
+            type="com.detroitlabs.devicemanager.ui.HomeViewModel" />
+
+        <variable
+            name="canUpdate"
+            type="boolean" />
+
+        <variable
+            name="hasGetSerialNumberPermission"
+            type="boolean" />
+    </data>
+
+    <FrameLayout
+        android:id="@+id/status"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        tools:background="@color/bg_dark">
+
+        <RelativeLayout
+            android:id="@+id/view_not_registrable"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:visibleGone="@{!canUpdate}">
+
+            <TextView
+                android:id="@+id/text_not_registrable"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="@string/this_device_cannot_be_registered"
+                android:textColor="@color/bg_white"
+                android:textSize="@dimen/fontsize_normal"
+                tools:visibility="visible" />
+
+            <Button
+                android:id="@+id/request_permission"
+                style="@style/brandedButtonLight"
+                android:layout_width="@dimen/button_width"
+                android:layout_height="@dimen/button_height_short"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="4dp"
+                android:layout_marginTop="4dp"
+                android:onClick="@{() -> viewModel.requestPermission()}"
+                android:text="@string/permission"
+                android:visibility="gone"
+                app:visibleGone="@{!hasGetSerialNumberPermission}" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/view_available"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:visibleGone="@{canUpdate &amp;&amp; !device.hasRequest() &amp;&amp; !device.checkedOut}"
+            tools:visibility="gone">
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/device_status"
+                android:src="@drawable/ic_checkbox_blank_circle_grey600_24dp"
+                android:tint="@color/green" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/normal_padding"
+                android:layout_marginStart="@dimen/normal_padding"
+                android:layout_toEndOf="@id/icon"
+                android:layout_toRightOf="@id/icon"
+                android:text="@string/available"
+                android:textAppearance="@style/TextAppearance.AppCompat.Inverse" />
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:id="@+id/view_request"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone">
+
+                <FrameLayout
+                    android:id="@+id/icon1"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/indicator_circle"
+                    android:backgroundTint="@color/status_orange"
+                    android:contentDescription="@string/device_status" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/normal_padding"
+                    android:layout_toRightOf="@id/icon1"
+                    android:text="@{@string/requested_by(device.requestedBy)}"
+                    android:textColor="@color/bg_white"
+                    android:textSize="@dimen/fontsize_normal"
+                    tools:text="Requested By Peike" />
+
+                <Button
+                    android:id="@+id/dismiss_button"
+                    style="@style/brandedButtonLight"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="@dimen/button_height_short"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="4dp"
+                    android:onClick="@{() -> viewModel.dismissRequest()}"
+                    tools:text="DISMISS" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/view_checkIn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                app:visibleGone="@{device.checkedOut &amp;&amp; canUpdate}">
+
+                <FrameLayout
+                    android:id="@+id/icon2"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/indicator_circle"
+                    android:backgroundTint="@color/status_red"
+                    android:contentDescription="@string/device_status" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/normal_padding"
+                    android:layout_toRightOf="@id/icon2"
+                    android:text="@{@string/borrowed_by(device.checkedOutBy)}"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
+                    android:textColor="@color/bg_white"
+                    android:textSize="@dimen/fontsize_normal"
+                    tools:text="Borrowed By Peike" />
+
+                <Button
+                    android:id="@+id/release_button"
+                    style="@style/brandedButtonLight"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="@dimen/button_height_short"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginBottom="4dp"
+                    android:layout_marginTop="4dp"
+                    android:onClick="@{() -> viewModel.checkIn()}"
+                    android:text="@string/release" />
+            </RelativeLayout>
+        </LinearLayout>
+    </FrameLayout>
+</layout>

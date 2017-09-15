@@ -1,20 +1,65 @@
 <resources>
 
     <style name="AppTheme" parent="BaseTheme" />
-    <!-- Base application theme. -->
     <style name="BaseTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="FlatButtonStyle" parent="Widget.AppCompat.Button.Borderless.Colored" />
+    <style name="FlatButtonStyle" parent="Widget.AppCompat.Button.Borderless" />
+
+    <style name="ColoredFlatButtonStyle" parent="Widget.AppCompat.Button.Borderless.Colored" />
+
+    <style name="TextButton" parent="FlatButtonStyle">
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:padding">0dp</item>
+    </style>
+
+    <style name="ColoredTextButton" parent="ColoredFlatButtonStyle">
+        <item name="android:minHeight">0dp</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:padding">0dp</item>
+    </style>
 
     <style name="RaisedButtonStyle" parent="Widget.AppCompat.Button.Colored" />
 
     <style name="HorizontalProgressBar" parent="Widget.AppCompat.ProgressBar.Horizontal" />
 
     <style name="AppBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="WindowAnimationTransition">
+        <item name="android:windowEnterAnimation">@android:anim/fade_in</item>
+        <item name="android:windowExitAnimation">@android:anim/fade_out</item>
+    </style>
+
+    <!-- Branding Styles -->
+    <style name="brandedButtonYellow" parent="@android:style/Widget.Button">
+        <item name="android:gravity">center_vertical|center_horizontal</item>
+        <item name="android:textColor">@color/bg_dark</item>
+        <item name="android:textSize">@dimen/fontsize_normal</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:layout_height">@dimen/button_height</item>
+        <item name="android:layout_width">@dimen/button_width</item>
+        <item name="android:background">@drawable/btn_yellow</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+    </style>
+
+    <style name="brandedButtonLight" parent="@style/brandedButtonYellow">
+        <item name="android:textColor">@color/bg_white</item>
+        <item name="android:background">@drawable/btn_light</item>
+    </style>
+
+    <style name="brandedEditText" parent="@android:style/Widget.EditText">
+        <item name="android:padding">6dp</item>
+        <item name="android:layout_height">@dimen/button_height</item>
+        <item name="android:textColor">@color/bg_dark</item>
+        <item name="android:textColorHint">@color/bg_light</item>
+        <item name="android:textSize">@dimen/fontsize_normal</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/branded_edittext</item>
+    </style>
 
 </resources>
