@@ -106,6 +106,8 @@ public class SyncActivity extends LifecycleActivity implements Ui, GoogleApiClie
         binding.signInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                binding.progressBar.setVisibility(View.VISIBLE);
+                binding.signInButton.setVisibility(View.GONE);
                 manualSignInSyncSequenceLazy.get().run().subscribe(manualSequenceObserver);
             }
         });

@@ -3,12 +3,8 @@ package com.detroitlabs.devicemanager.ui;
 import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.annotation.Nullable;
-import android.transition.TransitionManager;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -58,32 +54,6 @@ public class HomeFragment extends LifecycleFragment {
         return binding.getRoot();
     }
 
-    private void animVisibility(final Device device) {
-        Handler handler = new Handler(Looper.getMainLooper());
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-                    TransitionManager.beginDelayedTransition(binding.transitionContainer);
-                }
-
-                boolean canUpdateDevice = HomeFragment.this.canUpdateDevice.isSatisfied();
-
-//                setVisible(binding.checkoutArea, canUpdateDevice && !device.isCheckedOut());
-//                setVisible(binding.status.viewNotRegistrable, !canUpdateDevice);
-//                setVisible(binding.status.viewAvailable, canUpdateDevice && !device.hasRequest() && !device.isCheckedOut());
-//                setVisible(binding.status.viewRequest, device.hasRequest());
-//                setVisible(binding.status.viewCheckIn, device.isCheckedOut());
-                setVisible(binding.status.requestPermission, !hasGetSerialNumberPermission.isSatisfied());
-            }
-        }, 1000);
-
-    }
-
-    private void setVisible(View view, boolean show) {
-        view.setVisibility(show ? View.VISIBLE : View.GONE);
-    }
-
     private void setupView() {
         binding.buttonCheckout.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -112,9 +82,6 @@ public class HomeFragment extends LifecycleFragment {
                 binding.setDevice(device);
                 binding.setCanUpdate(canUpdateDevice.isSatisfied());
                 binding.setHasGetSerialNumberPermission(hasGetSerialNumberPermission.isSatisfied());
-//                if (device != null) {
-//                    animVisibility(device);
-//                }
             }
         });
     }

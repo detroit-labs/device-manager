@@ -1,11 +1,14 @@
 package com.detroitlabs.devicemanager.utils;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Point;
 import android.os.BatteryManager;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.WindowManager;
@@ -26,7 +29,7 @@ public class DeviceUtil {
         device.version = Build.VERSION.RELEASE;
         device.screenResolution = getResolution(context);
         device.screenSize = getSize(context);
-        device.serialNumber = getSerialNumber();
+        device.serialNumber = getLocalSerialNumber(context);
         device.yearClass = getYearClass(context);
         device.isSamsung = getIsSamsung();
         return device;
@@ -34,6 +37,15 @@ public class DeviceUtil {
 
     public static String getSerialNumber() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return Build.getSerial();
+        } else {
+            return Build.SERIAL;
+        }
+    }
+
+    public static String getLocalSerialNumber(Context context) {
+        int value = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE);
+        if (value == PackageManager.PERMISSION_GRANTED && Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             return Build.getSerial();
         } else {
             return Build.SERIAL;

@@ -17,6 +17,7 @@ public class Constants {
     public static final int DOMAIN_GOOGLE_API_CLIENT_ID = 12;
 
     public static final int DEVICE_UPDATE_NOTIFICATION_ID = 1;
-    public static final String DEVICE_UPDATE_NOTIFICATION_CHANNEL_ID = "du_channel_1";
+    public static final String NOTIFICATION_CHANNEL_UPDATE_DEVICE_ID = "du_channel_1";
+    public static final String NOTIFICATION_CHANNEL_UPDATE_DEVICE_NAME = "Update Device";
     public static final String KEY_QUICK_CHECKOUT = "key_name_checkout";
 }

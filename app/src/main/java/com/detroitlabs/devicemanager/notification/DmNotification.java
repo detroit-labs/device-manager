@@ -1,8 +1,13 @@
 package com.detroitlabs.devicemanager.notification;
 
 import android.app.Notification;
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.os.Build;
+import android.support.annotation.RequiresApi;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -34,10 +39,26 @@ public class DmNotification {
 
     public void show(Context context, NotificationItem item) {
         Notification notification = notificationBuilder.build(context, item);
+        if (Build.VERSION.SDK_INT == Build.VERSION_CODES.O) {
+            createChannel(item);
+        }
         notificationManager.notify(item.id(), notification);
     }
 
     public void dismissAll() {
         notificationManager.cancelAll();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void createChannel(NotificationItem item) {
+        NotificationChannel channel =
+                new NotificationChannel(item.channel().channelId(),
+                        item.channel().channelName(),
+                        NotificationManagerCompat.IMPORTANCE_MAX);
+        channel.setShowBadge(false);
+        channel.setLockscreenVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+        channel.enableLights(false);
+        channel.enableVibration(false);
+        notificationManager.createNotificationChannel(channel);
     }
 }

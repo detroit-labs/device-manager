@@ -25,9 +25,13 @@ abstract class AsyncTask<T> implements Task {
             @Override
             public void subscribe(@NonNull SingleEmitter<T> e) throws Exception {
                 Log.d("AsyncTask", "Observable thread: " + Thread.currentThread().getName());
-                task(e);
+                performTask(e);
             }
         });
         return single.subscribeOn(scheduler).observeOn(AndroidSchedulers.mainThread());
+    }
+
+    protected void performTask(SingleEmitter<T> e) {
+        task(e);
     }
 }

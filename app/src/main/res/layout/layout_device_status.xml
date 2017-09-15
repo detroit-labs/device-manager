@@ -138,7 +138,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                app:visibleGone="@{device.checkedOut}">
+                app:visibleGone="@{device.checkedOut &amp;&amp; canUpdate}">
 
                 <FrameLayout
                     android:id="@+id/icon2"

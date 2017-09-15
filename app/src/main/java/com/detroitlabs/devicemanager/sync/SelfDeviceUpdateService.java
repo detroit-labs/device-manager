@@ -8,10 +8,10 @@ import android.support.v4.app.RemoteInput;
 import android.util.Log;
 
 import com.detroitlabs.devicemanager.DmApplication;
-import com.detroitlabs.devicemanager.sync.sequences.DeviceCheckInSequence;
-import com.detroitlabs.devicemanager.sync.sequences.DeviceCheckOutSequence;
 import com.detroitlabs.devicemanager.sync.tasks.CheckInNotificationTask;
 import com.detroitlabs.devicemanager.sync.tasks.CheckOutNotificationTask;
+import com.detroitlabs.devicemanager.sync.tasks.DeviceCheckInTask;
+import com.detroitlabs.devicemanager.sync.tasks.DeviceCheckOutTask;
 
 import javax.inject.Inject;
 
@@ -27,10 +27,10 @@ public class SelfDeviceUpdateService extends Service {
     public static final String ACTION_CHECK_OUT = ACTION + ".CHECK_OUT";
 
     @Inject
-    DeviceCheckOutSequence checkOutSequence;
+    DeviceCheckOutTask checkOutTask;
 
     @Inject
-    DeviceCheckInSequence checkInSequence;
+    DeviceCheckInTask deviceCheckInTask;
 
     @Inject
     CheckOutNotificationTask checkOutNotificationTask;
@@ -63,7 +63,7 @@ public class SelfDeviceUpdateService extends Service {
     private void performCheckOut(Intent intent) {
         Log.d(TAG, "perform check out");
         final CharSequence name = getName(intent);
-        checkOutSequence.run(name.toString()).subscribe(new Consumer<Result>() {
+        checkOutTask.run(name.toString()).subscribe(new Consumer<Result>() {
             @Override
             public void accept(Result result) throws Exception {
                 if (result.isSuccess()) {
@@ -79,12 +79,11 @@ public class SelfDeviceUpdateService extends Service {
 
     private void performCheckIn() {
         Log.d(TAG, "perform check in");
-        checkInSequence.run().subscribe(new Consumer<Result>() {
+        deviceCheckInTask.run().subscribe(new Consumer<Result>() {
             @Override
             public void accept(Result result) throws Exception {
-                if (result.isSuccess()) {
-                    checkOutNotificationTask.run().subscribe();
-                }
+                Log.d(TAG, "check in result: " + result.isSuccess());
+                checkOutNotificationTask.run().subscribe();
             }
         });
     }
