@@ -1,10 +1,10 @@
 package com.detroitlabs.devicemanager;
 
-import android.arch.lifecycle.LifecycleActivity;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 
@@ -24,7 +24,7 @@ import io.reactivex.SingleObserver;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.functions.Consumer;
 
-public class SyncActivity extends LifecycleActivity implements Ui, GoogleApiClient.OnConnectionFailedListener {
+public class SyncActivity extends AppCompatActivity implements Ui, GoogleApiClient.OnConnectionFailedListener {
 
     private static final String TAG = SyncActivity.class.getName();
     @Inject
@@ -48,11 +48,11 @@ public class SyncActivity extends LifecycleActivity implements Ui, GoogleApiClie
         @Override
         public void onSuccess(@io.reactivex.annotations.NonNull Result result) {
             Log.d(TAG, "initial sync sequence finished!!!");
-            if (!result.isSuccess()) {
+            if (result.isSuccess()) {
+                startPagerActivity();
+            } else {
                 Log.d(TAG, "Initial sync sequence failed", result.exception);
                 displayUnauthorisedMsg();
-            } else {
-                startPagerActivity();
             }
         }
 

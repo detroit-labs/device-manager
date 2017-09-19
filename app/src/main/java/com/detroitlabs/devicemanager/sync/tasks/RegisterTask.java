@@ -19,7 +19,7 @@ import io.reactivex.SingleEmitter;
 
 import static com.detroitlabs.devicemanager.data.DatabaseContract.TABLE_DEVICES;
 
-public class RegisterTask extends SyncDeviceTask {
+public class RegisterTask extends UpdateDeviceTask {
 
     private static final String TAG = RegisterTask.class.getName();
     private final Context context;

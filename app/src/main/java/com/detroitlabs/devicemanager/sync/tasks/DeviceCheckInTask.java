@@ -15,7 +15,7 @@ import io.reactivex.SingleEmitter;
 import static com.detroitlabs.devicemanager.data.DatabaseContract.TABLE_DEVICES;
 
 
-public class DeviceCheckInTask extends SyncDeviceTask {
+public class DeviceCheckInTask extends UpdateDeviceTask {
 
     @Inject
     public DeviceCheckInTask(CanUpdateDevice canUpdateDevice) {
