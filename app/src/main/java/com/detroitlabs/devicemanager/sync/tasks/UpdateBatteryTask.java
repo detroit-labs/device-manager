@@ -17,7 +17,7 @@ import io.reactivex.SingleEmitter;
 import static com.detroitlabs.devicemanager.data.DatabaseContract.TABLE_DEVICES;
 
 
-public class UpdateBatteryTask extends SyncDeviceTask {
+public class UpdateBatteryTask extends UpdateDeviceTask {
 
     private static final String TAG = UpdateBatteryTask.class.getName();
     private final Context context;

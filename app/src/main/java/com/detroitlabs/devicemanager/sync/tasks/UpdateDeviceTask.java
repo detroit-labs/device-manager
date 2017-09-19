@@ -6,10 +6,10 @@ import com.detroitlabs.devicemanager.sync.Result;
 
 import io.reactivex.SingleEmitter;
 
-abstract class SyncDeviceTask extends AsyncTask<Result> {
+abstract class UpdateDeviceTask extends AsyncTask<Result> {
     private final CanUpdateDevice canUpdateDevice;
 
-    protected SyncDeviceTask(CanUpdateDevice canUpdateDevice) {
+    UpdateDeviceTask(CanUpdateDevice canUpdateDevice) {
         this.canUpdateDevice = canUpdateDevice;
     }
 
