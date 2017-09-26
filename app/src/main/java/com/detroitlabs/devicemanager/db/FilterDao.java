@@ -55,6 +55,7 @@ public class FilterDao {
             final int _cursorIndexOfRequestedBy = cursor.getColumnIndexOrThrow("requestedBy");
             final int _cursorIndexOfYearClass = cursor.getColumnIndexOrThrow("yearClass");
             final int _cursorIndexOfIsSamsung = cursor.getColumnIndexOrThrow("isSamsung");
+            final int _cursorIndexOfCheckOutTime = cursor.getColumnIndexOrThrow("checkOutTime");
             final List<Device> _result = new ArrayList<>(cursor.getCount());
             while (cursor.moveToNext()) {
                 final Device device = new Device();
@@ -69,6 +70,11 @@ public class FilterDao {
                 device.requestedBy = cursor.getString(_cursorIndexOfRequestedBy);
                 device.yearClass = cursor.getString(_cursorIndexOfYearClass);
                 device.isSamsung = cursor.getString(_cursorIndexOfIsSamsung);
+                if (cursor.isNull(_cursorIndexOfCheckOutTime)) {
+                    device.checkOutTime = null;
+                } else {
+                    device.checkOutTime = cursor.getLong(_cursorIndexOfCheckOutTime);
+                }
                 _result.add(device);
             }
             liveData.postValue(_result);

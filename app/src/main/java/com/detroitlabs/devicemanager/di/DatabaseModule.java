@@ -17,7 +17,8 @@ public class DatabaseModule {
     @Provides
     @Singleton
     DeviceDatabase providesDeviceDatabase(Application application) {
-        return Room.databaseBuilder(application, DeviceDatabase.class, "device.db").build();
+        return Room.databaseBuilder(application, DeviceDatabase.class, "device.db")
+                .fallbackToDestructiveMigration().build();
     }
 
     @Provides

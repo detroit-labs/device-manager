@@ -29,10 +29,9 @@ public class BindingAdapters {
 
     @BindingAdapter("status_text")
     public static void setStatusText(TextView textView, Device device) {
-        if (device.hasRequest()) {
-            textView.setText(textView.getContext().getString(R.string.requested_by, device.requestedBy));
-        } else if (device.isCheckedOut()) {
-            textView.setText(textView.getContext().getString(R.string.checked_out_by, device.checkedOutBy));
+        if (device.isCheckedOut()) {
+            String checkedOutBy = textView.getContext().getString(R.string.checked_out_by, device.checkedOutBy, device.getCheckOutTime());
+            textView.setText(checkedOutBy);
         } else {
             textView.setText(R.string.available);
         }

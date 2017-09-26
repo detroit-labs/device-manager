@@ -9,7 +9,6 @@ import com.detroitlabs.devicemanager.di.qualifiers.ApplicationContext;
 import com.detroitlabs.devicemanager.specification.CanUpdateDevice;
 import com.detroitlabs.devicemanager.sync.Result;
 import com.detroitlabs.devicemanager.utils.DeviceUtil;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -17,6 +16,13 @@ import javax.inject.Inject;
 
 import io.reactivex.SingleEmitter;
 
+import static com.detroitlabs.devicemanager.data.DatabaseContract.DeviceColumns.BRAND_AND_MODEL;
+import static com.detroitlabs.devicemanager.data.DatabaseContract.DeviceColumns.IS_SAMSUNG;
+import static com.detroitlabs.devicemanager.data.DatabaseContract.DeviceColumns.PLATFORM;
+import static com.detroitlabs.devicemanager.data.DatabaseContract.DeviceColumns.SCREEN_RESOLUTION;
+import static com.detroitlabs.devicemanager.data.DatabaseContract.DeviceColumns.SCREEN_SIZE;
+import static com.detroitlabs.devicemanager.data.DatabaseContract.DeviceColumns.VERSION;
+import static com.detroitlabs.devicemanager.data.DatabaseContract.DeviceColumns.YEAR_CLASS;
 import static com.detroitlabs.devicemanager.data.DatabaseContract.TABLE_DEVICES;
 
 public class RegisterTask extends UpdateDeviceTask {
@@ -36,18 +42,14 @@ public class RegisterTask extends UpdateDeviceTask {
         Log.d(TAG, "start register task");
         Device selfDevice = DeviceUtil.readThisDevice(context);
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference();
-        DatabaseReference rowRef = dbRef.child(TABLE_DEVICES).child(selfDevice.serialNumber);
-        rowRef.updateChildren(selfDevice.toMap(), new DatabaseReference.CompletionListener() {
-            @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                if (databaseError == null) {
-                    Log.d(TAG, "register success");
-                    emitter.onSuccess(Result.success());
-                } else {
-                    Log.e(TAG, "register failed", databaseError.toException());
-                    emitter.onSuccess(Result.failure(databaseError.toException()));
-                }
-            }
-        });
+        DatabaseReference deviceRef = dbRef.child(TABLE_DEVICES).child(selfDevice.serialNumber);
+        deviceRef.child(PLATFORM).setValue(selfDevice.platform);
+        deviceRef.child(BRAND_AND_MODEL).setValue(selfDevice.brandAndModel);
+        deviceRef.child(VERSION).setValue(selfDevice.version);
+        deviceRef.child(SCREEN_SIZE).setValue(selfDevice.screenSize);
+        deviceRef.child(SCREEN_RESOLUTION).setValue(selfDevice.screenResolution);
+        deviceRef.child(YEAR_CLASS).setValue(selfDevice.yearClass);
+        deviceRef.child(IS_SAMSUNG).setValue(selfDevice.isSamsung);
+        emitter.onSuccess(Result.success());
     }
 }

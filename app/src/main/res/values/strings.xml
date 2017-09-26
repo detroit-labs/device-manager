@@ -28,7 +28,7 @@
     <string name="requested_by">Requested by %1$s</string>
     <string name="status">Status</string>
     <string name="borrowed_by">Borrowed by %1$s</string>
-    <string name="checked_out_by">Checked out by %1$s</string>
+    <string name="checked_out_by">by %1$s at %2$s</string>
     <string name="available">Available</string>
     <string name="dash">-</string>
     <string name="request_from">From: %1$s</string>

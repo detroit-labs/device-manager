@@ -4,8 +4,8 @@ package com.detroitlabs.devicemanager.sync.tasks;
 import com.detroitlabs.devicemanager.data.DatabaseContract;
 import com.detroitlabs.devicemanager.specification.CanUpdateDevice;
 import com.detroitlabs.devicemanager.sync.Result;
+import com.detroitlabs.devicemanager.utils.DatetimeUtil;
 import com.detroitlabs.devicemanager.utils.DeviceUtil;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -31,19 +31,13 @@ public class DeviceCheckOutTask extends UpdateDeviceTask {
 
     @Override
     protected void task(final SingleEmitter<Result> emitter) {
-        FirebaseDatabase.getInstance().getReference()
+        DatabaseReference deviceReference = FirebaseDatabase.getInstance().getReference()
                 .child(TABLE_DEVICES)
-                .child(DeviceUtil.getSerialNumber())
-                .child(DatabaseContract.DeviceColumns.CHECKED_OUT_BY)
-                .setValue(checkOutBy, new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                        if (databaseError == null) {
-                            emitter.onSuccess(Result.success());
-                        } else {
-                            emitter.onSuccess(Result.failure(databaseError.toException()));
-                        }
-                    }
-                });
+                .child(DeviceUtil.getSerialNumber());
+        deviceReference.child(DatabaseContract.DeviceColumns.CHECKED_OUT_BY)
+                .setValue(checkOutBy);
+        deviceReference.child(DatabaseContract.DeviceColumns.CHECK_OUT_TIME)
+                .setValue(DatetimeUtil.getCurrentTimeInMillis());
+        emitter.onSuccess(Result.success());
     }
 }
