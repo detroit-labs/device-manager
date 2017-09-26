@@ -36,8 +36,7 @@ lane :beta do |options|
   crashlytics(
     api_token: "2abbd3768efce5a40e96de83cb479fe0360ba2de",
     build_secret: "75baed502be3fd561ae3852452c2d583ae3ebb54c60dca92c35c9fcf8271880a",
-    notes: options[:release_note],
-    emails: "test_user_1@detroitlabs.com"
+    notes: options[:release_note]
   )
 end
 

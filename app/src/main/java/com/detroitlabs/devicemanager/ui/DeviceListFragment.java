@@ -1,10 +1,10 @@
 package com.detroitlabs.devicemanager.ui;
 
-import android.arch.lifecycle.LifecycleFragment;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.LayoutInflater;
@@ -26,7 +26,7 @@ import java.util.Iterator;
 import java.util.List;
 
 
-public class DeviceListFragment extends LifecycleFragment {
+public class DeviceListFragment extends Fragment {
 
 
     private FragDeviceListBinding binding;

@@ -138,7 +138,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
-                app:visibleGone="@{device.checkedOut &amp;&amp; canUpdate}">
+                app:visibleGone="@{device.checkedOut &amp;&amp; canUpdate}"
+                tools:visibility="visible">
 
                 <FrameLayout
                     android:id="@+id/icon2"
@@ -149,17 +150,37 @@
                     android:backgroundTint="@color/status_red"
                     android:contentDescription="@string/device_status" />
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:layout_marginLeft="@dimen/normal_padding"
+                    android:layout_toEndOf="@id/icon2"
+                    android:layout_toLeftOf="@+id/release_button"
                     android:layout_toRightOf="@id/icon2"
-                    android:text="@{@string/borrowed_by(device.checkedOutBy)}"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
-                    android:textColor="@color/bg_white"
-                    android:textSize="@dimen/fontsize_normal"
-                    tools:text="Borrowed By Peike" />
+                    android:layout_toStartOf="@+id/release_button"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/normal_padding"
+                    android:paddingRight="@dimen/normal_padding">
+
+                    <TextView
+                        android:id="@+id/borrow_by_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@{@string/borrowed_by(device.checkedOutBy)}"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Inverse"
+                        android:textColor="@color/bg_white"
+                        android:textSize="@dimen/fontsize_normal"
+                        tools:text="Borrowed By Peike" />
+
+                    <TextView
+                        android:id="@+id/borrow_time"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/bg_white"
+                        android:textSize="12sp"
+                        android:text="@{device.getCheckOutTime()}"
+                        tools:text="12:14 09/22" />
+                </LinearLayout>
 
                 <Button
                     android:id="@+id/release_button"
