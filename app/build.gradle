@@ -31,15 +31,23 @@ android {
 
 def computeBuildNumber() {
     if (project.hasProperty("BUILD_NUMBER")) {
+        print "Build #" + project.BUILD_NUMBER
+    } else {
+        print "Build #unknown"
+    }
+}
+
+task getBuildNumber() {
+    if (project.hasProperty("BUILD_NUMBER")) {
         return ", Build #" + project.BUILD_NUMBER
     } else {
         return ", Build #unknown"
     }
 }
 
-def google_play_revision = "11.4.2"
+def google_play_revision = "11.6.0"
 def support_lib_revision = "26.1.0"
-def android_arch_revision = "1.0.0-rc1"
+def android_arch_revision = "1.0.0"
 def dagger_revision = "2.12"
 
 dependencies {
