@@ -31,14 +31,6 @@ android {
 
 def computeBuildNumber() {
     if (project.hasProperty("BUILD_NUMBER")) {
-        print "Build #" + project.BUILD_NUMBER
-    } else {
-        print "Build #unknown"
-    }
-}
-
-task getBuildNumber() {
-    if (project.hasProperty("BUILD_NUMBER")) {
         return ", Build #" + project.BUILD_NUMBER
     } else {
         return ", Build #unknown"
@@ -51,47 +43,47 @@ def android_arch_revision = "1.0.0"
 def dagger_revision = "2.12"
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
 
-    testCompile 'junit:junit:4.12'
-    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.google.code.findbugs'
     })
 
-    compile "com.android.support:design:${support_lib_revision}"
-    compile "com.android.support:appcompat-v7:${support_lib_revision}"
-    compile "com.android.support:recyclerview-v7:${support_lib_revision}"
+    implementation "com.android.support:design:${support_lib_revision}"
+    implementation "com.android.support:appcompat-v7:${support_lib_revision}"
+    implementation "com.android.support:recyclerview-v7:${support_lib_revision}"
 
-    compile "com.google.firebase:firebase-auth:${google_play_revision}"
-    compile "com.google.firebase:firebase-database:${google_play_revision}"
-    compile "com.google.firebase:firebase-messaging:${google_play_revision}"
-    compile "com.google.android.gms:play-services-auth:${google_play_revision}"
+    implementation "com.google.firebase:firebase-auth:${google_play_revision}"
+    implementation "com.google.firebase:firebase-database:${google_play_revision}"
+    implementation "com.google.firebase:firebase-messaging:${google_play_revision}"
+    implementation "com.google.android.gms:play-services-auth:${google_play_revision}"
 
-    compile "android.arch.lifecycle:runtime:${android_arch_revision}"
-    compile "android.arch.lifecycle:extensions:${android_arch_revision}"
-    compile "android.arch.persistence.room:runtime:${android_arch_revision}"
-    compile "android.arch.persistence.room:rxjava2:${android_arch_revision}"
+    implementation "android.arch.lifecycle:runtime:${android_arch_revision}"
+    implementation "android.arch.lifecycle:extensions:${android_arch_revision}"
+    implementation "android.arch.persistence.room:runtime:${android_arch_revision}"
+    implementation "android.arch.persistence.room:rxjava2:${android_arch_revision}"
     annotationProcessor "android.arch.lifecycle:compiler:${android_arch_revision}"
     annotationProcessor "android.arch.persistence.room:compiler:${android_arch_revision}"
 
-    compile ('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
+    implementation ('com.crashlytics.sdk.android:crashlytics:2.6.8@aar') {
         transitive = true
     }
 
-    compile "com.google.dagger:dagger:${dagger_revision}"
-    compile "com.google.dagger:dagger-android:${dagger_revision}"
+    implementation "com.google.dagger:dagger:${dagger_revision}"
+    implementation "com.google.dagger:dagger-android:${dagger_revision}"
     //compile "com.google.dagger:dagger-android-support:${dagger_revision}" // if you use the support libraries
     annotationProcessor "com.google.dagger:dagger-android-processor:${dagger_revision}"
     annotationProcessor "com.google.dagger:dagger-compiler:${dagger_revision}"
 
-    compile 'io.reactivex.rxjava2:rxjava:2.1.5'
-    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.5'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
 
-    compile 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
+    implementation 'com.tbruyelle.rxpermissions2:rxpermissions:0.9.4@aar'
 
-    compile 'com.facebook.device.yearclass:yearclass:2.0.0'
-    compile 'com.jaredrummler:android-device-names:1.1.5'
-    compile 'com.xiaofeng.android:flowlayoutmanager:1.2.3.2'
+    implementation 'com.facebook.device.yearclass:yearclass:2.0.0'
+    implementation 'com.jaredrummler:android-device-names:1.1.5'
+    implementation 'com.xiaofeng.android:flowlayoutmanager:1.2.3.2'
 }
 apply plugin: 'com.google.gms.google-services'
