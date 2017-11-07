@@ -12,9 +12,9 @@ xcode-select --install
 
 <table width="100%" >
 <tr>
-<th width="33%"><a href="http://brew.sh">Homebrew</a></td>
-<th width="33%">Installer Script</td>
-<th width="33%">Rubygems</td>
+<th width="33%"><a href="http://brew.sh">Homebrew</a></th>
+<th width="33%">Installer Script</th>
+<th width="33%">RubyGems</th>
 </tr>
 <tr>
 <td width="33%" align="center">macOS</td>
@@ -29,11 +29,12 @@ xcode-select --install
 </table>
 
 # Available Actions
-### beta
+## Android
+### android beta
 ```
-fastlane beta
+fastlane android beta
 ```
-
+Submit a new Beta Build to Crashlytics Beta
 
 ----
 
